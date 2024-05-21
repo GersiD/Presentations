@@ -1,0 +1,1132 @@
+\documentclass{beamer}
+
+\usepackage{pgf}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{natbib}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{bbm}
+
+\usetikzlibrary{arrows,automata,backgrounds,positioning,decorations,intersections,matrix}
+
+% *** Styles ***
+\usetheme{Singapore}
+\setbeamertemplate{navigation symbols}{}
+%\usetheme[progressbar=frametitle]{metropolis}
+%\usecolortheme{dolphin}
+%\useinnertheme{circles}
+%\usecolortheme{rose}
+%\setbeamercovered{transparent}
+\setbeamercovered{invisible}
+\usefonttheme{professionalfonts}
+%\usefonttheme[onlymath]{serif}
+\setbeamertemplate{footline}[frame number]
+
+% *** Notation ***
+\newcommand{\frep}{\tilde{\mathcal{U}}}
+\newcommand{\freqs}{\mathcal{U}}
+\newcommand{\fre}{d}
+\newcommand{\nat}{\xi}
+\newcommand{\natures}{\Xi}
+\newcommand{\timesteps}{\mathcal{T}}
+\newcommand{\measures}[1]{\triangle^{#1}}
+\newcommand{\rewset}{\mathcal{R}}
+\newcommand{\tpol}{\bar\pi}
+\newcommand{\ambigs}{\mathcal{B}}
+\newcommand{\opt}{^{\star}}
+
+\newcommand{\return}{\rho}
+
+% *** Colors ***
+\newcommand{\tc}[2]{\textcolor{#1}{#2}}
+\newcommand{\tcb}[1]{\tc{blue}{#1}}
+\newcommand{\tcr}[1]{\tc{red}{#1}}
+\newcommand{\tcg}[1]{\tc{green}{#1}}
+
+\usepackage{pifont} % for the check marks
+\newcommand{\cmark}{\tcg{\ding{51}}}%
+\newcommand{\xmark}{\tcr{\ding{55}}}%
+\newcommand{\G}{\mathbb{G}}
+\newcommand{\N}{\mathbb{N}}
+\renewcommand{\exp}[1]{\operatorname{exp}\left( #1\right) }
+\newcommand{\vspan}{\lVert \mathfrak{R} \rVert_{\rm{s}} }
+\newcommand{\rspan}{\lVert r \rVert_{\rm{s}}}
+\newcommand{\tr}{^{\top}}
+\newcommand{\Real}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Ex}[1]{\E \left[#1 \right]}
+\newcommand{\Ind}[1]{\mathbbm{1}_{#1}}
+
+\newcommand{\PiHR}{\Pi_{\mathrm{HR}}}
+\newcommand{\PiMR}{\Pi_{\mathrm{MR}}}
+\newcommand{\PiMD}{\Pi_{\mathrm{MD}}}
+\newcommand{\PiSR}{\Pi_{\mathrm{SR}}}
+\newcommand{\PiSD}{\Pi_{\mathrm{SD}}}
+
+\newenvironment{mprog}{\begin{array}{>{\displaystyle}l>{\displaystyle}l>{\displaystyle}l}}{\end{array}}
+\newenvironment{mprog*}{\begin{array}{>{\displaystyle}l>{\displaystyle}l>{\displaystyle}l}}{\end{array}}
+
+\newcommand{\subjectto}{\operatorname{s.\,t.} &}
+\newcommand{\minimize}[1]{\min_{#1} &}
+\newcommand{\maximize}[1]{\max_{#1} &}
+\newcommand{\minsep}[2]{\min_{#1 \; \vline \; #2} &}
+\newcommand{\maxsep}[2]{\max_{#1 \; \vline \; #2} &}
+\newcommand{\cs}{\\[1ex] & }
+\newcommand{\stc}{\\[1ex] \subjectto}
+
+\DeclareMathOperator{\kl}{KL}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator{\ess}{ess}
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+\DeclarePairedDelimiter{\spannorm}{\lVert}{\rVert_s}
+
+% Define risk operator
+\newcommand{\risko}{\operatorname{Risk}}
+\DeclareMathOperator{\varo}{VaR}
+\DeclareMathOperator{\cvaro}{CVaR}
+\DeclareMathOperator{\evaro}{EVaR}
+\DeclareMathOperator{\ermo}{ERM}
+
+\renewcommand{\P}[1]{\mathbb{P}\left[ #1 \right]}
+\renewcommand{\Pr}[1]{\mathbb{P}\left[ #1 \right]}
+\newcommand{\risk}[1]{\risko\left[#1\right]}
+\newcommand{\erm}[2]{\ermo_{#1}\left[#2\right]}
+\newcommand{\var}[2]{\varo_{#1} \left[#2\right]}
+\newcommand{\cvar}[2]{\cvaro_{#1} \left[#2\right]}
+\newcommand{\evar}[2]{\evaro_{#1} \left[#2\right]}
+
+\title{Safe RL: Risk and Robustness}
+%\subtitle{A tale of left distribution tails}
+\author{Marek Petrik}
+\institute{Department of Computer Science\\University of New Hampshire}
+\date{DLRL Summer School 2023}
+
+\AtBeginSection[]{
+	\begin{frame}
+          \vfill
+	\centering
+	% \usebeamerfont{title}
+        {\huge\bf \insertsectionhead}%
+	\vfill
+\end{frame}
+}
+
+\begin{document}
+\begin{frame}
+\maketitle
+\end{frame}
+
+\section*{Intro}
+
+\begin{frame} \frametitle{Safety in RL: Risk and Robustness}
+  \textbf{Objective}: Deploy RL in high-stakes domains
+  \begin{itemize}
+  \item Health care: automating and improving ER care
+  \item Finance: profitable and safe investments 
+  % \item Robotics: co-bots collaborating with humans
+  \item Agriculture: profitably grow crops mitigating failure
+  \end{itemize}
+  \vfill
+  \textbf{Safe RL}: Compute policies that mitigate return \emph{variability}
+  \begin{enumerate}
+  \item \emph{Aleatory uncertainty} is inherent to the environment
+  \item \emph{Epistemic uncertainty} about the model of environment 
+  \end{enumerate}
+\end{frame}
+
+\begin{frame} \frametitle{Markov Decision Process}
+  \textbf{Model} (tabular in this talk) \par
+    {\small
+   ~~~States $\mathcal{S}$: $s_1, s_2, s_3, \dots $ \par
+   ~~~Actions $\mathcal{A}$: $a_1, a_2, \dots $ \par
+   ~~~Transition probabilities $p$ \par
+   ~~~Rewards $r$}
+    \vfill 
+    \textbf{Solution}: Policy $\tcr{\pi}\colon \mathcal{S} \to \mathcal{A}$  (randomized in general) 
+    \vfill
+    \textbf{Return}: Discounted random return (random over trajectories):
+    \[
+      \tilde{\rho}(\tcr{\pi}) = \sum_{t=0}^\infty \gamma^t r(\tilde{s}^{\tcr{\pi}}_t, \tilde{a}^{\tcr{\pi}}_t)
+    \]
+    \vfill
+    \textbf{Random variables}: $\tilde{\rho}, \tilde{s}, \tilde{a}, \tilde{x}, \dots $ adorned with tilde
+\end{frame}
+
+\begin{frame}{Managing Pest Population with RL}
+\textbf{MDP Model}
+    \begin{itemize}
+    \item \emph{States}: Pest population, weather, \ldots
+    \item \emph{Actions}: How much and which pesticide 
+    \item \emph{Transitions}: Pest population dynamics
+    \item \emph{Reward}:  Crop yield minus pesticide cost
+    \end{itemize}
+\vfill
+\textbf{Challenges}
+    \begin{itemize}
+    \item Stochastic environment, delayed rewards, no reliable simulator
+    \item One episode = one year
+    \item Crop failure can be catastrophic
+    \end{itemize}
+\vfill
+\textbf{Uncertainty}
+\begin{itemize}
+\item \emph{Aleatory uncertainty}: Weather, like temperatures and rain
+\item \emph{Epistemic uncertainty}: Response of pest to pesticides
+\end{itemize}
+\end{frame}
+
+\begin{frame} \frametitle{Limitation of Expected Return}
+  Standard RL objective: $\max_{\pi} \mathbb{E}[\tilde{\rho}(\pi)]$
+
+  \begin{center}
+  \begin{minipage}{0.42\linewidth}
+    \centering
+    $ \mathbb{E}[\tilde{\rho}(\pi_1)] = 1$
+    % \includegraphics[width=\linewidth]{../fig/dlrl23/return-normal2}
+  \end{minipage}
+  \hspace{0.05\linewidth}
+  \begin{minipage}{0.42\linewidth}
+    \centering
+    $ \mathbb{E}[\tilde{\rho}(\pi_2)] = 1$
+    % \includegraphics[width=\linewidth]{../fig/dlrl23/return-normal10}
+  \end{minipage}
+  \\[0.3cm]
+  \begin{minipage}{0.42\linewidth}
+    \centering
+    $ \mathbb{E}[\tilde{\rho}(\pi_3)] = 1$
+    % \includegraphics[width=\linewidth]{../fig/dlrl23/return-laplace}
+  \end{minipage}
+  \end{center}
+\end{frame}
+
+\begin{frame} \frametitle{This Talk}
+  Computing policies that mitigate return \emph{variability}
+  \vfill
+  \textbf{Outline}
+  \begin{enumerate}
+    \item \emph{Risk measures}: Measure variability
+    \item \emph{Risk-averse RL}: Mitigate aleatory uncertainty
+    \item \emph{Robust RL}: Mitigate epistemic uncertainty
+    \end{enumerate}
+    \vfill
+    \textbf{Caution}: Mathematical precision matters because ordinary RL intuition fails with risk-aversion
+\end{frame}
+
+
+
+
+% ---------------------------------------------------------------------------------------
+% ---------------------------------------------------------------------------------------
+% ---------------------------------------------------------------------------------------
+
+\section{Risk Measures}
+
+\begin{frame} \frametitle{Measuring Variability of Random Variable}
+  \begin{center}
+  \begin{minipage}{0.25\linewidth}
+    \centering
+    $ \mathbb{E}\left[\tilde{\rho}(\pi_1)\right] = 1$
+    % \includegraphics[width=\linewidth]{../fig/dlrl23/return-normal2}
+  \end{minipage}
+  \hspace{0.2\linewidth}
+  \begin{minipage}{0.25\linewidth}
+    \centering
+    $ \mathbb{E}\left[\tilde{\rho}(\pi_3)\right] = 1$
+    % \includegraphics[width=\linewidth]{../fig/dlrl23/return-laplace}
+  \end{minipage}
+  \end{center}
+ \vfill 
+ \textbf{Variance} $\mathbb{V}\left[ \tilde{\rho}(\pi) \right]$: natural but inflexible and also penalizes upside
+ \vfill
+ \textbf{Expected utility} $\alert{u}^{-1}(\mathbb{E}\left[\alert{u}(\tilde{\rho}(\pi)) \right])$: powerful but difficult to interpret and optimize
+ \vfill
+ \textbf{Worst case} $\min \left[  \tilde{\rho}(\pi) \right]$: simple but inflexible and overly conservative
+ \vfill 
+ \textbf{Monetary risk measure} $\risk{\tilde{\rho}(\pi)}$: generalize $\mathbb{E}$ as a maps of random variable to $\mathbb{R}$.
+\end{frame}
+
+
+\begin{frame} \frametitle{Statistics of Random Variable}
+    \begin{columns}
+      \begin{column}{0.5\linewidth}
+        \textbf{Probability} 
+        \( \P{\tilde{x}} \) \\[1.2cm]
+        \textbf{CDF}
+        \[
+         F(z) = \P{\tilde{x} \le z} 
+        \] \\[0.8cm]
+        \textbf{Quantile}
+        \[
+          F^{-1}(\alpha) = \left\{ \tcr{t} \;:\;
+            \begin{array}{l}
+              \P{\tilde{x} \le \tcr{t}} \ge \alpha, \\
+              \P{\tilde{x} \ge \tcr{t}} \ge 1-\alpha
+            \end{array}
+            \right\}
+        \]
+      \end{column}
+      \begin{column}{0.5\linewidth}
+        \centering
+        % \includegraphics[width=0.8\linewidth]{../fig/dlrl23/example-probability}
+        \vfill 
+        % \includegraphics[width=0.8\linewidth]{../fig/dlrl23/example-cdf}
+        \vfill 
+        % \includegraphics[width=0.8\linewidth]{../fig/dlrl23/example-quantile}
+      \end{column}
+    \end{columns}
+\end{frame}
+\begin{frame} \frametitle{Basic Risk Measure: Value at Risk (VaR)}
+   \begin{equation*}
+    \var{\tcg\alpha}{\tilde{x}}
+    = \sup F^{-1}(\tcg\alpha)
+    = \sup \left\{ \tcr{t} \in \Real \;:\; \Pr{\tilde{x} \ge \tcr{t}} \ge 1-\tcg\alpha \right\}
+   \end{equation*}
+   \begin{center}
+     % \includegraphics[width=0.6\linewidth]{../fig/dlrl23/example-var}
+   \end{center}
+   \vfill
+   $\var{\tcg{\alpha}}{ \tilde{x} } = $ best $\tcg{\alpha}$-confidence lower bound on  $\tilde{x}$
+   \vfill 
+   $\var{0.2}{\tilde{x}} = -1.2$ means that $80\%$ of time return is at least $-1.2$
+   \vfill 
+   \[
+     \var{0}{\tilde{x}} = \ess \inf [\tilde{x}]
+     \qquad 
+     \var{\frac{1}{2}}{\tilde{x}} \approx \operatorname{median}[\tilde{x}]
+     \qquad
+     \var{1}{\tilde{x}} = \infty
+   \]
+ \end{frame}
+
+
+\begin{frame} \frametitle{Limitations of VaR}
+  \textbf{1. VaR ignores the tail} and catastrophic risk \\ 
+  \begin{center}
+    \begin{minipage}{0.42\linewidth}
+        \centering
+        % \includegraphics[width=0.8\linewidth]{../fig/dlrl23/example-tail-normal}
+        {\small $\var{0.2}{\tilde{x}} = -8.2$}
+    \end{minipage}
+    \hspace{0.1\linewidth}
+    \begin{minipage}{0.42\linewidth}
+        \centering
+        % \includegraphics[width=0.8\linewidth]{../fig/dlrl23/example-tail-laplace}
+        {\small $\var{0.2}{\tilde{x}} = -8.2$}
+    \end{minipage}
+  \end{center}
+  \vfill
+  \textbf{2. Difficult to optimize}\\[0.2cm]
+  \begin{columns}
+    \begin{column}{0.45\linewidth}
+        {\small
+            Stock returns (equal probs.)
+            \begin{center}
+            \begin{tabular}[t]{|l|rr|}
+            \hline
+            &$\tilde{r}_1$ & $\tilde{r}_2$ \\
+        \hline 
+            $\omega_1$ & 1 & 0 \\
+            $\omega_2$ & 1 & -2 \\
+            $\omega_3$ & 0 &  2 \\
+            \hline
+        \end{tabular}
+            \end{center}
+        $ \max_{\eta \in [0,1]} \var{0.4}{\eta \tilde{r}_1 + (1-\eta) \tilde{r}_2} $
+        }
+    \end{column}
+    \begin{column}{0.55\linewidth}
+      \centering
+      % \includegraphics[width=0.9\linewidth]{../fig/dlrl23/var-portfolio}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame} \frametitle{Concave Risk Measures}
+  \framesubtitle{Easier to optimize and consider distribution's tail}
+  \textbf{CVaR}: Conditional Value at Risk
+  \begin{align*}
+    \cvar{\alpha}{\tilde{x}}
+    &\; =\;  \sup_{z\in\mathbb R}\left(z - \frac{1}{\alpha} \E\left[z - \tilde{x}\right]_{+} \right) \\
+    &\; \approx\;  \Ex{\tilde{x} \mid  \tilde{x} \le \var{\alpha}{\tilde{x}}}
+\end{align*}
+  \vfill
+  \textbf{ERM}: Entropic risk measure 
+  \[
+    \erm{\beta}{\tilde{x}} \;=\;  -\beta^{-1}\log \mathbb{E}\left[\exp{-\beta \tilde{x}}\right] ,\quad\beta>0.
+  \]
+  \vfill 
+  \textbf{EVaR}: Entropic value at risk 
+  \[
+    \evar{\alpha}{\tilde{x}} \;=\;  \sup_{\beta>0}\left(\erm{\beta}{\tilde{x}} + \beta^{-1} \log  \alpha\right).
+  \]
+\end{frame}
+
+\begin{frame} \frametitle{Concave Risk Measures: Portfolio Example}
+  \begin{center}
+      % \includegraphics[width=\linewidth]{../fig/dlrl23/cvar-portfolio}
+  \end{center}
+\end{frame}
+
+\begin{frame} \frametitle{Correct CVaR Definition}
+\begin{align*}
+    \cvar{\alpha}{\tilde{x}}
+    &=
+    \sup_{z\in\mathbb R}\left(z-\frac{1}{\alpha} \E\left[z-\tilde{x}\right]_+\right) \\
+    &\neq
+    \Ex{\tilde{x} \mid  \tilde{x} \le \var{\alpha}{\tilde{x}}} \text{ for discrete } \tilde{x}
+\end{align*}
+\begin{center}
+  % \includegraphics[width=\linewidth]{../fig/dlrl23/cvar-correct-incorrect}
+\end{center}
+\end{frame}
+
+
+\begin{frame} \frametitle{EVaR \& CVaR: Approximate Value at Risk}
+  \begin{align*}
+    \var{\alpha}{\tilde{x}}
+    &= \inf\left\{ t\in \Real \;:\; \Pr{\tilde{x} \le t} > \alpha\right\}  \\
+    &= \inf\left\{ t\in \Real \;:\; \Ex{\tcb{f_{\varo}}(\tilde{x}; t)} >  \alpha\right\}
+    \end{align*}
+  \[
+    \tcb{f_{\varo}}(x; t) = \Ind{x \le t}
+  \]
+  \begin{center}
+    % \includegraphics[width=0.7\linewidth]{../fig/dlrl23/var-cfunction}
+  \end{center} 
+\end{frame}
+
+\begin{frame} \frametitle{CVaR Bounds VaR  (Markov's Inequality)}
+  \begin{align*}
+    \var{\alpha}{\tilde{x}} \ge \sup_{\tcr{z} \in \Real}\inf
+    \left\{ t \;:\; \Ex{\tcr{f_{\cvaro}}(\tilde{x}; t, \tcr{z})} > \alpha\right\} = \cvar{\alpha}{\tilde{x}}                
+  \end{align*}
+  \[
+    \tcr{f_{\cvaro}}(x; t, \tcr{z}) = \frac{[\tcr{ z }-x]_+}{[\tcr{z}-t]_+}
+  \]
+  \vfill 
+  \begin{center}
+    % \includegraphics[width=0.7\linewidth]{../fig/dlrl23/cvar-cfunction}
+  \end{center}
+\end{frame}
+
+\begin{frame} \frametitle{EVaR Bounds  VaR (Chernoff Bound)}
+  \begin{align*}
+    \var{\alpha}{\tilde{x}} \ge \sup_{\tcg\beta\in \Real}\inf \left\{ t\in \Real \;:\; \Ex{\tcg{f_{\evaro}}(\tilde{x}; t, \tcg\beta)} > \alpha\right\} = \evar{\alpha}{\tilde{x}}                
+  \end{align*}
+  \[
+    \tcg{f_{\evaro}}(x; t, \tcg\beta) = e^{\tcg\beta t} \cdot e^{-\tcg\beta x}
+  \]
+  \vfill 
+  \begin{center}
+    % \includegraphics[width=0.8\linewidth]{../fig/dlrl23/evar-cvar-cfunction}
+  \end{center}
+\end{frame}
+
+\begin{frame} \frametitle{Hierarchy of Risk Measures}
+  \begin{center}
+    % \includegraphics[width=0.8\linewidth]{../fig/dlrl23/evar-cvar-cfunction}
+  \end{center}
+  \vfill 
+  For any r.v. $\tcr{\tilde{x}}$ and $\tcg\alpha \in [0,1]$
+  \[
+    \var{\tcg\alpha}{\tcr{\tilde{x}}} \quad \ge \quad  \cvar{\tcg\alpha}{\tcr{\tilde{x}}} \quad  \ge \quad \evar{\tcg\alpha}{\tcr{\tilde{x}}}
+  \]
+\end{frame}
+
+
+% \begin{frame} \frametitle{Approximation for Normal Random Variable}
+%   \[
+%     \var{\tcg\alpha}{\tcr{\tilde{x}}} \quad \ge \quad  \cvar{\tcg\alpha}{\tcr{\tilde{x}}} \quad  \ge \quad \evar{\tcg\alpha}{\tcr{\tilde{x}}}
+%   \]
+%   \vfill 
+%   \begin{center}
+%     \includegraphics[width=0.8\linewidth]{../fig/googlerisk/var-approximation}
+%   \end{center}
+% \end{frame}
+
+\begin{frame} \frametitle{Common Risk Measures}
+
+  \begin{center}
+    \begin{tabular}{|l|ccccc|}
+      \hline
+      Property & $\mathbb{E}$, $\min$ & VaR & CVaR & ERM & EVaR \\
+      \hline
+      Translation invariance   & \cmark & \cmark & \cmark & \cmark & \cmark \\
+      Monotonicity          & \cmark & \cmark & \cmark & \cmark & \cmark \\
+      Positive homogeneity & \cmark & \cmark & \cmark & \xmark & \cmark \\
+      Concavity           & \cmark & \xmark & \cmark & \cmark & \cmark \\
+      Coherence          & \cmark & \xmark & \cmark & \xmark & \cmark \\
+      Tower property    & \cmark & \xmark & \xmark & \cmark & \xmark \\
+      % Law invariance     & \cmark & \cmark & \cmark & \cmark & \cmark \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+
+% ---------------------------------------------------------------------------------------
+% ---------------------------------------------------------------------------------------
+% ---------------------------------------------------------------------------------------
+
+\section{Risk-averse RL}
+
+\begin{frame} \frametitle{Risk-averse Reinforcement Learning}
+    \textbf{Return}: Discounted random return (random variable):
+    \[
+      \tilde{\rho}(\tcr{\pi}) = \sum_{t=0}^\infty \gamma^t r(\tilde{s}^{\tcr{\pi}}_t, \tilde{a}^{\tcr{\pi}}_t)
+    \]
+    \vfill
+    \textbf{Risk neutral RL}: Maximize \emph{expected} return
+    \[
+        \max_{\tcr\pi} \; \Ex{\tilde{\rho}(\tcr\pi)}
+    \]  
+    \vfill
+    \textbf{Risk-averse RL}: Maximize high-confidence \emph{guarantee} on the return
+    \[
+        \max_{\tcr\pi} \; \var{\alpha}{\tilde{\rho}(\tcr\pi)}    
+    \]
+\end{frame}
+
+\begin{frame} \frametitle{Risk-averse RL}
+  \[
+        \max_{\tcr\pi} \; \var{\alpha}{\tilde{\rho}(\tcr\pi)}    
+  \]
+  \vfill
+  Difference from ordinary RL:
+  \begin{enumerate}
+  \item Optimal policy is history-dependent
+  \item No optimal stationary policy
+  \item No notion of value function
+  \item No Bellman optimality equation
+  \item NP hard to compute optimal policy
+  \end{enumerate}
+\end{frame}
+  
+
+\begin{frame} \frametitle{Risk-Neutral RL: Dynamic Programming}
+  \textbf{Optimal value function}
+  \[
+    v_{\tcg{t}}\opt(s) \;=\; \max_{\tcr{\pi}} \,
+    \E\left[\sum_{t'=\tcg{t}}^T \gamma^{t' - \tcg{t}} r(\tilde{s}_{t'}, \tcr{\pi}_t(\tilde{s}_{t'})) \mid \tilde{s}_t = s \right] 
+  \]
+  \vfill 
+  \textbf{Dynamic program}: Compute optimal $v\opt$ efficiently
+  \[
+   v_{\tcg{t}}\opt(s) \;=\; \max_{a\in \mathcal{A}}\left(  r(s,a) + \gamma \sum_{s'\in \mathcal{S}}  p(s' \mid s,a)\cdot  v_{\tcg{t+1}}\opt(s') \right) 
+ \]
+  \vfill  
+  \textbf{ RL use of dynamic programs}
+  \begin{enumerate}
+    \item (Fitted) value and policy iteration, TD, Q-learning
+    \item Actor-critic policy gradient methods, LP formulations
+  \end{enumerate}
+\end{frame}
+
+\begin{frame} \frametitle{Why is Dynamic Programming Possible?}
+  \[
+   v_{\tcg{t}}\opt(s) \;=\; \max_{a\in \mathcal{A}} r(s,a) + \gamma \sum_{s'\in \mathcal{S}}  p(s' \mid s,a) \cdot v_{\tcg{t}+1}\opt(s')
+  \] 
+\vfill 
+  \textbf{Dynamic program}: Compute $v_t$ from $v_{t+1}$ (fixed $a$)
+\begin{align*}
+  v_0(s) 
+  &= \Ex{r(s,a) + \gamma \cdot r(\tilde{s}_1,a) + \gamma^2 \cdot r(\tilde{s}_2,a) \mid \tilde{s}_0 = s} \\
+  & \quad  \text{\tiny Use \alert{positive homogeneity} and \alert{translation invariance}} \\
+  &= r(s,a) + \gamma \cdot \Ex{r(\tilde{s}_1,a) + \gamma \cdot r(\tilde{s}_2,a) \mid \tilde{s}_0 = s} \\
+  & \quad  \text{\tiny Use \alert{tower property} and \alert{translation invariance}} \\
+  &= r(s,a) + \gamma \cdot \Ex{ r(\tilde{s}_1,a) + \Ex{ \gamma\cdot  r(\tilde{s}_2,a) \mid \tilde{s}_1} \mid \tilde{s}_0 = s}  \\
+& \quad \text{\tiny Recursive definition} \\
+&= r(s,a) + \gamma \cdot \Ex{ v_1(\tilde{s}_1) \mid  \tilde{s}_0 = s}  \\
+\end{align*}
+\end{frame}
+
+
+\begin{frame} \frametitle{Dynamic Programming for MDPs}
+  
+  \textbf{1. Tower property} 
+  \[
+    \E[\tilde{x}_1] \;=\; \E\left[\E[\tilde{x}_1 \mid \tilde{x}_2]\right]
+  \]
+  \vfill 
+  \textbf{2. Positive homogeneity} for $\gamma \ge 0$ 
+  \[
+   \E[\gamma \cdot  \tilde{x}] \;=\;  \gamma \cdot  \E[\tilde{x}]
+ \]
+ \vfill 
+  \textbf{3. Translation invariance} 
+  \[
+   \E[c + \tilde{x}]  \;=\;  c + \E[\tilde{x}]
+  \]
+\end{frame}
+
+\begin{frame} \frametitle{Dynamic Programming for Risk-Averse RL}
+      \[
+        \max_{\tcr{\pi}} \; \risk{\sum_{t=0}^T \gamma^t \, r(\tilde{s}_t, \tcr{\pi}_t(\tilde{s}_t)) }
+      \]
+      \vfill
+    Properties needed for a dynamic program
+    \begin{center}
+        \begin{tabular}{|l|ccccc|}
+        \toprule
+        Property & $\mathbb{E}$, $\min$ & VaR & CVaR & ERM & EVaR \\
+        \midrule
+        Tower property    & \cmark & \xmark & \xmark & \cmark & \xmark \\
+        Positive homogeneity   & \cmark & \cmark & \cmark & \xmark & \cmark \\
+        Translation invariance  & \cmark & \cmark & \cmark & \cmark & \cmark \\
+        \bottomrule
+        \end{tabular}
+      \end{center}
+\end{frame}
+
+\begin{frame} \frametitle{Building Risk-averse Dynamic Programs}
+  \begin{enumerate}
+  \item Use a nested risk measure
+    \vfill 
+  \item Use entropic risk measure (ERM)
+    \vfill
+  \item Reduce to simpler risk measure
+    \vfill 
+  \item Dual decomposition
+  \end{enumerate}
+\end{frame}
+
+\begin{frame} \frametitle{1. Nested Risk Measures: Pros}
+   \textbf{Nested risk measures} (or Markov risk measure) for CVaR
+  \[
+    \operatorname{nCVaR}_{\alpha}[\tilde{\rho}(\tcr\pi)] =
+    \cvar{\alpha}{\tilde{r}_0^{\tcr\pi}  + \cvar{\alpha}{\gamma \, \tilde{r}_1^{\tcr\pi} + \cvar{\alpha}{\gamma^2 \, \tilde{r}_2^{\tcr\pi} + \dots }}}
+  \]
+  \vfill
+  \textbf{Dynamic program} and value function
+  \[
+   v_{\tcg{t}}\opt(s) \;=\; \max_{a\in \mathcal{A}} \left(  r(s,a) + \gamma \cvar{\alpha}{p(\tilde{s}' \mid s,a) \cdot  v_{\tcg{t}+1}\opt(\tilde{s}')}\right)
+ \]
+ \vfill 
+  {\tiny Ruszczynski, Andrzej. “Risk-Averse Dynamic Programming for Markov Decision Processes.” Mathematical Programming B, 2010
+}
+\end{frame}
+
+\begin{frame} \frametitle{1. Nested Risk Measures: Cons}
+  \textbf{Poor approximation of static risk}
+  \begin{center}
+    % \includegraphics[width=0.5\linewidth]{../fig/googlerisk/nested-approximation}
+  \end{center}
+  \vfill 
+  \textbf{NOT law invariant}
+  \[
+    \tilde{\rho}(\pi_1) = \tilde{\rho}(\pi_2)
+    \qquad \text{but} \qquad 
+    \operatorname{nCVaR}_{\alpha}[ \tilde{\rho}(\pi_1) ] \neq \operatorname{nCVaR}_{\alpha}[ \tilde{\rho}(\pi_2) ]
+  \]
+  \vfill
+  \textbf{Difficult to interpret}
+\end{frame}
+
+\begin{frame} \frametitle{2. ERM is Special in RL}
+  \begin{center}
+    Properties needed for dynamic programming
+        \begin{tabular}{|l|ccccc|}
+        \toprule
+        Property &  VaR & CVaR & \alert{ERM} & EVaR & Nested \\
+        \midrule
+        Tower property           & \xmark & \xmark & \cmark & \xmark & \cmark \\
+        Translation invariance   & \cmark & \cmark & \cmark & \cmark & \cmark \\
+        Law invariance           & \cmark & \cmark & \cmark & \cmark & \xmark \\
+        % \hline
+        % Positive homogeneity    & \cmark & \cmark & \xmark & \xmark & \cmark \\
+        % \hline
+        \bottomrule
+        \end{tabular}
+      \end{center}
+      \vfill 
+      \textbf{ERM is unique}: No other risk measure checks all boxes
+        \vfill
+       Note that $\mathbb{E}[ \tilde{x} ] = \erm{0}{\tilde{x}}$, $\min [\tilde{x}] = \erm{\infty}{\tilde{x}}$
+\end{frame}
+  
+\begin{frame} \frametitle{2. Formulating ERM DP}
+  \textbf{Challenge}: ERM is NOT positively homogeneous
+  \[
+   \erm{\tcg\beta}{ \gamma \cdot  \tilde{x} } \;\neq\;  \gamma \cdot  \erm{\tcg\beta}{ \tilde{x} }
+  \]
+  \vfill 
+  \textbf{Solution}: ERM is positive quasi-homogeneous
+  \[
+   \erm{\tcg\beta}{ \gamma \cdot  \tilde{x} } \;  =\;  \gamma \cdot  \erm{\gamma \cdot \tcg\beta}{ \tilde{x} }
+ \]
+\end{frame}
+\begin{frame} \frametitle{2. Dynamic Program for ERM-MDPs}
+   \textbf{ERM-MDP} objective
+        \[
+          \max_{\tcr{\pi}} \;
+          \erm{\beta}{\sum_{t=0}^T \gamma^t \, r(\tilde{s}_t, \tcr{\pi}_t(\tilde{s}_t)) }
+        \]
+        \vfill 
+    \textbf{ERM Dynamic Program}: \alert{Time-dependent} risk level 
+    \[
+    v\opt_t(s) = \max_{a\in \mathcal{A}} \; \erm{\beta \cdot \alert{ \gamma^t }} {r(s,a) + \gamma \cdot  v_{t+1}\opt(\tilde{s}') }
+  \]
+  \vfill
+  {\tiny  Hau, Jia Lin, Marek Petrik, and Mohammad Ghavamzadeh. “Entropic Risk Optimization in Discounted MDPs.” In Artificial Intelligence and Statistics (AISTATS), 2023.}
+\end{frame}
+
+\begin{frame} \frametitle{2. ERM-MDP Optimal Policies}
+    \[
+        \max_{\tcr{\pi}} \; \erm{\beta}{\sum_{t=0}^T \gamma^t \, r(\tilde{s}_t, \tcr{\pi}_t(\tilde{s}_t)) }
+    \]
+    \vfill
+    \begin{theorem}
+    Exist optimal policy that is
+    \begin{enumerate}
+        \item \textbf{Markov} (history independent)
+        \item \textbf{Deterministic} (no hedging)
+        \item \textbf{More risk-neutral over time}
+        \end{enumerate}
+    \end{theorem}
+    \vfill
+    ERM is often impractical because
+    \begin{enumerate}
+    \item Risk aversion depends on rewards scale (currency)
+    \item Hard to interpret 
+    \end{enumerate}
+  \end{frame}
+
+\begin{frame} \frametitle{3. Reduce EVaR-MDP to ERM-MDP}
+  Objective
+  \begin{small}
+    \[\max_{\tcr{\pi}}\;  \evar{\alpha}{\sum_{t=0}^T \gamma^t \, r(\tilde{s}_t, \tcr{\pi}_t(\tilde{s}_t)) } \]
+  \end{small}
+  \vfill 
+  Reformulate from EVaR definition
+  \begin{small}
+    \[
+        \sup_{\beta>0} \underbrace{\max_{\tcr{\pi}} \left(\erm{\beta}{\sum_{t=0}^T \gamma^t \, r(\tilde{s}_t, \tcr{\pi}_t(\tilde{s}_t)) } + \frac{\log(1 - \alpha)}{\beta}\right)}_{=h(\beta)}
+    \]
+  \end{small}
+  \vfill 
+  \begin{theorem}
+    There exists EVaR-MDP optimal policy also optimal in ERM-MDP
+  \end{theorem}
+  {\tiny  Hau, Jia Lin, Marek Petrik, and Mohammad Ghavamzadeh. “Entropic Risk Optimization in Discounted MDPs.” In Artificial Intelligence and Statistics (AISTATS), 2023.}
+\end{frame}
+
+\begin{frame} \frametitle{3. EVaR-MDP Algorithm}
+  Discretize the non-concave objective function:
+  \begin{small}
+  \[
+   h(\beta) = \max_{\tcr\pi} \; \left(\erm{\beta}{\sum_{t=0}^T \gamma^t \, r(\tilde{s}_t, \tcr{\pi}_t(\tilde{s}_t)) } + \frac{\log(1 - \alpha)}{\beta}\right) 
+ \]
+  \end{small}
+ \begin{center}
+   % \includegraphics[width=0.7\linewidth]{../fig/googlerisk/evar_discretized2}
+ \end{center}
+ FPTAS algorithm when discretized properly
+\end{frame}
+
+\begin{frame} \frametitle{3. Numerical Results: EVaR-MDP}
+  \centering
+\begin{tabular}{l|rrrrr}
+\toprule
+\multicolumn{1}{c|}{Method} & \multicolumn{1}{c}{MR} & \multicolumn{1}{c}{GR} & \multicolumn{1}{c}{INV1} & \multicolumn{1}{c}{INV2} & \multicolumn{1}{c}{RS}  \\
+  \midrule
+  \textbf{EVaR-MDP} & \textbf{-6.73} & \textbf{5.34} & \textbf{67.4} & \textbf{189} & \textbf{303} \\ 
+  \midrule
+   Risk neutral & \textbf{-6.53} & 2.29 & 40.6 & \textbf{186} & \textbf{300} \\
+   Nested CVaR & -10.00 & -0.02 & -0.0 & 132 & 217 \\ 
+   Nested EVaR & -10.00 & 4.61 & -0.0 & 164 & 217 \\ 
+   ERM & \textbf{-6.72} & 5.19 & 50.7 & 178 & 217 \\ 
+   Nested ERM & -10.00 & 4.76 & 24.9 & 150 & 217 \\ 
+   CVaR & -7.06 & 3.64 & 49.0 & 82 & 93 \\
+  \bottomrule
+\end{tabular}
+\vfill
+Similar reductions for VaR and CVaR\\
+{\tiny Bäuerle, Nicole, and Jonathan Ott. Markov Decision Processes with Average-Value-at-Risk Criteria. Mathematical Methods of Operations Research 74, no. 3 (2011): 361–79.
+}
+\end{frame}
+
+\begin{frame} \frametitle{4. Dual Decomposition}
+ \textbf{Augment states} with risk level, using 
+ \begin{gather*}
+   \max_{\pi\in \Pi} \; \varo_{\alpha}[{r(\tilde{s}, \tilde{a}, \tilde{s}')}] \; =\;  \\
+   =\; \sup_{\zeta\in \Delta_S} \left\{  \min_{s\in\mathcal{S}}\, \max_{d\in \Delta_A} \varo_{\alpha \zeta_s \hat{p}_s^{-1}}\big[{r(s, \tilde{a}, \tilde{s}')}\mid \tilde{s}=s\big]  \;:\;   \alpha\cdot \zeta \leq \hat{p}\right\}.
+\end{gather*}
+  \vfill 
+  \textbf{Properties}
+  \begin{itemize}
+  \item[\tcg{+}] A single DP for all risk levels $\alpha$
+  \item[\tcr{--}] Only optimal and practical for VaR
+  \item[\tcr{--}] Conceptually complex 
+  \end{itemize}
+  \vfill
+  {\tiny Hau, Jia Lin, Erick Delage, Mohammad Ghavamzadeh, and Marek Petrik. On Dynamic Programming Decompositions of Static Risk Measures in Markov Decision Processes. arXiv, 2023.
+}
+\end{frame}
+
+
+
+\begin{frame} \frametitle{Building Risk-averse Dynamic Programs}
+  \begin{enumerate}
+  \item Use a nested risk measure
+    \vfill 
+  \item Use entropic risk measure (ERM)
+    \vfill
+  \item Reduce to simpler risk measure
+    \vfill 
+  \item Dual decomposition
+  \end{enumerate}
+\end{frame}
+
+
+% ---------------------------------------------------------------------------------------
+% ---------------------------------------------------------------------------------------
+% ---------------------------------------------------------------------------------------
+
+\section{Robust RL}
+
+% \begin{frame}{Robustness}
+% 	\begin{center}
+% 		An algorithm is \alert{robust} if it \emph{performs well} even in the presence of \emph{small errors} in inputs. 
+% 	\end{center}
+% 	\vfill
+% 	\textbf{Questions}:
+% 	\begin{enumerate}
+% 		\item What does it mean to perform well?
+% 		\item What is a small error?
+% 		\item How to compute a robust solution?
+% 	\end{enumerate}
+% \end{frame}
+
+\begin{frame} \frametitle{MDP with Epistemic Uncertainty}
+    \textbf{Epistemic (model) uncertainty in RL}: limited data, missing observations, violated Markov assumption, \ldots
+    \vfill 
+    \textbf{Random return}: uncertain transitions $\tilde{p}$ and $\tilde{r}$
+    \[
+      \tilde{\rho}(\tcr{\pi}, \tcb{\tilde{p}}, \tcb{\tilde{r}}) = \sum_{t=0}^\infty \gamma^t \tcb{\tilde{r}}(\tilde{s}^{\tcr{\pi}}_t, \tilde{a}^{\tcr{\pi}}_t) \qquad \tilde{s}_{t+1}^{\tcr{\pi}} \sim \tcb{\tilde{p}}(\tilde{s}_t^{\tcr{\pi}},\tilde{a}_t^{\tcr{\pi}})
+    \]
+    \vfill
+    \textbf{Expected return}: uncertain transition probabilities 
+    \[
+        \rho(\tcr\pi, \tcb{\tilde{p}}, \tcb{ \tilde{r} }) = \Ex{\tilde{\rho}(\tcr\pi) \mid \tcb{ \tilde{p} }, \tcb{ \tilde{r} }}
+    \]  
+    % \vfill
+    % \textbf{Soft-robust RL}: \emph{epistemic} risk aversion
+    % \[
+    %   \max_{\tcr\pi} \, \risk{\rho(\tcr\pi, \tcb{ \tilde{p} }, \tcb{ \tilde{r} })}
+    %   =
+    %     \max_{\tcr\pi} \, \risk{ \Ex{\tilde{\rho}(\tcr\pi) \mid \tcb{ \tilde{p} }, \tcb{ \tilde{r} }} }
+    % \]
+\end{frame}
+
+\begin{frame} \frametitle{Robust RL}
+    \textbf{Soft-robust RL}: epistemic risk aversion
+    \[
+      \max_{\tcr\pi} \risk{\rho(\tcr\pi, \tcb{ \tilde{p} }, \tcb{ \tilde{r} })}
+      \; =\;
+        \risk{ \Ex{\tilde{\rho}(\tcr\pi) \mid \tcb{ \tilde{p} }, \tcb{ \tilde{r} }} }
+    \]
+    \vfill 
+    \textbf{Robust RL}: use $\min$ as the risk measure with some $\mathcal{P}$ and $\mathcal{R}$
+    \[
+      \max_{\tcr\pi} \min_{\tcb{p}\in \mathcal{P},\, \tcb{r}\in \mathcal{R}} \rho(\tcr\pi, \tcb{ p }, \tcb{ r })
+    \]
+    \vfill
+    Difference from aleatory uncertainty
+    \begin{itemize}
+    \item Distribution over $\tilde{p}$ and $\tilde{r}$ is often unknown
+    \item Model is unknown but does not change
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Adversarial Robustness for RL}
+    \textbf{Robust optimization}: Best $\tcr{\pi}$ with respect to the inputs with \emph{all} possible \emph{small errors}: 
+    \[ \max_{\tcr{\pi}} \min_{\tcb{p}, \tcb{r}} \; \left\{ \return(\tcr{\pi}, \tcb{p}, \tcb{r}) ~:~ 
+    \begin{matrix} 
+    \lVert \bar{p} - \tcb{p} \rVert \le \text{small} \\ 
+    \lVert \bar{r} - \tcb{r} \rVert \le \text{small}
+    \end{matrix} \right\} \]
+    {\small Game in which adversarial nature chooses $\tcb{p}, \tcb{r}$}
+\end{frame}
+
+
+\begin{frame}{Robust Representation}
+	Nominal values: $\bar{p}$, $\bar{r}$\\
+	\vfill
+	\textbf{Robustness to rewards}
+		\[ \max_{\tcr{\pi}} \min_{\tcb{r}} \left\{ \return(\tcr{\pi}, \bar{p}, \tcb{r}) \;:\; \|\tcb{r} - \bar{r}\| \le \psi \right\} \]
+	\vfill
+	\textbf{Robustness to transitions}
+		\[ \max_{\tcr{\pi}} \min_{\tcb{p}} \left\{ \return(\tcr{\pi}, \tcb{p}, \bar{r}) \;:\; \|\tcb{p} - \bar{p}\| \le \psi \right\} \]
+	\vfill
+	% \textbf{Budget of robustness} $\psi$ is the error size
+\end{frame}
+
+\begin{frame}{Robustness to Reward Errors}
+	\textbf{Objective:}
+	\[
+          \max_{\tcr{\pi}} \min_{\tcb{r}} \left\{ \return(\tcr{\pi}, \bar{p}, \tcb{r}) \;:\; \|\tcb{r} - \bar{r}\| \le \psi \right\}
+        \]
+	\vfill
+	% Solve as dual linear program:
+        % \[
+        %   \begin{mprog*}
+        %     \maximize{u \in \Real^{S A}} \min_{r\in\Real^{S A}}\, \{ r\tr u \;:\; \| r - \bar{r} \| \le \psi \}
+        %     \stc \sum_a (I - \gamma P_a\tr) u_a = p_0 
+        %     \cs u \ge 0
+        %   \end{mprog*}
+        % \]
+	\textbf{Linear program} reformulation ($\|\cdot\|_\star$ is dual norm):
+	\[
+          \begin{mprog*}
+            \maximize{u \in \Real^{S A}} \bar{r}\tr u - \psi \| u \|_\star
+            \stc \sum_a (I - \gamma P_a\tr) u_a = p_0 
+            \cs u \ge 0
+          \end{mprog*}
+        \]
+	% \vfill
+	% No known VI, PI, or similar algorithms in general
+\end{frame}
+
+\begin{frame}{Robustness to Transition Errors}
+	\textbf{Objective:}
+	\[ \max_{\tcr{\pi}} \min_{\tcb{p}} \left\{ \return(\tcr{\pi}, \tcb{p}, \bar{r}) \;:\; \|\tcb{p} - \bar{p}\| \le \psi \right\} \]
+        \vfill 
+            \textbf{Ambiguity set} (aka uncertainty set):
+            \[
+              \mathcal{P} \; =\; \left\{ \tcb{p} \;:\; \|\tcb{p} - \bar{p}\| \le \psi \right\}
+            \]
+	\vfill
+	\begin{itemize}
+		\item \textbf{NP-hard} to solve 
+		\item No value function, or dynamic program
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Dynamic Program for Rectangular Robust RL}
+  % \textbf{Rectangular} $\mathcal{P}$ is analogous to \emph{nested risk measures}
+  % \vfill 
+ \textbf{S-rectangular}: $\tcb{\mathcal{P}}$ constrained for each \alert{state} separately 
+ \[
+   \max_{\tcr{\pi}} \min_{\tcb{p}}  \left\{ \return(\tcr{\pi}, \tcb{p}, \bar{r}) \;:\; \|\tcb{p_s} - \bar{p}_s\| \le \psi_s,\, \forall s \right\}
+ \]
+Nature sees last state 
+\vfill 
+\textbf{SA-rectangular}: $\tcb{\mathcal{P}}$ constrained for each \alert{state and action} separately 
+\[
+  \max_{\tcr{\pi}} \min_{\tcb{p}}  \left\{ \return(\tcr{\pi}, \tcb{p}, \bar{r}) \;:\; \|\tcb{p_{s,a}} - \bar{p}_{s,a}\| \le \psi_{s,a},\, \forall s,a \right\}
+\]
+	Nature sees last state and action
+\end{frame}
+
+
+\begin{frame}{Optimal Robust Value Function}
+    \textbf{Bellman operator in MDPs}:
+    {\small
+        \[
+        v(s) = \max_{a} \left( r_{s,a} + \gamma \cdot \bar{p}_{s,a}\tr v \right)
+        \]
+    }
+
+    \textbf{Robust Bellman operator}: \alert{SA-rectangular} ambiguity set
+    {\small
+        \[
+        v(s) \; =\;  \max_{a} \min_{\tcb{p}\in\Delta_S}  \left\{ r_{s,a} + \gamma \cdot \tcb{p}\tr v  \;:\;  \|  \tcb{p} - \bar{p}_{s,a} \| \le \psi_{s,a} \right\}
+        \]	
+    }
+
+    \textbf{Robust Bellman operator}: \alert{S-rectangular} ambiguity set
+    {\small
+        \[
+        v(s) =
+        \max_{d \in \Delta_A} \min_{\tcb{p_a}\in\Delta_S}
+        \Bigl\{ \sum_{a} d(s,a) (r_{s,a} + \gamma \cdot \tcb{p_a} \tr v)
+        \;:\;  \sum_a \| \tcb{p_{a}} - \bar{p}_{s,a} \| \le \psi_s \Bigr\}
+        \]	
+    }
+\end{frame}
+
+\begin{frame}{Solving Robust MDPs}
+    \textbf{Robust Bellman operator} is:
+    \begin{enumerate}
+        \item A contraction in $L_\infty$ norm
+        \item Monotone elementwise
+    \end{enumerate}
+    \vfill
+    \textbf{Algorithms}
+    \begin{enumerate}
+        \item Value iteration works but slow
+        \item Naive policy iteration may loop forever
+        \item Approximate convex optimization formulation
+    \end{enumerate}
+    \vfill 
+    {\tiny
+      Grand-Clément, Julien, and Marek Petrik. Towards Convex Optimization Formulations for Robust MDPs, 2022.
+}
+\end{frame}
+
+
+\begin{frame}{Solving Robust MDPs}
+ \textbf{Robust Bellman Optimality}: SA-rectangular ambiguity set
+    \[
+    v(s) = \max_{a} \min_{\tcr{p}\in\Delta_S}
+    \left\{ r_{s,a} + \tcr{p}\tr v   ~:~ \| \tcg{\bar{p}} - \tcr{p} \|_1 \le \psi \right\}
+    \]	
+ How to solve for $\tcr{p}$?
+\vfill
+ Linear programming is \textbf{polynomial time} for polyhedral sets
+ % Optimal policy using \textbf{value iteration} in polynomial time
+\vfill
+ Is it really \textbf{tractable}?
+\end{frame}
+
+\begin{frame}{Benchmarking Robust Bellman Update}
+    \textbf{Bellman update}: {\footnotesize Inventory optimization, 200 states and actions}
+    \[  r_{s,a} + p\tr v  \]
+    Time: 0.04s
+    \vfill
+    \textbf{Robust Bellman update}: 	{\small Gurobi LP}
+    \[ \min_{\tcr{p}\in\Delta_S}  \left\{ r_{s,a} + \tcr{p}\tr v   ~:~ \| \tcg{\bar{p}} - \tcr{p} \|_1 \le \psi \right\} \]
+    \begin{center}
+    \begin{tabular}{|l|r|}
+        \toprule
+    \textbf{Rectangularity} & \multicolumn{1}{c|}{\textbf{Time}} \\
+        \midrule
+        SA- & 1.1 min  \\
+        \hline
+        S & 16.7 min \\
+        \bottomrule
+    \end{tabular} \\[0.3cm]
+    \end{center}
+\end{frame}
+
+\begin{frame}{Fast Robust RL Algorithms}
+\textbf{Homotopy algorithm + PPI}:
+\begin{center}
+\begin{tabular}{|l|r|}
+    \toprule
+    \textbf{Rectangularity} & \multicolumn{1}{c|}{\textbf{Time}} \\
+    \midrule
+    SA- & 1.1 min / \tcb{0.6s} \\
+    \hline
+    S- & 16.7 min / \tcb{0.7s} \\
+    \bottomrule
+\end{tabular} \\[0.3cm]
+\end{center}
+{\tiny
+  \begin{itemize}
+  \item Ho, Chin Pang, Marek Petrik, and Wolfram Wiesemann. Robust Phi-Divergence MDPs, Neurips, 2023
+  \item Derman, Esther, Matthieu Geist, and Shie Mannor. Twice Regularized MDPs and the Equivalence between Robustness and Regularization, Neurips, 2021
+  \item Grand-Clément, Julien. From Convex Optimization to MDPs: A Review of First-Order, Second-Order and Quasi-Newton Methods for MDPs, 2021
+  \end{itemize}
+}
+\end{frame}
+
+\begin{frame} \frametitle{Other Robust RL Results}
+ \begin{itemize}
+  \item Other notions of rectangularity \\
+  {\tiny Goyal, V. and Grand-Clement, J., Robust Markov decision process: Beyond rectangularity, Mathematics of Operations Research, 2022.
+}  
+\item Model free algorithms \\
+  {\tiny Panaganti, K. et al., Robust reinforcement learning using offline data, NIPS, 2022).
+ }
+\item Robust policy gradient \\
+  {\tiny Qiuhao Wang, Chin Pang Ho, Marek Petrik, Policy Gradient in Robust MDPs with Global Convergence Guarantee, ICML, 2023.}
+\item Average reward criteria \\
+  {\tiny Wang, Y. et al., Robust Average-Reward Markov Decision Processes, AAAI, 2023.
+  }
+\item \ldots
+  \end{itemize}
+\end{frame}
+
+% ---------------------------------------------------------------------------------------
+% ---------------------------------------------------------------------------------------
+% ---------------------------------------------------------------------------------------
+
+\section{Summary}
+
+\begin{frame}{Risk and Robustness in RL}
+  \begin{itemize}
+  \item Monetary risk measures: VaR, CVaR, EVaR, ERM
+    \vfill 
+  \item Risk-aversion
+    \begin{enumerate}
+    \item Aleatory: risk-averse RL
+    \item Epistemic: (soft-)robust RL
+    \end{enumerate}
+  \vfill 
+\item Formulating a dynamic program
+  \begin{enumerate}
+  \item Make assumptions on the risk: nested risk measures, ERM, rectangular uncertainty
+  \item Reduce to a simpler risk measure: EVaR to ERM
+  \item Augment state space: VaR, CVaR
+  \end{enumerate}
+  \end{itemize}
+  
+\end{frame}
+
+
+\begin{frame}{Research Questions}
+  \begin{enumerate}
+  \item Scalable risk-averse RL with guarantees
+    \vfill 
+  \item Distributional RL for risk-aversion
+    \vfill 
+  \item Relaxing rectangularity in robust RL
+    \vfill 
+  \item Unifying risk-averse and robust RL
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \textbf{Thank You}
+  \end{center}
+  \vfill 
+ \textbf{Thanks to my collaborators}: Bahram Behzadian, Erick Delage, Mohammad Ghavamzadeh, Julien Grand-Clement, Jia Lin Hau, Chin Pang Ho,  Reazul Russel, Xihong Su, Wiuhao Wang, Wolfram Wiesemann
+\end{frame}
+
+\appendix
+\section{Appendix}
+
+\begin{frame}{SA-Rectangular Ambiguity}
+	\textbf{Example}: For each state $s$ and action $a$:
+	\[ \Bigl\{ \tcr{p_{s,a}} ~:~ \| \tcr{p_{s,a}} - \bar{p}_{s,a} \|_1 \le \psi_{s,a}   \Bigr\} = \Bigl\{ \tcr{p_{s,a}} ~:~  \sum_{s'} |\tcb{p_{s,a,s'}} - \bar{p}_{s,a,s'} | \le \psi_{s,a} \Bigr\} \]
+	\vfill
+	Sets are rectangles over $s$ and $a$:
+	\begin{center}
+		% \input{../fig/dlrl19/rectangular_sa.latex}
+	\end{center}
+\end{frame}
+
+\begin{frame}{S-Rectangular Ambiguity}
+	\textbf{Example}: For each state $s$:
+	\[ \Bigl\{ \tcr{p_{s,a}} ~:~ \sum_a \| \tcr{p_{s,a}} - \bar{p}_{s,a} \|_1 \le \psi_{s}   \Bigr\} = \Bigl\{ \tcr{p_{s,a}} ~:~  \sum_{a,s'} |\tcr{p_{s,a,s'}} - \bar{p}_{s,a,s'} | \le \psi_{s} \Bigr\} \]
+	\vfill
+	Sets are rectangles over $s$ only:
+	\begin{center}
+	% \input{../fig/dlrl19/rectangular_s.latex}
+	\end{center}
+\end{frame}
+
+% \begin{frame}[allowframebreaks]{Bibliography}
+% 	\bibliographystyle{abbrvnat}
+% 	\begin{small}
+% 		\bibliography{/home/marek/Articles/library}
+% 	\end{small}
+% \end{frame}
+
+
+\end{document}
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -4,15 +4,85 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathtools}
+\usepackage{pgf}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{natbib}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{bbm}
+
+
+\usetikzlibrary{arrows,automata,backgrounds,positioning,decorations,intersections,matrix}
+
+% *** Styles ***
+\usetheme{Singapore}
+\setbeamertemplate{navigation symbols}{}
+% \usetheme[progressbar=frametitle]{metropolis}
+% \usecolortheme{dolphin}
+%\useinnertheme{circles}
+%\usecolortheme{rose}
+%\setbeamercovered{transparent}
+\setbeamercovered{invisible}
+\usefonttheme{professionalfonts}
+%\usefonttheme[onlymath]{serif}
+\setbeamertemplate{footline}[frame number]
 
 \title{ROIL -- Robust Offline Imitation Learning}
 \author{Gersi Doko}
-\institute{Department of Computer Science, University of New Hampshire}
-\date{2024}
+\institute{Department of Computer Science \\ University of New Hampshire}
+% \date{2024}
+
+\AtBeginSection[]{
+	\begin{frame}
+          \vfill
+	\centering
+	% \usebeamerfont{title}
+        {\huge\bf \insertsectionhead}%
+	\vfill
+\end{frame}
+}
 
 \begin{document}
 
 \frame{\titlepage}
+
+\section*{Intro}
+
+\begin{frame}
+	\frametitle{Robust Offline Imitation Learning}
+	\textbf{Objective}: Learn a policy from expert demonstrations
+	\begin{itemize}
+	\item Health care: automating and improving ER care
+	\item Robotics: self-driving cars, complete tasks only from demonstrations
+	\item Retail: recommendation systems, customer service
+	
+	\end{itemize}
+	\vfill
+	\textbf{Offline IL}: Compute policy from a fixed dataset of expert demonstrations
+	\begin{itemize}
+		\item No interaction with the environment
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{This Talk}
+	Computing policies that minimize worst case regret, with respect to a possible set of experts.
+	\vfill
+	\textbf{Outline}
+	\begin{itemize}
+	\item \emph{Motivation}: Why study IRL?
+	\item \emph{Domain Introduction}: What is IRL?
+	\item \emph{Robust Offline IL}: New approach to minimizing regret of learning from demonstrations
+	\end{itemize}
+\end{frame}
+
+\section*{Motivation}
 
 \begin{frame}
 \frametitle{Motivation}
@@ -23,6 +93,8 @@
 	\end{itemize}
 \end{frame}
 
+\section*{Domain Introduction}
+
 \begin{frame}
 \frametitle{Domain Introduction}
 	\begin{itemize}
@@ -30,6 +102,26 @@
 		\item Similar to Reinforcement Learning, but we don't have access to the reward function.
 		\item Instead, we try and replicate the expert's behavior given their demonstrations.
 	\end{itemize}
+\end{frame}
+
+\begin{frame} \frametitle{Markov Decision Process}
+  \textbf{Model} (tabular in this talk) \par
+    {\small
+   ~~~States $\mathcal{S}$: $s_1, s_2, s_3, \dots $ \par
+   ~~~Actions $\mathcal{A}$: $a_1, a_2, \dots $ \par
+   ~~~Transition probabilities $\mathcal{P}$ \par
+   ~~~Initial state distribution $p_0$ \par
+   ~~~Discount factor $\gamma$ \par
+   ~~~\textbf{Rewards $r$}}
+    \vfill 
+    \textbf{Solution}: Policy ${\pi}\colon \mathcal{S} \to \Delta^\mathcal{A}$
+    \vfill
+    \textbf{Return}: Discounted random return (random over trajectories):
+    \[
+      \tilde{\rho}(\pi) = \sum_{t=0}^\infty \gamma^t r(\tilde{s}^{\pi}_t, \tilde{a}^{{\pi}}_t)
+    \]
+    \vfill
+    \textbf{Random variables}: $\tilde{\rho}, \tilde{s}, \tilde{a}, \tilde{x}, \dots $ adorned with tilde
 \end{frame}
 
 \begin{frame}
@@ -58,6 +150,8 @@
 	We assume that $\exists w \in \mathcal{W} \mid r^\star = \Phi w$.
 
 \end{frame}
+
+\section*{Problem and Solution}
 
 \begin{frame}
 	\frametitle{Problem and Solution}
