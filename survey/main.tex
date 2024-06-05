@@ -26,6 +26,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{tikz}
+\usepackage{subcaption}
 
 \bibliographystyle{abbrvnat}
 \usepackage[framemethod=default]{mdframed}
@@ -65,5 +66,65 @@
 \begin{document}
 
 \maketitle
+
+\section{Risk and Reward}
+
+\begin{definition}[Risk Measure]
+        \label{def:risk}
+        A Risk Measure is a mapping from a random variable to a real number. Quantifying the uncertainty of an outcome.
+        Given a metric space ($\Omega$, $\mathcal{F}$, $P$), a risk measure is a function $\psi: \mathcal{X} \to \Real$. Satisfying
+        \begin{enumerate}
+                \item Monotonicity: $X \leq Y \implies \psi(X) \leq \psi(Y)$
+                \item Translation Invariance: $\psi(X + c) = \psi(X) + c \quad \forall c \in \Real$
+        \end{enumerate}
+\end{definition}
+
+\begin{definition}[Expectation]
+        \label{def:expectation}
+        A common risk measure is the expectation of a random variable. Given a random variable $X: \Omega \to \Real$, the expectation of $X$ is defined as
+        $$\mathbb{E}[X] = \sum_{\omega \in \Omega} X(\omega) P(\omega).$$
+\end{definition}
+
+\begin{figure}[ht!]
+        \begin{subfigure}[t]{0.5\textwidth}
+                \centering
+                \includegraphics[width=0.7\linewidth]{julia_figures/normal.pdf}
+                \caption{$\mathcal{N}(0,1)$}
+                \label{fig:normal}
+        \end{subfigure}
+        \begin{subfigure}[t]{0.5\textwidth}
+                \centering
+                \includegraphics[width=0.7\linewidth]{julia_figures/normal_wide.pdf}
+                \caption{$\mathcal{N}(0,2)$}
+                \label{fig:normal_wide}
+        \end{subfigure}
+        \begin{subfigure}[t]{1.0\textwidth}
+                \centering
+                \includegraphics[width=0.4\linewidth]{julia_figures/cauchy.pdf}
+
+                \caption{$\mathcal{C}(0,0.5)$}
+                \label{fig:cauchy_tight}
+        \end{subfigure}
+\end{figure}
+
+\section{Vanilla Reinforcement Learning}
+
+\begin{definition}[Finite Horizon Expected Return]
+        Given a policy $\pi : \mathcal{S} \to \Delta^\mathcal{A}$ the expected finite horizon discounted return $\rho(\pi)$ can be defined as
+        $$\rho(\pi) = \mathbb{E}_{\pi, \mathcal{P}} \left[ \sum_{t=0}^{T} \gamma^t r(s_t, \pi(s_t)) \right].$$
+        Where $s_0 \sim p_0$ and $s_{t+1} \sim \mathcal{P}(s_t, \pi(s_t))$, $\gamma$ is the discount factor, and $T$ is the time horizon.
+\end{definition}
+
+\begin{definition}[Objective of Reinforcement Learning]
+        \label{def:rl_obj}
+        The objective of reinforcement learning (RL) is as follows
+        $$\max_{\pi \in \Pi} \rho(\pi).$$
+        Where $\Pi = \left\{ \pi \in \mathcal{S} \to \Delta^\mathcal{A}  \right\}$.
+        In practice, one is most concerned with the optimal policy $\pi^* = \argmax_{\pi \in \Pi} \rho(\pi)$.
+\end{definition}
+
+\section{Risk-Averse Reinforcement Learning}
+
+\section{Methods}
 
 \end{document}
