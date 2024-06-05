@@ -36,7 +36,7 @@
 \setbeamertemplate{footline}[frame number]
 
 \title{ROIL -- Robust Offline Imitation Learning}
-\author{Marek Petrik, PhD}
+\author{Gersi Doko}
 \institute{Department of Computer Science \\ University of New Hampshire}
 \date{}
 
@@ -57,19 +57,44 @@
 \section*{Intro}
 
 \begin{frame}
-	\frametitle{Robust Offline Imitation Learning}
+	\frametitle{Imitation Learning}
+	\textbf{TODO}: Add Image of the basic Imitation Learning setup
+\end{frame}
+
+\begin{frame}
+	\frametitle{Imitation Learning}
 	\textbf{Objective}: Learn a policy from expert demonstrations
 	\begin{itemize}
 	\item Health care: automating and improving ER care
-	\item Robotics: self-driving cars, complete tasks only from demonstrations
+	\item Robotics: self-driving cars, manufacturing, etc.
 	\item Retail: recommendation systems, customer service
 	
 	\end{itemize}
 	\vfill
-	\textbf{Offline IL}: Compute policy from a fixed dataset of expert demonstrations
+	\textbf{Offline IL}: Given fixed dataset of expert demonstrations
 	\begin{itemize}
 		\item No interaction with the environment
 	\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Imitation Learning}
+	\textbf{Central Issue}: Covanariate Shift : True expert behavior may not be the same as the expert demonstrations
+	\vfill
+	\textbf{Example}: An expert who only wishes to show the most demonstrative states
+
+	\vfill
+	\textbf{Methods Affected} LPAL, GAIL, GWAL, MWAL, BC, etc.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Robust Offline Imitation Learning}
+	\textbf{Objective}: Learn a policy under difficult learning conditions i.e. covariate shift
+
+	\vfill
+
+	\textbf{Key Idea}: Generate a convex set of consistent experts, then minimize regret
 \end{frame}
 
 \begin{frame}
@@ -91,18 +116,20 @@
 
 \begin{frame}
 \frametitle{Motivation}
+	\textbf{Why Imitation Learning?}
 	\begin{itemize}
-		\item Solve problems where it's hard to define what outcome we want
-		\item Self-driving, Robotic Control, Medicine, Recommendation Systems, etc.
-		\item Often have access to expert demonstrations instead of a clear description for the task
+		\item Models are hard to specify
+		\item Even harder to solve
+		\item Often have access to expert demonstrations
+		\item Usually don't have access to a simulator
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Motivation}
 	\begin{itemize}
-		\item Similar to Reinforcement Learning, but we don't have access to the true reward function $r^\star : \mathcal{S} \times \mathcal{A} \to \Real$
-		\item Instead, we try and replicate the experts' behavior given their demonstrations $D_e = (s_i, \pi_e(s_i))_{i=1}^N$
+		\item Similar to Reinforcement Learning, except $r^\star : \mathcal{S} \times \mathcal{A} \to \Real$
+		\item Instead $D_e = (s_i, \pi_e(s_i))_{i=1}^N$
 		\item Generally demonstrations are given as state-action pairs collected along expert trajectories with horizon $N$
 		\item We make no assumptions on the experts' optimality, nor the temporal structure of the demonstrations
 	\end{itemize}
