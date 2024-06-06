@@ -58,7 +58,14 @@
 
 \begin{frame}
 	\frametitle{Imitation Learning}
-	\textbf{TODO}: Add Image of the basic Imitation Learning setup
+	\centering
+	\begin{minipage}{0.9\linewidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\linewidth]{plots/rainbow_road.jpeg}
+			\caption{Super Mario Kart 64 Rainbow Road}
+		\end{figure}
+	\end{minipage}
 \end{frame}
 
 \begin{frame}
@@ -75,17 +82,25 @@
 	\begin{itemize}
 		\item No interaction with the environment
 	\end{itemize}
-
 \end{frame}
 
 \begin{frame}
-	\frametitle{Imitation Learning}
-	\textbf{Central Issue}: Covanariate Shift : True expert behavior may not be the same as the expert demonstrations
+\frametitle{Why Imitation Learning?}
+	\begin{itemize}
+		\item Models are hard to specify
+		\item Even harder to solve
+		\item Often have access to expert demonstrations
+		\item Usually don't have access to a simulator
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Imitation Learning Difficulties}
+	\textbf{Central Issue}: \emph{Covariate Shift}, true expert behavior may not be the same as the expert demonstrations
 	\vfill
 	\textbf{Example}: An expert who only wishes to show the most demonstrative states
-
 	\vfill
-	\textbf{Methods Affected} LPAL, GAIL, GWAL, MWAL, BC, etc.
+	\textbf{Methods Affected} LPAL, GAIL, GWAL, MWAL, BC, and many others
 \end{frame}
 
 \begin{frame}
@@ -112,31 +127,10 @@
 	\end{itemize}
 \end{frame}
 
-\section*{Motivation}
+\section*{Domain Introduction}
 
 \begin{frame}
-\frametitle{Motivation}
-	\textbf{Why Imitation Learning?}
-	\begin{itemize}
-		\item Models are hard to specify
-		\item Even harder to solve
-		\item Often have access to expert demonstrations
-		\item Usually don't have access to a simulator
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Motivation}
-	\begin{itemize}
-		\item Similar to Reinforcement Learning, except $r^\star : \mathcal{S} \times \mathcal{A} \to \Real$
-		\item Instead $D_e = (s_i, \pi_e(s_i))_{i=1}^N$
-		\item Generally demonstrations are given as state-action pairs collected along expert trajectories with horizon $N$
-		\item We make no assumptions on the experts' optimality, nor the temporal structure of the demonstrations
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Motivation}
+\frametitle{Domain Introduction}
 Two approaches to learning from demonstrations:
 \begin{itemize}
 	\item \emph{Inverse Reinforcement Learning (IRL)}: Learn a reward function from expert demonstrations then use RL to learn a policy
@@ -145,25 +139,33 @@ Two approaches to learning from demonstrations:
 \textbf{Distinction}: Inverse Reinforcement Learning (IRL) \emph{typically} assumes problem dynamics are known, Imitation Learning (IL) \emph{typically} does not
 \end{frame}
 
-\section*{Domain Introduction}
+\begin{frame}
+\frametitle{Domain Introduction}
+	\begin{itemize}
+		\item Similar to Reinforcement Learning, except $r^\star : \mathcal{S} \times \mathcal{A} \to \Real$
+		\item $$D_e = (s_i, \pi_e(s_i))_{i=1}^N$$
+		\item Generally demonstrations are given as state-action pairs collected along expert trajectories with horizon $N$
+		\item We make no assumptions on the experts' optimality, nor the temporal structure of the demonstrations
+	\end{itemize}
+\end{frame}
 
 \begin{frame}
 	\frametitle{Notation}
 	\begin{itemize}
-		\item Let m, n be positive integers
+		\item Let $m, n$ be positive integers
 		\item $\Real^{mn}$ denotes the set of $m \cdot n$-dimensional real vectors
 		\item $\Real^{m \times n}$ denotes the set of $m \times n$ real matrices
 		\item $\Delta^m$ denotes the $m$-dimensional probability simplex
-		\item $\Pi$ denotes the set of all randomized markov policies
+		\item $\Pi$ denotes the set of all randomized Markov policies
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Domain Introduction}
 	\begin{itemize}
-		\item Our work falls into the Inverse Reinforcement Learning (IRL) category since we assume access to model dynamics
-		\item We do not attempt to learn the expert's reward function
-		\item Instead, we aim to learn a policy that minimizes the regret with respect to the \emph{worst case expert} consistent with the demonstrations $D_e$
+		\item We do not attempt to learn the experts' reward function
+		\item We don't even estimate the experts' behavior
+		\item minimize the regret with respect to the \emph{worst case expert} consistent with the demonstrations $D_e$
 	\end{itemize}
 \end{frame}
 
@@ -190,8 +192,8 @@ Two approaches to learning from demonstrations:
 \begin{frame}
 	\frametitle{Domain Introduction}
 	\begin{itemize}
-		\item In addition to the MDP, we are given a matrix of features $\Phi \in \Real^{\mathcal{S}\mathcal{A} \times k}$
-		\item Features are typically constructed by human experts and enable generalization across unseen states
+		\item Matrix of features $\Phi \in \Real^{\mathcal{S}\mathcal{A} \times k}$
+		\item Enable generalization across unseen states
 		\item We are also given a dataset of state, action pairs $D_e$ generated by some expert policy $\pi_e$. \[ D_e = (s_i, \pi_e(s_i))_{i=1}^N \]
 		\item Notice we make no assumptions on the state visitation frequency of the expert,
 			the expert may choose to show us only a subset of the state space
