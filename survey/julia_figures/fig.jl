@@ -6,16 +6,21 @@ using Distributions
 
 # Define the distributions
 d1 = Normal(0, 1)
+m1 = mean(d1)
 d2 = Normal(0, 2)
-d3 = Cauchy(0, 0.5)
+m2 = mean(d2)
+d3 = Laplace(0, 1)
+m3 = mean(d3)
 
 # Plot all three
-@show mean(d1)
-plot(pdf(d1, -5:0.01:5), label="", lw=2, color=:purple, fillrange=0, fillalpha=0.3, fillcolor=:purple)
+# Vertical lines at the mean
+range = -5:0.01:5
+plot(range, pdf(d1, range), label="", lw=2, color=:purple, fillrange=0, fillalpha=0.3, fillcolor=:purple)
+vline!([m1], label="", color=:purple, lw=2)
 savefig("normal.pdf")
-@show mean(d2)
-plot(pdf(d2, -5:0.01:5), label="", lw=2, color=:green, fillrange=0, fillalpha=0.3, fillcolor=:green)
+plot(range, pdf(d2, range), label="", lw=2, color=:green, fillrange=0, fillalpha=0.3, fillcolor=:green)
+vline!([m2], label="", color=:green, lw=2)
 savefig("normal_wide.pdf")
-@show mean(d3)
-plot(pdf(d3, -5:0.01:5), label="", lw=2, color=:blue, fillrange=0, fillalpha=0.3, fillcolor=:blue)
-savefig("cauchy.pdf")
+plot(range, pdf(d3, range), label="", lw=2, color=:blue, fillrange=0, fillalpha=0.3, fillcolor=:blue)
+vline!([m3], label="", color=:blue, lw=2)
+savefig("laplace.pdf")

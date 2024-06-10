@@ -38,6 +38,10 @@
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
+\newcommand{\cvar}{\text{CVaR}}
+\newcommand{\cvaralpha}{\text{CVaR}_\alpha}
+\newcommand{\var}{\text{VaR}}
+\newcommand{\varalpha}{\text{VaR}_\alpha}
 
 
 \theoremstyle{plain}
@@ -67,6 +71,21 @@
 
 \maketitle
 
+\section{Introduction}
+
+Reinforcement learning (RL) is a powerful framework for developing agents that can learn to make decisions in complex, uncertain environments.
+The core goal of RL is to tractably compute an optimal policy for acting in such an environment. A key challenge in RL is 
+that the environment is often stochastic, and the agent may have only partial observability. 
+Choosing an objective function that accurately captures the desired behavior of the agent is a difficult task.
+
+We would hope the objective that an RL agent aims to optimize would consider the "risk" of the actions it takes.
+One first needs to consider how to quantify risk into a numerical value. A value that encapsulates the uncertainty of the outcome of an action,
+so that an agent can distinguish between actions that are risky and those that are safe.
+
+There is a vast field of research that focuses on developing risk measures.
+The goal of a risk measure is to quantify the uncertainty of a random variable, often while being interpretable and computationally tractable.
+The intersections of risk and reinforcement learning is the topic of this review, where we will explore the field of risk-averse reinforcement learning.
+
 \section{Risk and Reward}
 
 \begin{definition}[Risk Measure]
@@ -79,11 +98,29 @@
         \end{enumerate}
 \end{definition}
 
+\begin{definition}[Variance]
+        \label{def:variance}
+        The variance of a random variable $X$ is defined as 
+        $$\text{Var}(X) = \mathbb{E}[(X - \mathbb{E}[X])^2].$$
+\end{definition}
+
 \begin{definition}[Expectation]
         \label{def:expectation}
         A common risk measure is the expectation of a random variable. Given a random variable $X: \Omega \to \Real$, the expectation of $X$ is defined as
         $$\mathbb{E}[X] = \sum_{\omega \in \Omega} X(\omega) P(\omega).$$
 \end{definition}
+
+\begin{definition}[Value at Risk (Var)]
+        The Value-at-Risk (VaR) of a random variable $X$ at risk-level $\alpha$ is defined as
+        $$\varalpha(X) = \inf \left\{ t \in \Real \mid P(X \leq t) \geq \alpha \right\}.$$
+\end{definition}
+
+\begin{definition}[Conditional Value-at-Risk (CVaR)]
+        \label{def:cvar}
+        The Conditional Value-at-Risk (CVaR) of a random variable $X$ at risk-level $\alpha$ is defined as
+        $$\cvaralpha(X) = \min_{t \in \Real} \left\{ t + \frac{1}{1 - \alpha} \mathbb{E}[(X - t)_+] \right\}.$$
+\end{definition}
+
 
 \begin{figure}[ht!]
         \begin{subfigure}[t]{0.5\textwidth}
@@ -100,11 +137,13 @@
         \end{subfigure}
         \begin{subfigure}[t]{1.0\textwidth}
                 \centering
-                \includegraphics[width=0.4\linewidth]{julia_figures/cauchy.pdf}
+                \includegraphics[width=0.4\linewidth]{julia_figures/laplace.pdf}
 
-                \caption{$\mathcal{C}(0,0.5)$}
-                \label{fig:cauchy_tight}
+                \caption{$\mathcal{L}(0,1)$}
+                \label{fig:laplace}
         \end{subfigure}
+        \caption{Probability Density Functions of Various Distributions. All with a shared mean of 0.}
+        \label{fig:pdfs}
 \end{figure}
 
 \section{Vanilla Reinforcement Learning}
