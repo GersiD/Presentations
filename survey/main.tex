@@ -27,14 +27,15 @@
 \usepackage{algpseudocode}
 \usepackage{tikz}
 \usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{dsfont}
+\usepackage{bbm}
+
 
 \bibliographystyle{abbrvnat}
 \usepackage[framemethod=default]{mdframed}
 
 \renewcommand{\cite}{\citep}
-
-%\mathtoolsset{showonlyrefs}     % Only number equations that are referenced (optional)
-\usepackage{bbm}
 
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Output:}}
@@ -85,6 +86,25 @@ so that an agent can distinguish between actions that are risky and those that a
 There is a vast field of research that focuses on developing risk measures.
 The goal of a risk measure is to quantify the uncertainty of a random variable, often while being interpretable and computationally tractable.
 The intersections of risk and reinforcement learning is the topic of this review, where we will explore the field of risk-averse reinforcement learning.
+
+\section{Preliminaries}
+
+In order to introduce the concepts of risk-averse reinforcement learning, we first need to define some basic concepts in probability theory and reinforcement learning.
+
+We adopt the common notation that $\Delta^n$ denotes the $n$-dimensional simplex. For two sets $A$ and $B$, $A^B$ denotes the set of all functions from $B$ to $A$.
+For a set $A$, $|A|$ denotes the cardinality of $A$[].
+
+The enviornment is a Markov Decision Process (MDP) defined by a tuple $\mathcal{M} = (\mathcal{S}, \mathcal{A}, \mathcal{P}, r, \gamma)$ where
+\begin{itemize}
+        \item $\mathcal{S}$ is the state space,
+        \item $\mathcal{A}$ is the action space,
+        \item $\mathcal{P} : \mathcal{S} \times \mathcal{A} \to \Delta^\mathcal{S}$ is the transition probability function,
+        \item $r : \mathcal{S} \times \mathcal{A} \to \Real$ is the reward function,
+        \item $\gamma \in [0, 1$ is the discount factor.
+\end{itemize} 
+Finally, we define the set of all deterministic policies $\Pi_D = \mathcal{A}^\mathcal{S}$. 
+And the set of all randomized policies $\Pi_R = [\Delta^\mathcal{A}]^\mathcal{S}$.
+We encourage the reader to refer to~\cite{Puterman1994} for a more detailed introduction to MDPs.
 
 \section{Risk and Reward}
 
@@ -148,6 +168,11 @@ The intersections of risk and reinforcement learning is the topic of this review
 
 \section{Vanilla Reinforcement Learning}
 
+In order to make decisions one must adopt a policy which prescribes the agent's behavior.
+A policy is a mapping from states to actions, and the goal of reinforcement learning is to find an optimal policy that maximizes the expected return.
+Policies may depend on time, and the agent may have a horizon of $T$ time steps to act. 
+In this paper we assume a finite horizon, with each $s \in S$ having a time component, thus we omit the subscript $t$ on all variables for simplicity.
+
 \begin{definition}[Finite Horizon Expected Return]
         Given a policy $\pi : \mathcal{S} \to \Delta^\mathcal{A}$ the expected finite horizon discounted return $\rho(\pi)$ can be defined as
         $$\rho(\pi) = \mathbb{E}_{\pi, \mathcal{P}} \left[ \sum_{t=0}^{T} \gamma^t r(s_t, \pi(s_t)) \right].$$
@@ -158,12 +183,22 @@ The intersections of risk and reinforcement learning is the topic of this review
         \label{def:rl_obj}
         The objective of reinforcement learning (RL) is as follows
         $$\max_{\pi \in \Pi} \rho(\pi).$$
-        Where $\Pi = \left\{ \pi \in \mathcal{S} \to \Delta^\mathcal{A}  \right\}$.
-        In practice, one is most concerned with the optimal policy $\pi^* = \argmax_{\pi \in \Pi} \rho(\pi)$.
 \end{definition}
+
+\begin{definition}[Optimal Policy]
+        \label{def:optimal_policy}
+        An optimal policy $\pi^* \in \argmax_{\pi \in \Pi} \rho(\pi)$.
+\end{definition}
+
+Notice in \ref{def:optimal_policy} that the optimal policy may not be unique, 
+as there may be multiple policies that achieve the same expected return. 
+In practice, other methods such as entropy are used to score policies that are otherwise equivalent for interpretability.
+
 
 \section{Risk-Averse Reinforcement Learning}
 
 \section{Methods}
+
+\bibliography{main.bib}
 
 \end{document}
