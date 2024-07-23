@@ -1,0 +1,58 @@
+\begin{frame}{\hspace{6cm}Uncertain Models}
+        \vspace{0.5cm}
+
+   
+   	   %\begin{textblock}{0.05}(0.02, 0.1)
+          	\begin{figure}
+			       % \centering
+                   \begin{tikzpicture}[font=\small,node distance=20mm]
+                   \node[initial, inner sep=0pt] (mild) at (0,2.5)
+                    {\includegraphics[width=.99\textwidth]{fig/moderate.png}};
+                   \node[inner sep=0pt] (moderate) at (2.5,0)
+                    {\includegraphics[width=.99\textwidth]{fig/mild.png}};
+                    \node[inner sep=0pt] (severe) at (2.5,5)
+                    {\includegraphics[width=.99\textwidth]{fig/severe.png}};
+                                      
+                   \path[->,draw=red,style=dashed,very thick] (mild) to  [in=225,out=45,loop, distance=1.5cm,color=red] node[auto,above,label={[xshift=-0.8cm, yshift=-0.8cm](B,-4)}] {} (severe);
+                    \path[->,draw=red,style=dashed,very thick] (severe) to  [in=135,out=90,loop, distance=1.5cm,color=red] node[auto,above,label={[xshift=0.8cm, yshift=-0.3cm](B,-2)}] {} (severe);
+                    \path[->,draw=red,style=dashed,very thick] (severe) to  [in=0,out=0,loop, distance=1.5cm,color=red] node[auto,above,label={[xshift=0.4cm, yshift=-0.3cm](A,4)}] {} (moderate);
+                   \path[->,draw=red,style=dashed,very thick] (mild) to  [in=135,out=315,loop,distance=1.5cm,color=red] node[auto,above,label={[xshift=0.3cm, yshift=-0.1cm](A,0)}] {} (moderate);
+                   \path[->,draw=red,style=dashed,very thick] (moderate) to  [in=270,out=90,loop,distance=1.5cm,color=red] node[auto,above,label={[xshift=0.5cm, yshift=-0.1cm](A,-2)}] {} (severe);
+                   \path[->,draw=red,style=dashed,very thick] (moderate) to  [in=270,out=180,loop,distance=1.5cm,color=red] node[auto,above,label={[xshift=-0.8cm, yshift=-0.1cm](B,2)}] {} (mild);
+                  
+                   \end{tikzpicture}
+            	\end{figure}
+    	    %\end{textblock} 
+   
+   
+	   % \begin{textblock}{0.05}(0.55, 0.1)
+    %       	\begin{figure}
+			 %        \centering
+    %                \begin{tikzpicture}[font=\small,node distance=20mm]
+    %                \node[initial, inner sep=0pt] (mild) at (0,2.5)
+    %                   {\includegraphics[width=.99\textwidth]{figs/moderate.png}};
+    %                \node[inner sep=0pt] (moderate) at (2.5,0)
+    %                  {\includegraphics[width=.99\textwidth]{figs/mild.png}};
+    %                 \node[inner sep=0pt] (severe) at (2.5,5)
+    %                 {\includegraphics[width=.99\textwidth]{figs/severe.png}};
+                                      
+    %                \path[->,draw=black,style=solid,very thick] (mild) to  [in=225,out=45,loop, distance=1.5cm,color=black] node[auto,above,label={[xshift=-0.8cm, yshift=-0.8cm](A,-6)}] {} (severe);
+    %                 \path[->,draw=black,style=solid,very thick] (severe) to  [in=135,out=90,loop, distance=1.5cm,color=black] node[auto,above,label={[xshift=0.8cm, yshift=-0.3cm](A,-4)}] {} (severe);
+    %                 \path[->,draw=black,style=solid,very thick] (severe) to  [in=0,out=0,loop, distance=1.5cm,color=black] node[auto,above,label={[xshift=0.4cm, yshift=-0.3cm](B,1)}] {} (moderate);
+    %                \path[->,draw=black,style=solid,very thick] (mild) to  [in=135,out=315,loop,distance=1.5cm,color=black] node[auto,above,label={[xshift=0.3cm, yshift=-0.1cm](B,1)}] {} (moderate);
+    %                \path[->,draw=black,style=solid,very thick] (moderate) to  [in=270,out=90,loop,distance=1.5cm,color=black] node[auto,above,label={[xshift=0.5cm, yshift=-0.1cm](A,-2)}] {} (severe);
+    %                \path[->,draw=black,style=solid,very thick] (moderate) to  [in=270,out=180,loop,distance=1.5cm,color=black] node[auto,above,label={[xshift=-0.8cm, yshift=-0.1cm](B,1)}] {} (mild);
+                  
+    %                \end{tikzpicture}
+    %         	\end{figure}
+    % 	    \end{textblock} 
+    	    
+    %     \begin{textblock}{0.5}(0.02, 0.2)
+    % 	    \textbf{\textcolor{red}{Model 1}}
+    % 	    \end{textblock} 
+    	    
+    	        	    
+    %     \begin{textblock}{0.5}(0.62, 0.2)
+    % 	    \textbf{\textcolor{black}{Model 2}}
+    % 	    \end{textblock} 
+\end{frame}

@@ -1,0 +1,29 @@
+\begin{block}{Error Bound}
+
+ \begin{itemize}
+    \item  \alert{Main idea}: Never decrease the return of the current policy.
+  \vspace{0.2cm}
+    \item  \textbf{Theorem 5.1:}Suppose that Algorithm 2generates a policy $\pi^n=(\pi_t^n)^T_{t=1}$ at an iteration $n$, then \( \rho(\pi^{n}) \geq \rho(\pi^{n-1}).
+     \)
+   % \vspace{0.2cm}
+    \item \textbf{Corollary 5.2}.Algorithm 2 terminates in a finite number of iterations. 
+     \vspace{0.5cm}
+ \end{itemize}   
+
+ \begin{itemize}
+     \item \alert{Main idea}: No guarantee for computing Markov policies to achieve sublinear regret.\\
+     \vspace{0.2cm}
+     \item \textbf{Regret:} The regret of a policy $\pi$ is defined as the average performance loss with respect to the best possible policy:
+     \[
+     R_T(\pi) = \max_{\bar\pi \in \Pi_H}\rho_T(\bar\pi) - \rho_T(\pi),
+     \]
+    where $\Pi_{H}$ is the set of all history-dependent randomized policies and $\rho_T$ is the return for the horizon of length $T$. 
+    %\vspace{0.2cm}
+    \item \textbf{Theorem 5.3},   There exists an MMDP for which no Markov policy achieves sub-linear regret. That is, there exists no $\pi\in \Pi$, $c>0$, and $t'>0$ such that
+     \[
+       R_t(\pi) \le c\cdot t \quad \text{for all} \quad  t \ge t'\,.
+      \]
+
+
+\end{itemize}
+\end{block}

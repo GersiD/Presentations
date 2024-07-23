@@ -1,0 +1,25 @@
+\begin{block}{Summary}
+\alert{Motivation}
+\begin{itemize}
+     \item Compute policies that are robust to parameter uncertainty is
+     very important in many domains, like health care, inventory control or finance.
+    % \item Decision makers
+    \item Seek policies that maximize the expected return over a distribution of MDP models 
+     \end{itemize}
+\alert{Limitations of existing  methods}
+\begin{itemize}
+    \item Reliance on $\hat{u}_e$ leads to covariate shift for off-policy datasets.
+    \item Inability to specify reliance on $\hat{u}_e$.
+    \item No guarantees of policy convergence to $u_e$.
+\end{itemize}
+\alert{Our contributions}
+\begin{itemize}
+     \item New algorithm for robust offline imitation learning.
+     \item Guaranteed convergence to the optimal policy for tabular domains.
+     \item Flexibility to define the reliance on $\hat{u}_e$.
+\end{itemize}
+\end{block}
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End: 

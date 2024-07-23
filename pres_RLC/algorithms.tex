@@ -1,0 +1,60 @@
+
+
+%\begin{block}{Coordinate Ascent Dynamic Programming(CADP)}
+\begin{block}{\normalsize {Coordinate Ascent Dynamic Programming (CADP)} }
+\vspace{0.2cm}
+\begin{itemize}
+    \item \alert{Main idea}: Combine coordinate ascent method and DP to solve MMDPs.
+    \vspace{0.2cm}
+      \item \alert{Corresponds to}: Replace the fixed model weights \alert{$\lambda_m $} in WSU by adjustable weights  \alert{$b_{t,m}^{\pi}$ }
+    \vspace{0.2cm}
+     \item  Blue dotted rectangle is to compute an initial policy (for example by WSU, MVP)
+   \vspace{0.5cm}
+    
+\begin{tikzpicture}[node distance=3cm]
+    
+\node (start) [startstop,xshift=-3cm] {Start};
+\node (in1) [io, right of=start, xshift=1cm,text width=2.5cm] {MMDP,$\lambda$, n = 0};
+\node (pro1) [process, right of=in1, xshift=1.5cm,text width=2.5cm] {Compute a policy $\pi^n$};
+\node (pro2) [process, right of=pro1,xshift=1cm,text width=2.5cm] {Adjust model weight $b^{\pi^n}$};
+\node (pro3) [process, below of=pro2,yshift=-0.5cm] {Compute a policy $\pi^{n+1}$};
+\node (dec1) [decision, below of=pro3, yshift=-1.5cm,text width=3cm] {
+$\rho(\pi^{n+1}) = \rho(\pi^n)$?};
+\node (pro2b) [process, right of=dec1, xshift=3cm,text width=3.5cm] {n $\gets$ n+1, $\pi^n$};
+\node (out1) [io, left of=dec1, xshift=-3.5cm] {Policy $\pi^{n+1}$};
+\node (stop) [startstop, left of=out1, xshift=-1.5cm] {Stop};
+
+\draw [decoration={markings,mark=at position 1 with
+    {\arrow[scale=4,>=stealth]{>}}},postaction={decorate}] (start) -- (in1);
+\draw [decoration={markings,mark=at position 1 with
+    {\arrow[scale=4,>=stealth]{>}}},postaction={decorate}]  (in1) -- (pro1);
+\draw [decoration={markings,mark=at position 1 with
+    {\arrow[scale=4,>=stealth]{>}}},postaction={decorate}]  (pro1) -- (pro2);
+\draw [decoration={markings,mark=at position 1 with
+    {\arrow[scale=4,>=stealth]{>}}},postaction={decorate}] (pro2) -- (pro3);
+\draw [decoration={markings,mark=at position 1 with
+    {\arrow[scale=4,>=stealth]{>}}},postaction={decorate}]  (pro3) -- (dec1);
+\draw [decoration={markings,mark=at position 1 with
+    {\arrow[scale=4,>=stealth]{>}}},postaction={decorate}] (dec1) -- node[anchor=south] {yes} (out1);
+\draw [decoration={markings,mark=at position 1 with
+    {\arrow[scale=4,>=stealth]{>}}},postaction={decorate}]  (dec1) -- node[anchor=south] {no} (pro2b);
+\draw [decoration={markings,mark=at position 1 with
+    {\arrow[scale=4,>=stealth]{>}}},postaction={decorate}] (pro2b) |- (pro2);
+\draw [decoration={markings,mark=at position 1 with
+    {\arrow[scale=4,>=stealth]{>}}},postaction={decorate}]  (out1) -- (stop);
+\draw [dotted,blue, very thick] (-1.5,2.0) -- (7.3,2.0);
+\draw [dotted,blue, very thick] (-1.5,-2) -- (7.3,-2);
+\draw [dotted,blue, very thick] (-1.5,2.0) -- (-1.5,-2);
+\draw [dotted,blue, very thick] (7.3,-2) -- (7.3,2.0);
+
+\end{tikzpicture}
+
+\end{itemize}
+\vspace{0.3cm}
+\end{block}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "poster"
+%%% End:
