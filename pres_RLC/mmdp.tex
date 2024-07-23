@@ -7,19 +7,16 @@
   \vspace{0.15cm}
 \end{block}
 
-\begin{block}{\normalsize{Multi-model Markov Decision Processes (MMDPs)}}
-    \begin{center}
-    \includegraphics[width=0.83\linewidth]{fig/mmdps.png}
-  \end{center}
- 
+\begin{block}{\normalsize{Inverse Reinforcement Learning (IRL)}}
   \begin{itemize}
-     \item Mean return across the uncertain true models
+     \item Given a dataset of expert demonstrations and an MDP model without a reward function, IRL aims to learn a policy $\pi$ 
+       from a dataset of expert demonstrations $D_e = \{ s_i, a_i, r_i \}_{i=0}^{N}$.
      \[
-       \rho(\pi)= \mathbb{E}^{\lambda} \left[  \mathbb{E}^{\pi,p^{\tilde{m}},\mu} \left[ \sum_{t=1}^{T}  r_{t}^{\tilde{m}}(\tilde{s}_{t},\tilde{a}_{t}) \mid \tilde{m} \right] \right]  \quad\quad(1).  
+       \rho(\pi, r) = \lim_{T \to \infty} \mathbb{E}^{\pi, p_0} \lbrack \sum_{t=0}^{T} \gamma^t r(\tilde{s}_t, \pi(\tilde{s}_t)) \rbrack
      \]
-     \item Optimal policy $\rho^* $
+     \item Optimal policy $\pi^* $
      \[
-      \rho^* = \max_{\pi \in \Pi}\rho(\pi).
+       \pi^* = \argmin_{\pi \in \Pi} \max_{\pi_e \in \Pi} \max_{r \in \mathcal{R}} \rho(\pi_e, r) - \rho(\pi, r)
      \]
     
 \end{itemize}
