@@ -56,31 +56,12 @@
 
 \section*{Intro}
 
-\begin{frame}
-	\frametitle{Imitation Learning}
-	\centering
-	\begin{minipage}{0.9\linewidth}
-		\begin{figure}
-			\centering
-			\includegraphics[width=\linewidth]{plots/rainbow_road.jpeg}
-			\caption{Super Mario Kart 64 Rainbow Road}
-		\end{figure}
-	\end{minipage}
-\end{frame}
 
 \begin{frame}
-	\frametitle{Imitation Learning}
-	\textbf{Objective}: Learn a policy from expert demonstrations
+	\frametitle{Prerequisites for This Talk}
 	\begin{itemize}
-	\item Health care: automating and improving ER care
-	\item Robotics: self-driving cars, manufacturing, etc.
-	\item Retail: recommendation systems, customer service
-	
-	\end{itemize}
-	\vfill
-	\textbf{Offline IL}: Given fixed dataset of expert demonstrations
-	\begin{itemize}
-		\item No interaction with the environment
+		\item \emph{Markov Decision Process (MDP)}: A tuple $(\mathcal{S}, \mathcal{A}, \mathcal{P}, p_0, \gamma)$
+		\item \emph{Occupancy Frequency}: A function $u : \mathcal{S} \times \mathcal{A} \to \Real$ that represents the discounted joint probability of being in state $s$ and taking action $a$
 	\end{itemize}
 \end{frame}
 
@@ -387,3 +368,4 @@ Two approaches to learning from demonstrations:
 \end{frame}
 
 \end{document} 
+
