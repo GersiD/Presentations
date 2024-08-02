@@ -6,9 +6,9 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{mathtools}
-\usepackage{pgf}
-\usepackage{pgfplots}
-\usepackage{tikz}
+%\usepackage{pgf}
+%\usepackage{pgfplots}
+%\usepackage{tikz}
 \usepackage{booktabs}
 \usepackage{siunitx}
 \usepackage{natbib}
@@ -20,7 +20,7 @@
 \usepackage{bbm}
 
 
-\usetikzlibrary{arrows,automata,backgrounds,positioning,decorations,intersections,matrix}
+%\usetikzlibrary{arrows,automata,backgrounds,positioning,decorations,intersections,matrix}
 
 % *** Styles ***
 \usetheme{Singapore}
@@ -67,12 +67,26 @@
 \begin{frame}
 \frametitle{Why Imitation Learning?}
 	\begin{itemize}
-		\item Models are hard to specify
-		\item Even harder to solve
+		\item RL requires Rewards 
+		\vfill
+    \item Rewards are hard to specify
+		\vfill
 		\item Often have access to expert demonstrations
-		\item Usually don't have access to a simulator
+		\vfill
+		\item Imitation Learning: Learn from demonstrations
 	\end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Inverse Reinforcement Learning}
+    \begin{itemize}
+      \item Leverage model dynamics to reduce sample complexity
+      \vfill
+      \item Occupancy Frequency matching (BC)
+      \vfill 
+      \item IRL: Learn reward functions from demonstrations
+    \end{itemize}
+  \end{frame}
 
 \begin{frame}
 	\frametitle{This Talk}
@@ -129,52 +143,51 @@
   \begin{center}
   \begin{minipage}{0.45\linewidth}
     \centering
+    \textbf{On-Policy}
     \includegraphics[width=\linewidth]{../../pres_roil/plots/returns/40x40_gridworld_on_policy_returns.pdf}
-    \subcaption{On-Policy}
   \end{minipage}
   \hspace{0.05\linewidth}
   \begin{minipage}{0.45\linewidth}
     \centering
+    \textbf{Off-Policy}
     \includegraphics[width=\linewidth]{../../pres_roil/plots/returns/40x40_gridworld_off_policy_returns.pdf}
-    \subcaption{Off-Policy}
   \end{minipage}
   \end{center}
-\caption{Returns of All Methods on 40x40 Gridworld}
 \end{figure}
 \end{frame}
 
-\begin{frame}
-\frametitle{Regret Comparison}
+% \begin{frame}
+% \frametitle{Regret Comparison}
 
- \[ Regret(\pi) = \max_{\pi_e \in \Pi_R(D_e)} \max_{w \in \mathcal{W}} \rho(\pi_e, \Phi w) - \rho(\pi, \Phi w)\]
+%  \[ Regret(\pi) = \max_{\pi_e \in \Pi_R(D_e)} \max_{w \in \mathcal{W}} \rho(\pi_e, \Phi w) - \rho(\pi, \Phi w)\]
 
-\begin{figure}
-  \begin{center}
-  \begin{minipage}{0.45\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{../../pres_roil/plots/regrets/40x40_gridworld_on_policy_regret_regrets.pdf}
-    \subcaption{On-Policy}
-  \end{minipage}
-  \hspace{0.05\linewidth}
-  \begin{minipage}{0.45\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{../../pres_roil/plots/regrets/40x40_gridworld_off_policy_regret_regrets.pdf}
-    \subcaption{Off-Policy}
-  \end{minipage}
-  \end{center}
-\caption{Regret of All Methods on 40x40 Gridworld}
-\end{figure}
+% \begin{figure}
+%   \begin{center}
+%   \begin{minipage}{0.47\linewidth}
+%     \centering
+%     \textbf{On-Policy}
+%     \includegraphics[width=\linewidth]{../../pres_roil/plots/regrets/40x40_gridworld_on_policy_regret_regrets.pdf}
+%   \end{minipage}
+%   \begin{minipage}{0.47\linewidth}
+%     \centering
+%     \textbf{Off-Policy}
+%     \includegraphics[width=\linewidth]{../../pres_roil/plots/regrets/40x40_gridworld_off_policy_regret_regrets.pdf}
+%   \end{minipage}
+%   \end{center}
+% \end{figure}
 
-\end{frame}
+% \end{frame}
 
 \section*{Conclusion}
 
 \begin{frame}
 	\frametitle{Conclusion}
 	\begin{itemize}
-		\item We propose ROIL, which avoids estimating the experts' occupancy frequency.
-		\item We show that our approach outperforms existing methods in environments with high covariate shift.
-		\item ROIL is guaranteed to find a policy that minimizes the worst case regret.
+    \item Need \emph{off-policy} IRL
+    \vfill
+    \item Existing methods fail
+    \vfill
+		\item ROIL outperforms in \emph{off-policy} settings
 	\end{itemize}
 \end{frame}
 
