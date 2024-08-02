@@ -1,22 +1,14 @@
-
 \begin{block}{\normalsize{Inverse Reinforcement Learning (IRL)}}
-  \begin{itemize}
-     \item Given a dataset of expert demonstrations and an MDP model without a reward function, IRL aims to learn a policy $\pi$ 
-       from a dataset of expert demonstrations $D_e = \{ s_i, a_i, r_i \}_{i=0}^{N}$.
      \[
        \rho(\pi, r) = \lim_{T \to \infty} \mathbb{E}^{\pi, p_0} \lbrack \sum_{t=0}^{T} \gamma^t r(\tilde{s}_t, \pi(\tilde{s}_t)) \rbrack
      \]
-     \item Optimal policy $\pi^* $
-     \[
-       \pi^* = \argmin_{\pi \in \Pi} \max_{\pi_e \in \Pi} \max_{r \in \mathcal{R}} \rho(\pi_e, r) - \rho(\pi, r)
+     \[ 
+       \pi^*_{IRL} = \argmin_{\pi \in \Pi} \max_{r \in \mathcal{R}} \rho(\hat{\pi}_e, r) - \rho(\pi, r)
      \]
-    
-\end{itemize}
+     \[
+       \pi^*_{ROIL} = \argmin_{\pi \in \Pi} \max_{\pi_e \in \Pi} \max_{r \in \mathcal{R}} \rho(\pi_e, r) - \rho(\pi, r)
+     \]
 \end{block}
-
-
-
-
 
 %%% Local Variables: 
 %%% mode: latex
