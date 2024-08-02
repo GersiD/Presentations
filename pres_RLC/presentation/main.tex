@@ -69,7 +69,7 @@
 	\begin{itemize}
 		\item RL requires Rewards 
 		\vfill
-    \item Rewards are hard to specify
+		\item Rewards are hard to specify
 		\vfill
 		\item Often have access to expert demonstrations
 		\vfill
@@ -79,14 +79,33 @@
 
 \begin{frame}
   \frametitle{Inverse Reinforcement Learning}
-    \begin{itemize}
-      \item Leverage model dynamics to reduce sample complexity
-      \vfill
-      \item Occupancy Frequency matching (BC)
-      \vfill 
-      \item IRL: Learn reward functions from demonstrations
-    \end{itemize}
-  \end{frame}
+  \begin{itemize}
+    \item Leverage model dynamics to reduce sample complexity
+    \vfill
+    \item Occupancy Frequency matching (BC)
+    \vfill 
+    \item IRL: Learn reward functions from demonstrations
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Inverse Reinforcement Learning}
+\begin{figure}
+  \begin{center}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \textbf{$u_e$}
+    \includegraphics[width=\linewidth]{../../pres_roil/plots/all_state/ue.pdf}
+  \end{minipage}
+  \hspace{0.05\linewidth}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \textbf{$\hat{u}_e$}
+    \includegraphics[width=\linewidth]{../../pres_roil/plots/all_state/uehat.pdf}
+  \end{minipage}
+  \end{center}
+\end{figure}
+\end{frame}
 
 \begin{frame}
 	\frametitle{This Talk}
@@ -106,39 +125,16 @@
 \end{frame}
 
 \begin{frame}
-\begin{figure}
+  \vfill
   \begin{center}
-  \begin{minipage}{0.45\linewidth}
-    \centering
-	\includegraphics[width=\textwidth]{../../pres_roil/plots/visual_U.pdf}
-
-    \subcaption{Set of all Occupancy Frequencies}
-  \end{minipage}
-  \hspace{0.05\linewidth}
-  \begin{minipage}{0.45\linewidth}
-    \centering
-	\includegraphics[width=\textwidth]{../../pres_roil/plots/visual_U_and_Upsilon.pdf}
-
-    \subcaption{Set of consistent Occupancy Frequencies}
-  \end{minipage}
+	  \includegraphics[width=0.95\textwidth, height=0.85\textheight]{../../pres_roil/plots/visual_solve_cheb.pdf}
   \end{center}
-\caption{Visual Representation of the Sets $\mathcal{U}$ and $\Upsilon$}
-\end{figure}
-
-\end{frame}
-
-\begin{frame}
-	\begin{center}
-		\includegraphics[width=\textwidth, height=\textheight]{../../pres_roil/plots/visual_solve_cheb.pdf}
-	\end{center}
 \end{frame}
 
 \section*{Experiments}
 
-
 \begin{frame}
 \frametitle{40x40 Gridworld}
-
 \begin{figure}
   \begin{center}
   \begin{minipage}{0.45\linewidth}
@@ -191,6 +187,4 @@
 	\end{itemize}
 \end{frame}
 
-
 \end{document} 
-
