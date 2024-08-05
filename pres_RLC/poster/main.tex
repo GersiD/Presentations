@@ -112,20 +112,89 @@ fill=green!30]
 \begin{columns}[t]
 % ===== COLUMN 1 ==========
   \begin{column}{0.3\linewidth}
-    \input{intro}
-    \input{irl}
-    \input{prev_work}
+    \begin{block}{Summary}
+    \alert{Motivation}
+    \begin{itemize}
+        \item Learning from data in a robust offline way is important in many fields, like health care, robotics or finance.
+    \end{itemize}
+    \alert{Limitations of existing  methods}
+    \begin{itemize}
+        \item Reliance on $\hat{u}_e$ leads to covariate shift for off-policy datasets.
+        \item Inability to specify reliance on $\hat{u}_e$.
+        \item No guarantees of policy convergence to $u_e$ even when every state is visited.
+    \end{itemize}
+    \alert{Our contributions}
+    \begin{itemize}
+        \item New algorithm for robust offline imitation learning.
+        \item Guaranteed convergence to the optimal policy for tabular domains.
+        \item Flexibility to define the reliance on $\hat{u}_e$.
+    \end{itemize}
+    \end{block}
+
+    \begin{block}{\normalsize{Inverse Reinforcement Learning (IRL)}}
+        \[
+          \rho(\pi, r) = \lim_{T \to \infty} \mathbb{E}^{\pi, p_0} \lbrack \sum_{t=0}^{T} \gamma^t r(\tilde{s}_t, \pi(\tilde{s}_t)) \rbrack
+        \]
+        \[ 
+          \pi^*_{IRL} = \argmin_{\pi \in \Pi} \max_{r \in \mathcal{R}} \rho(\hat{\pi}_e, r) - \rho(\pi, r)
+        \]
+        \[
+          \pi^*_{ROIL} = \argmin_{\pi \in \Pi} \max_{\pi_e \in \Pi} \max_{r \in \mathcal{R}} \rho(\pi_e, r) - \rho(\pi, r)
+        \]
+    \end{block}
+
+    \begin{block}{\normalsize {Previous Work} }
+      \begin{itemize}
+        \item \textbf{LPAL}
+      \item \textbf{MILO}
+      \item \textbf{GAIL}
+      \item \textbf{BROIL}
+      \end{itemize}
+    \end{block}
   \end{column}
   
 % ===== COLUMN 2 ==========
   \begin{column}{0.3\linewidth}
-    \input{visual}
-    \input{lp}
+    \begin{block}{Visual Representation of ROIL}
+        \begin{center}
+            \begin{figure}
+                \begin{center}
+                    \includegraphics[width=0.85\textwidth]{../../pres_roil/plots/visual_solve_cheb.pdf}
+                \end{center}
+            \end{figure}
+        \end{center}
+    \end{block}
+
+    \begin{block}{ROIL LP}
+
+    \[ \begin{mprog}
+      \minimize{t \in \Real, u \in \Real^{\mathcal{S} \times \mathcal{A}}} t
+      \stc t \geq -u\tr \Phi w + \max_{v \in \Upsilon} v\tr \Phi w,\quad \forall \; w \in ext(\mathcal{W}),
+            \cs u\in \Upsilon,
+    \end{mprog} \]
+
+    \end{block}
   \end{column}
 
 % ===== COLUMN 3 ==========
   \begin{column}{0.3\linewidth}
-    \input{results}
+    \begin{block}{Gridworld Results}
+        \begin{center}
+            \begin{figure}
+                \includegraphics[]{../../pres_roil/plots/returns/40x40_gridworld_on_policy_returns.pdf}
+                \includegraphics[]{../../pres_roil/plots/returns/40x40_gridworld_off_policy_returns.pdf}
+                \caption{On-policy and off-policy returns (respectively) for 40x40 Gridworld.}
+            \end{figure}
+        \end{center}
+    \end{block}
+    \begin{block}{Regret Results}
+        \begin{center}
+            \begin{figure}
+                \includegraphics[]{../../pres_roil/plots/regrets/40x40_gridworld_on_policy_regret_regrets.pdf}
+                \caption{On-policy regret for 40x40 Gridworld.}
+            \end{figure}
+        \end{center}
+    \end{block}
   \end{column}
 \end{columns}
 \end{frame}
