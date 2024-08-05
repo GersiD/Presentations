@@ -36,7 +36,7 @@
 \setbeamertemplate{footline}[frame number]
 
 \title{ROIL - Robust Offline Imitation Learning}
-\author{Gersi Doko$^1$, Guang Yang$^2$, Daniel S. Brown$^2$, and Marek Petrik$^1$}
+\author{\textbf{Gersi Doko$^1$}, Guang Yang$^2$, Daniel S. Brown$^2$, Marek Petrik$^1$}
 \institute{Department of Computer Science \\ $1$ University of New Hampshire \\ $2$ University of Utah}
 \date{}
 
@@ -67,13 +67,13 @@
 \begin{frame}
 \frametitle{Why Imitation Learning?}
 	\begin{itemize}
-		\item RL requires Rewards 
+		\item RL requires rewards 
 		\vfill
 		\item Rewards are hard to specify
 		\vfill
 		\item Often have access to expert demonstrations
 		\vfill
-		\item Imitation Learning: Learn from demonstrations
+		\item Imitation learning: Learn from demonstrations
 	\end{itemize}
 \end{frame}
 
@@ -82,25 +82,26 @@
   \begin{itemize}
     \item Leverage model dynamics to reduce sample complexity
     \vfill
-    \item Occupancy Frequency matching (BC)
+    \item Aims to match experts occupancy frequency
     \vfill 
-    \item IRL: Learn reward functions from demonstrations
+    \item Sensitive to state distribution
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Inverse Reinforcement Learning}
+\frametitle{Off-Policy IRL}
 \begin{figure}
   \begin{center}
   \begin{minipage}{0.45\linewidth}
     \centering
-    \textbf{$u_e$}
+    \emph{On-Policy}\\
+    \textbf{Expert's Occ Freq $u_e$}
     \includegraphics[width=\linewidth]{../../pres_roil/plots/all_state/ue.pdf}
   \end{minipage}
-  \hspace{0.05\linewidth}
   \begin{minipage}{0.45\linewidth}
     \centering
-    \textbf{$\hat{u}_e$}
+    \emph{Off-Policy}\\
+    \textbf{Estimated Occ Freq $\hat{u}_e$}
     \includegraphics[width=\linewidth]{../../pres_roil/plots/all_state/uehat.pdf}
   \end{minipage}
   \end{center}
@@ -108,11 +109,15 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{This Talk}
-	Computing policies that minimize worst case regret
+	\frametitle{ROIL}
+	\emph{Robust} method for \emph{off-policy} IRL
 
 	\vfill
-	\emph{Key Idea}: Generate a convex set of consistent experts, then formulate and minimize regret
+	\emph{Key Idea}
+  \begin{itemize}
+    \item Generate a convex set of consistent experts
+    \item Formulate and minimize regret
+  \end{itemize}
 \end{frame}
 
 \section*{ROIL}
