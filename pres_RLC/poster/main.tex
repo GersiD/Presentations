@@ -65,45 +65,10 @@
 \usetikzlibrary{overlay-beamer-styles}  % Overlay effects for TikZ
 \usetikzlibrary{arrows,automata}
 
-% ---- for the flow chart----
-\usetikzlibrary{shapes.geometric, arrows}
-\usepackage[absolute,overlay]{textpos}
-\tikzstyle{startstop} = [rectangle, rounded corners, 
-minimum width=2cm, 
-minimum height=1cm,
-text centered, 
-draw=black, 
-fill=red!30]
-
-\tikzstyle{io} = [trapezium, 
-trapezium stretches=true, % A later addition
-trapezium left angle=70, 
-trapezium right angle=110, 
-minimum width=2cm, 
-minimum height=1cm, text centered, 
-draw=black, fill=blue!30]
-
-\tikzstyle{process} = [rectangle, 
-minimum width=3cm, 
-minimum height=1cm, 
-text centered, 
-text width=3cm, 
-draw=black, 
-fill=orange!30]
-
-\tikzstyle{decision} = [diamond, 
-minimum width=3cm, 
-minimum height=1cm, 
-text centered, 
-draw=black, 
-fill=green!30]
-\tikzstyle{arrow} = [thick,->,>=stealth]
-% ---- for the flow chart----
-
 \graphicspath{{fig/}}
  
 \title{ROIL\@: Robust Offline Imitation Learning}
-\author[]{Gersi Doko$^{1}$, Guang Yang$^{2}$, Daniel S. Brown$^{2}$, Marek Petrik$^{1}$}
+\author[]{\textbf{Gersi Doko$^{1}$}, Guang Yang$^{2}$, Daniel S. Brown$^{2}$, Marek Petrik$^{1}$}
 \institute{$^{1}$University of New Hampshire, $^{2}$University of Utah}
   
 \begin{document}
@@ -115,23 +80,43 @@ fill=green!30]
     \begin{block}{Summary}
     \alert{Motivation}
     \begin{itemize}
-        \item Learning from data in a robust offline way is important in many fields, like health care, robotics or finance.
+        \item \textbf{Need better offline IRL methods}
+        \item Learning from data in a robust offline way is important in many fields, like health care, robotics or finance
+        \item Existing methods are not robust to covariate shift
     \end{itemize}
     \alert{Limitations of existing  methods}
     \begin{itemize}
-        \item Reliance on $\hat{u}_e$ leads to covariate shift for off-policy datasets.
-        \item Inability to specify reliance on $\hat{u}_e$.
-        \item No guarantees of policy convergence to $u_e$ even when every state is visited.
+        \item Reliance on $\hat{u}_e$ leads to covariate shift for off-policy datasets
+        \item Inability to specify reliance on $\hat{u}_e$
+        \item \textbf{No guarantees of policy convergence to $u_e$ even when every state is visited}
     \end{itemize}
     \alert{Our contributions}
     \begin{itemize}
-        \item New algorithm for robust offline imitation learning.
-        \item Guaranteed convergence to the optimal policy for tabular domains.
-        \item Flexibility to define the reliance on $\hat{u}_e$.
+        \item New algorithm for robust offline imitation learning
+        \item Guaranteed convergence to the optimal policy for tabular domains
+        \item Flexibility to define the reliance on $\hat{u}_e$
     \end{itemize}
     \end{block}
 
-    \begin{block}{\normalsize{Inverse Reinforcement Learning (IRL)}}
+    \begin{block}{IRL}
+        \begin{itemize}
+            \item Methods that learn a policy from expert demonstrations and a model of the environment
+            \item \textbf{Goal}: Learn a policy that is close to the expert's
+            \item \textbf{On-policy}: State visitation frequency is the same as the expert's
+            \item \textbf{Off-policy}: State visitation frequency is \emph{different} from the expert's
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{\textbf{Not} Occupancy Frequency Matching}
+        \begin{itemize}
+            \item Many methods rely on matching the occupancy frequencies of the expert and the learned policy
+            \item LPAL, GAIL, MILO, ect
+            \item When off-policy, $\hat{u}_e$ is not close to $u_e$
+            \item ROIL avoids this by not relying on $\hat{u}_e$
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Inverse Reinforcement Learning (IRL)}
         \[
           \rho(\pi, r) = \lim_{T \to \infty} \mathbb{E}^{\pi, p_0} \lbrack \sum_{t=0}^{T} \gamma^t r(\tilde{s}_t, \pi(\tilde{s}_t)) \rbrack
         \]
@@ -143,14 +128,14 @@ fill=green!30]
         \]
     \end{block}
 
-    \begin{block}{\normalsize {Previous Work} }
-      \begin{itemize}
-        \item \textbf{LPAL}
-      \item \textbf{MILO}
-      \item \textbf{GAIL}
-      \item \textbf{BROIL}
-      \end{itemize}
-    \end{block}
+    % \begin{block}{\normalsize {Previous Work} }
+    %   \begin{itemize}
+    %     \item \textbf{LPAL}
+    %   \item \textbf{MILO}
+    %   \item \textbf{GAIL}
+    %   \item \textbf{BROIL}
+    %   \end{itemize}
+    % \end{block}
   \end{column}
   
 % ===== COLUMN 2 ==========
@@ -183,7 +168,6 @@ fill=green!30]
             \begin{figure}
                 \includegraphics[]{../../pres_roil/plots/returns/40x40_gridworld_on_policy_returns.pdf}
                 \includegraphics[]{../../pres_roil/plots/returns/40x40_gridworld_off_policy_returns.pdf}
-                \caption{On-policy and off-policy returns (respectively) for 40x40 Gridworld.}
             \end{figure}
         \end{center}
     \end{block}
@@ -191,7 +175,6 @@ fill=green!30]
         \begin{center}
             \begin{figure}
                 \includegraphics[]{../../pres_roil/plots/regrets/40x40_gridworld_on_policy_regret_regrets.pdf}
-                \caption{On-policy regret for 40x40 Gridworld.}
             \end{figure}
         \end{center}
     \end{block}
