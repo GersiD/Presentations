@@ -1,6 +1,6 @@
 \documentclass[final,a0paper]{beamer}
 %\documentclass[final,a1paper]{beamer}
-\mode<presentation>{\usetheme{I6dv} }
+\mode<presentation>{\usetheme{I6dv}}
 
 \usepackage[orientation=landscape,size=a1,scale=1.8]{beamerposter}
 \usepackage{exscale}
@@ -110,7 +110,7 @@
     \begin{block}{\textbf{Not} Occupancy Frequency Matching}
         \begin{itemize}
             \item Many methods rely on matching the occupancy frequencies of the expert and the learned policy
-            \item LPAL, GAIL, MILO, ect
+            \item LPAL, GAIL, MILO, etc.
             \item When off-policy, $\hat{u}_e$ is not close to $u_e$
             \item ROIL avoids this by not relying on $\hat{u}_e$
         \end{itemize}
@@ -127,11 +127,16 @@
           \pi^*_{ROIL} = \argmin_{\pi \in \Pi} \max_{\pi_e \in \Pi} \max_{r \in \mathcal{R}} \rho(\pi_e, r) - \rho(\pi, r)
         \]
     \end{block}
-
-    \begin{block}{Contact}
-        \textbf{Gersi Doko}\\
-        \textbf{Gersi.Doko@unh.edu}
+    \begin{block}{Occupancy Frequencies}
+    \[
+        \mathcal{U}
+        \; =\; 
+        \left\{ u^{\pi} \mid  \pi \in \Pi \right\}
+        \; =\;
+        \Bigl\{ u\in \Real^{SA}_{+} \mid \sum_{a\in \mathcal{A}} (I - \gamma\cdot P\tr_a) \cdot u(\cdot, a) = p_0 \Bigr\}.
+    \]
     \end{block}
+
 
     % \begin{block}{\normalsize {Previous Work} }
     %   \begin{itemize}
@@ -145,6 +150,14 @@
   
 % ===== COLUMN 2 ==========
   \begin{column}{0.3\linewidth}
+    \begin{block}{ROIL LP}
+        \[ \begin{mprog}
+        \minimize{t \in \Real, u \in \Real^{\mathcal{S} \times \mathcal{A}}} t
+        \stc t \geq -u\tr \Phi w + \max_{v \in \Upsilon} v\tr \Phi w,\quad \forall \; w \in ext(\mathcal{W}),
+                \cs u\in \Upsilon,
+        \end{mprog} \]
+    \end{block}
+
     \begin{block}{Visual Representation of ROIL}
         \begin{center}
             \begin{figure}
@@ -155,15 +168,6 @@
         \end{center}
     \end{block}
 
-    \begin{block}{ROIL LP}
-
-    \[ \begin{mprog}
-      \minimize{t \in \Real, u \in \Real^{\mathcal{S} \times \mathcal{A}}} t
-      \stc t \geq -u\tr \Phi w + \max_{v \in \Upsilon} v\tr \Phi w,\quad \forall \; w \in ext(\mathcal{W}),
-            \cs u\in \Upsilon,
-    \end{mprog} \]
-
-    \end{block}
     \begin{block}{Regret Results}
         \begin{center}
             \begin{figure}
@@ -182,6 +186,11 @@
                 \includegraphics[scale=1.5]{../../pres_roil/plots/returns/40x40_gridworld_off_policy_returns.pdf}
             \end{figure}
         \end{center}
+    \end{block}
+
+    \begin{block}{Contact}
+        \textbf{Gersi Doko}\\
+        \textbf{Gersi.Doko@unh.edu}
     \end{block}
   \end{column}
 \end{columns}
