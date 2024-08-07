@@ -111,6 +111,30 @@
 \end{frame}
 
 \begin{frame}
+\frametitle{Off-Policy IRL}
+\begin{figure}
+  \begin{center}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \emph{On-Policy}\\
+    \textbf{Expert's Occ Freq $u_e$}
+    \includegraphics[width=\linewidth]{../../pres_roil/plots/all_state/ue.pdf}
+    LPAL Return $= 86/87$ \\
+    \textcolor{green}{\textbf{ROIL Return $= 79/87$}}
+  \end{minipage}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \emph{Off-Policy}\\
+    \textbf{Estimated Occ Freq $\hat{u}_e$}
+    \includegraphics[width=\linewidth]{../../pres_roil/plots/all_state/uehat.pdf}
+    LPAL Return $= 38/87$ \\
+    \textcolor{green}{\textbf{ROIL Return $= 82/87$}}
+  \end{minipage}
+  \end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
 	\frametitle{ROIL}
 	\emph{Robust} method for \emph{off-policy} IRL
 
@@ -127,8 +151,10 @@
 \begin{frame}
 	\frametitle{Our Approach}
 	\textbf{Problem}: Find a policy $\pi$ that minimizes the regret with respect to the worst case expert consistent with the demonstrations $D_e$.
-	\[ \rho(\tilde{\pi}, r) = \lim_{t \to \infty} \mathbb{E}^{\tilde{\pi}, \mathcal{P}} \lbrack \sum_{t=0}^T \gamma^t r(\tilde{s_t}, \tilde{\pi}(\tilde{s_t})) \rbrack \]
-	\[ \min_{\pi \in \Pi} \max_{\pi_e \in \Pi} \max_{r \in \mathcal{R}} \rho(\pi_e, r) - \rho(\pi, r)\]
+	\vfill
+	\[ \textcolor{blue}{\min_{u^\pi \in \mathcal{U}}} \; \textcolor{red}{\max_{u_e \in \Upsilon}} \; \textcolor{purple}{\max_{r \in \mathcal{R}}} \;return(\textcolor{red}{u_e}, \textcolor{purple}{r}) - return(\textcolor{blue}{u^\pi}, \textcolor{purple}{r})\]
+	\vfill
+	\textbf{Solution}: Formulate as a linear program, we present ROIL and its many extensions
 \end{frame}
 
 \begin{frame}
