@@ -117,9 +117,6 @@
     \end{block}
 
     \begin{block}{Inverse Reinforcement Learning (IRL)}
-        \[
-          \rho(\pi, r) = \lim_{T \to \infty} \mathbb{E}^{\pi, p_0} \lbrack \sum_{t=0}^{T} \gamma^t r(\tilde{s}_t, \pi(\tilde{s}_t)) \rbrack
-        \]
         \[ 
           \pi^*_{IRL} = \argmin_{\pi \in \Pi} \max_{r \in \mathcal{R}} \rho(\hat{\pi}_e, r) - \rho(\pi, r)
         \]
@@ -152,7 +149,7 @@
         \begin{center}
             \begin{figure}
                 \begin{center}
-                    \includegraphics[width=0.85\textwidth]{../../pres_roil/plots/visual_solve_cheb.pdf}
+                    \includegraphics[scale=1.8]{../../pres_roil/plots/visual_solve_cheb.pdf}
                 \end{center}
             \end{figure}
         \end{center}
@@ -172,8 +169,8 @@
     \begin{block}{Gridworld Results}
         \begin{center}
             \begin{figure}
-                \includegraphics[scale=1.5]{../../pres_roil/plots/returns/40x40_gridworld_on_policy_returns_cropped.pdf}
-                \includegraphics[scale=1.5]{../../pres_roil/plots/returns/40x40_gridworld_off_policy_returns_cropped.pdf}
+                \includegraphics[scale=1.6]{../../pres_roil/plots/returns/40x40_gridworld_on_policy_returns_cropped.pdf}
+                \includegraphics[scale=1.6]{../../pres_roil/plots/returns/40x40_gridworld_off_policy_returns_cropped.pdf}
             \end{figure}
         \end{center}
     \end{block}
