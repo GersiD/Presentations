@@ -74,7 +74,7 @@
 
 \section{Introduction}
 
-Reinforcement learning (RL) is a powerful framework for developing agents that can learn to make decisions in complex, uncertain environments.
+Reinforcement learning (RL) is a powerful framework for developing agents that can learn to make decisions in complex, uncertain environments~\cite{MEHTA2007237, Hall2018}.
 The core goal of RL is to tractably compute an optimal policy for acting in such an environment. A key challenge in RL is 
 that the environment is often stochastic, and decisions made now can affect state distributions encountered in the
 future. Choosing an objective function that accurately captures the desired behavior of the agent is a difficult task.
@@ -82,7 +82,13 @@ future. Choosing an objective function that accurately captures the desired beha
 We would hope the objective that an RL agent aims to optimize would consider the `risk' of the actions it takes. Before even phrasing such an objective, one first needs to consider how to quantify risk into a numerical value. A value that encapsulates the uncertainty of the outcome of an action,
 so that an agent can distinguish between actions that are risky and those that are safe.
 
-There is a vast field of research that focuses on developing risk measures \todo{cite somethin}. The goal of a risk measure is to quantify the uncertainty of a random variable, often while being interpretable and computationally tractable. The intersections of risk and reinforcement learning is the topic of this review, where we will explore the field of risk-averse reinforcement learning.
+There is a vast field of research that focuses on developing risk measures \todo{cite somethin}~\cite{howard1972}. The goal of a risk measure is to quantify the uncertainty of a random variable, often while being interpretable and computationally tractable. The intersections of risk and reinforcement learning is the topic of this review, where we will explore the field of risk-averse reinforcement learning.
+
+One must be cautious when optimizing a risk sensitive objective due to the
+common pitfalls that arise even in the published
+literature~\cite{Hau2023OnDP}. Many risk measures do not satisfy the
+properties common to expectation. And therefore many blunders found in the literature can be attributed to either
+misunderstanding of the optimization literature or the risk measure itself.
 
 \section{Preliminaries}
 
@@ -116,10 +122,33 @@ We encourage the reader to refer to~\cite{Puterman1994} for a more detailed intr
         \end{enumerate}
 \end{definition}
 
-\begin{definition}[Variance]
-        \label{def:variance}
+\begin{definition}[Coherent Risk Measure]\label{def:coherent-risk-measure}
+        Given a metric space ($\Omega$, $\mathcal{F}$, $P$), a coherent risk measure is a function $\psi: \mathcal{X} \to \Real$. Satisfying
+        \begin{enumerate}
+                \item All items in definition~\ref{def:risk}
+                \item Subadditivity: $\psi(X + Y) \leq \psi(X) + \psi(Y)$
+                \item Positive Homogeneity: $\psi(\lambda X) = \lambda \psi(X)$ for $\lambda \in \Real_+$
+        \end{enumerate}
+\end{definition}
+
+\begin{proposition}\label{prop:coherent-convex}
+        All coherent risk measures are convex risk measures.
+        \begin{proof}
+                Let $\psi$ be a coherent risk measure. Then for $X, Y \in \mathcal{X}$ and $\lambda \in [0, 1]$ we have
+                \begin{align*}
+                        \psi(\lambda X + (1 - \lambda) Y) &\leq \psi(\lambda X) + \psi((1 - \lambda) Y) \\
+                        &= \lambda \psi(X) + (1 - \lambda) \psi(Y) \\
+                \end{align*} \\
+        \end{proof}
+\end{proposition}
+
+It is important to note the the converse of Proposition~\ref{prop:coherent-convex} is not true. That is, not all convex risk measures are coherent. This is due to positive homogeneity.
+
+\begin{definition}[Variance]\label{def:variance}
         The variance of a random variable $X$ is defined as 
-        $$\text{Var}(X) = \mathbb{E}[(X - \mathbb{E}[X])^2].$$
+        \[
+                \text{Var}(X) = \mathbb{E}[(X - \mathbb{E}[X])^2].
+        \]
 \end{definition}
 
 \begin{definition}[Expectation]
@@ -169,6 +198,8 @@ We encourage the reader to refer to~\cite{Puterman1994} for a more detailed intr
         \label{fig:pdfs}
 \end{figure}
 
+Our introduction of the concept of risk is largely inspired by the influential work of~\cite{follmer2016}. We refer the reader there for a more delicate and detailed treatment of risk measures and their subsequent properties.
+
 \section{Vanilla Reinforcement Learning}
 
 In order to make decisions one must adopt a policy which prescribes the agent's behavior.
@@ -176,9 +207,11 @@ A policy is a mapping from states to actions, and the goal of reinforcement lear
 Policies may depend on time, and the agent may have a horizon of $T$ time steps to act. 
 In this paper we assume a finite horizon, with each $s \in S$ having a time component, thus we omit the subscript $t$ on all variables for simplicity.
 
-\begin{definition}[Finite Horizon Expected Return]
+\begin{definition}[Finite Horizon Expected Discounted Return]
         Given a policy $\pi : \mathcal{S} \to \Delta^\mathcal{A}$ the expected finite horizon discounted return $\rho(\pi)$ can be defined as
-        $$\rho(\pi) = \mathbb{E}_{\pi, \mathcal{P}} \left[ \sum_{t=0}^{T} \gamma^t r(s_t, \pi(s_t)) \right].$$
+        \[ 
+                \rho(\pi) = \mathbb{E}_{\pi, \mathcal{P}} \left[ \sum_{t=0}^{T} \gamma^t r(s_t, \pi(s_t)) \right].
+        \]
         Where $s_0 \sim p_0$ and $s_{t+1} \sim \mathcal{P}(s_t, \pi(s_t))$, $\gamma$ is the discount factor, and $T$ is the time horizon.
 \end{definition}
 
@@ -190,11 +223,21 @@ In this paper we assume a finite horizon, with each $s \in S$ having a time comp
 \end{definition}
 
 \begin{definition}[Optimal Policy]\label{def:optimal_policy}
-        An optimal policy $\pi^* \in \argmax_{\pi \in \Pi} \rho(\pi)$.
+        An optimal policy $\pi^\star \in \argmax_{\pi \in \Pi} \rho(\pi)$.
+\end{definition}
+
+\begin{definition}[Optimal Value Function]\label{def:optimal_value_function}
+        Given an optimal polcy $\pi^\star$, the optimal value function starting at time $l \in [0...T]$ $V^\star_l = V^{\pi^\star}_l : \mathcal{S} \to \Real]$ is defined as
+        \[
+                V^\star_l(s) = \mathbb{E}_{\mathcal{P}} \left[ \sum_{t=l}^{T} \gamma^t r(s_t, \pi^\star(s_t)) \right].
+        \]
 \end{definition}
 
 Notice in~\ref{def:optimal_policy} that the optimal policy may not be unique, as there may be multiple policies that achieve the same expected return. 
 In practice, other methods such as entropy are used to score policies that are otherwise equivalent for interpretability.
+
+\subsection{Dynamic Programming}
+A common approach to solving 
 
 
 \section{Risk-Averse Reinforcement Learning}
