@@ -59,6 +59,7 @@
 % \newcommand{\s}[1]{\mathcal{#1}}
 
 \DeclareMathOperator{\ext}{ext}
+\DeclareMathOperator*{\essinf}{ess\,inf}
 
 % \setlength{\parskip}{3mm plus 1mm minus 1mm}
 % \setlength{\parindent}{0pt}
@@ -161,7 +162,7 @@ It is important to note the the converse of Proposition~\ref{prop:coherent-conve
         For $\alpha \in [0, 1]$, the Value-at-Risk of a random variable 
         $X$ at risk-level $\alpha$ is defined as
         \[
-                \varalpha(X) = \sup_{t \in \Real} \left\{ P(X < t) \leq \alpha \right\}. 
+                \varalpha(X) = \sup_{t \in \Real} \left\{ P(X < t) \leq \alpha \right\} = \inf_{t \in \Real} \left\{ P(X \leq t) > \alpha \right\}.
         \]
 \end{definition}
 
@@ -169,9 +170,14 @@ It is important to note the the converse of Proposition~\ref{prop:coherent-conve
         For $\alpha \in [0, 1]$, the Conditional-Value-at-Risk of a random variable 
         $X$ at risk-level $\alpha$ is defined as
         \[
-                \cvaralpha(X) = \sup_{t \in \Real} \left\{ t - \frac{1}{1 - \alpha} \mathbb{E}{[t - X]}_+ \right\}.
+                \cvaralpha(X) = \sup_{t \in \Real} \left\{ t - \frac{1}{\alpha} \mathbb{E}{[t - X]}_+ \right\} =
+                \inf_{\xi \in \Delta^n} \left\{ \xi\tr x \mid \alpha \cdot \xi \leq q \right\}.
         \]
 \end{definition}
+
+From the definitions of both $\var$ and $\cvar$ we can see that $\var_1[\tilde{x}] = \infty$ and $\cvar_1[\tilde{x}] = \mathbb{E}[\tilde{x}]$.
+$\cvar_0[\tilde{x}] = \essinf[\tilde{x}]$ where $\essinf[\tilde{x}]$ is the essential infimum of $\tilde{x}$ with pdf
+$q$ (smalles value with nonzero probability).
 
 
 \begin{figure}[ht!]
@@ -227,18 +233,41 @@ In this paper we assume a finite horizon, with each $s \in S$ having a time comp
 \end{definition}
 
 \begin{definition}[Optimal Value Function]\label{def:optimal_value_function}
-        Given an optimal polcy $\pi^\star$, the optimal value function starting at time $l \in [0...T]$ $V^\star_l = V^{\pi^\star}_l : \mathcal{S} \to \Real]$ is defined as
+        Given an optimal policy $\pi^\star$, the optimal value function starting at time $l \in [0...T]$ $V^\star_l = V^{\pi^\star}_l : \mathcal{S} \to \Real]$ is defined as
         \[
                 V^\star_l(s) = \mathbb{E}_{\mathcal{P}} \left[ \sum_{t=l}^{T} \gamma^t r(s_t, \pi^\star(s_t)) \right].
         \]
 \end{definition}
 
-Notice in~\ref{def:optimal_policy} that the optimal policy may not be unique, as there may be multiple policies that achieve the same expected return. 
-In practice, other methods such as entropy are used to score policies that are otherwise equivalent for interpretability.
+Notice in~\ref{def:optimal_policy} that the optimal policy may not be unique, as there may be multiple policies that achieve the same expected return. Notice also that our definition of the value function presupposes the existence of an optimal policy and requires that policy in order to derive the value function. For a general MDP this need not be the case, and we refer the reader to~\cite{Puterman1994} for a description on the deep and rich relationship between value functions and policies which we do not embark on here.
+
 
 \subsection{Dynamic Programming}
-A common approach to solving 
+A common approach to solving the objective of reinforcement learning is to use dynamic programming. Dynamic programming is a method for solving complex problems by breaking them down into simpler sub-problems. In the context of reinforcement learning, dynamic programming is used to compute the optimal value function and policy.
 
+\begin{definition}[Bellman Equation]\label{def:bellman}
+        Given a policy $\pi : \mathcal{S} \to \mathcal{A}$, the Bellman equation for the value function is defined as
+        \[
+                V^\pi_l(s) = r(s, \pi(s)) + \gamma \mathbb{E}_{s' \sim \mathcal{P}(s, \pi(s))} [V^\pi_{l+1}(s')].
+        \]
+\end{definition}
+The Bellman equation is a recursive equation that decomposes the value function into two parts: the immediate reward and the value of the next state. While we
+consider deterministic policies in our definition here, the Bellman equation can be extended to randomized policies as well through the use of an expectation operator.
+
+\begin{definition}[Bellman Optimality Equation]\label{def:bellman_optimality}
+        Given a policy $\pi : \mathcal{S} \to \mathcal{A}$, the Bellman optimality equation for the value function is defined as
+        \[
+                V^\star_l(s) = \max_{a \in \mathcal{A}} \left\{ r(s, a) + \gamma \mathbb{E}_{s' \sim \mathcal{P}(s, a)} [V^\star_{l+1}(s')] \right\}.
+        \]
+\end{definition}
+
+\begin{proposition}\label{prop:optimal_policy_value}
+        There exists an optimal policy $\pi^\star$ such that $V^\star_l(s) = V^{\pi^\star}_l(s)$ for all $s \in \mathcal{S}$ and for all $l \in [1\ldots T]$.
+\end{proposition}
+
+While Proposition~\ref{prop:optimal_policy_value} seems obvious, and indeed the proof is trivial by contradiction. We include it here to illustrate a key step twoards our goal of finding an optimal policy that maximizes the expected return by dynamic programming.
+
+We urge the reader to consider the work of~\cite{sutton2018} for a more detailed introduction to reinforcement learning.
 
 \section{Risk-Averse Reinforcement Learning}
 
