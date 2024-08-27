@@ -76,23 +76,21 @@
 
 Reinforcement learning (RL) is a powerful framework for developing agents that can learn to make decisions in complex, uncertain environments.
 The core goal of RL is to tractably compute an optimal policy for acting in such an environment. A key challenge in RL is 
-that the environment is often stochastic, and the agent may have only partial observability. 
-Choosing an objective function that accurately captures the desired behavior of the agent is a difficult task.
+that the environment is often stochastic, and decisions made now can affect state distributions encountered in the
+future. Choosing an objective function that accurately captures the desired behavior of the agent is a difficult task.
 
-We would hope the objective that an RL agent aims to optimize would consider the "risk" of the actions it takes.
-One first needs to consider how to quantify risk into a numerical value. A value that encapsulates the uncertainty of the outcome of an action,
+We would hope the objective that an RL agent aims to optimize would consider the `risk' of the actions it takes. Before even phrasing such an objective, one first needs to consider how to quantify risk into a numerical value. A value that encapsulates the uncertainty of the outcome of an action,
 so that an agent can distinguish between actions that are risky and those that are safe.
 
-There is a vast field of research that focuses on developing risk measures.
-The goal of a risk measure is to quantify the uncertainty of a random variable, often while being interpretable and computationally tractable.
-The intersections of risk and reinforcement learning is the topic of this review, where we will explore the field of risk-averse reinforcement learning.
+There is a vast field of research that focuses on developing risk measures \todo{cite somethin}. The goal of a risk measure is to quantify the uncertainty of a random variable, often while being interpretable and computationally tractable. The intersections of risk and reinforcement learning is the topic of this review, where we will explore the field of risk-averse reinforcement learning.
 
 \section{Preliminaries}
 
 In order to introduce the concepts of risk-averse reinforcement learning, we first need to define some basic concepts in probability theory and reinforcement learning.
 
-We adopt the common notation that $\Delta^n$ denotes the $n$-dimensional simplex. For two sets $A$ and $B$, $A^B$ denotes the set of all functions from $B$ to $A$.
-For a set $A$, $|A|$ denotes the cardinality of $A$[].
+Unless explicitly stated we assume all variables are discrete, and finite.
+
+We adopt the common notation that $\Delta^n$ denotes the $n$-dimensional simplex. For two sets $A$ and $B$, $A^B$ denotes the set of all functions from $B$ to $A$. For a set $A$, $|A|$ denotes the cardinality of $A$.
 
 The environment is a Markov Decision Process (MDP) defined by a tuple $\mathcal{M} = (\mathcal{S}, \mathcal{A}, \mathcal{P}, r, \gamma)$ where
 \begin{itemize}
@@ -130,15 +128,20 @@ We encourage the reader to refer to~\cite{Puterman1994} for a more detailed intr
         $$\mathbb{E}[X] = \sum_{\omega \in \Omega} X(\omega) P(\omega).$$
 \end{definition}
 
-\begin{definition}[Value at Risk (Var)]
-        The Value-at-Risk (VaR) of a random variable $X$ at risk-level $\alpha$ is defined as
-        $$\varalpha(X) = \inf \left\{ t \in \Real \mid P(X \leq t) \geq \alpha \right\}.$$
+\begin{definition}[Value-at-Risk --- $\varalpha$]\label{def:var}
+        For $\alpha \in [0, 1]$, the Value-at-Risk of a random variable 
+        $X$ at risk-level $\alpha$ is defined as
+        \[
+                \varalpha(X) = \sup_{t \in \Real} \left\{ P(X < t) \leq \alpha \right\}. 
+        \]
 \end{definition}
 
-\begin{definition}[Conditional Value-at-Risk (CVaR)]
-        \label{def:cvar}
-        The Conditional Value-at-Risk (CVaR) of a random variable $X$ at risk-level $\alpha$ is defined as
-        $$\cvaralpha(X) = \min_{t \in \Real} \left\{ t + \frac{1}{1 - \alpha} \mathbb{E}[(X - t)_+] \right\}.$$
+\begin{definition}[Conditional Value-at-Risk --- $\cvaralpha$]\label{def:cvar}
+        For $\alpha \in [0, 1]$, the Conditional-Value-at-Risk of a random variable 
+        $X$ at risk-level $\alpha$ is defined as
+        \[
+                \cvaralpha(X) = \sup_{t \in \Real} \left\{ t - \frac{1}{1 - \alpha} \mathbb{E}{[t - X]}_+ \right\}.
+        \]
 \end{definition}
 
 
@@ -157,10 +160,10 @@ We encourage the reader to refer to~\cite{Puterman1994} for a more detailed intr
         \end{subfigure}
         \begin{subfigure}[t]{1.0\textwidth}
                 \centering
-                \includegraphics[width=0.4\linewidth]{julia_figures/laplace.pdf}
+                \includegraphics[width=0.4\linewidth]{julia_figures/gamma.pdf}
 
-                \caption{$\mathcal{L}(0,1)$}
-                \label{fig:laplace}
+                \caption{$\Gamma(2,2) - 4$}
+                \label{fig:gamma}
         \end{subfigure}
         \caption{Probability Density Functions of Various Distributions. All with a shared mean of 0.}
         \label{fig:pdfs}
@@ -179,23 +182,24 @@ In this paper we assume a finite horizon, with each $s \in S$ having a time comp
         Where $s_0 \sim p_0$ and $s_{t+1} \sim \mathcal{P}(s_t, \pi(s_t))$, $\gamma$ is the discount factor, and $T$ is the time horizon.
 \end{definition}
 
-\begin{definition}[Objective of Reinforcement Learning]
-        \label{def:rl_obj}
+\begin{definition}[Objective of Reinforcement Learning]\label{def:rl_obj}
         The objective of reinforcement learning (RL) is as follows
-        $$\max_{\pi \in \Pi} \rho(\pi).$$
+        \[
+        \max_{\pi \in \Pi} \rho(\pi). 
+        \]
 \end{definition}
 
-\begin{definition}[Optimal Policy]
-        \label{def:optimal_policy}
+\begin{definition}[Optimal Policy]\label{def:optimal_policy}
         An optimal policy $\pi^* \in \argmax_{\pi \in \Pi} \rho(\pi)$.
 \end{definition}
 
-Notice in \ref{def:optimal_policy} that the optimal policy may not be unique, 
-as there may be multiple policies that achieve the same expected return. 
+Notice in~\ref{def:optimal_policy} that the optimal policy may not be unique, as there may be multiple policies that achieve the same expected return. 
 In practice, other methods such as entropy are used to score policies that are otherwise equivalent for interpretability.
 
 
 \section{Risk-Averse Reinforcement Learning}
+
+Consider the return function $\rho(\pi)$, which is of key importance in reinforcement learning~\ref{def:rl_obj}.
 
 \section{Methods}
 
