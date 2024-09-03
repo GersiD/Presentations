@@ -9,7 +9,7 @@ d1 = Normal(0, 1)
 m1 = mean(d1)
 d2 = Normal(0, 2)
 m2 = mean(d2)
-d3 = Laplace(0, 1)
+d3 = Gamma(2, 2) - 4
 m3 = mean(d3)
 
 # Plot all three
@@ -23,4 +23,4 @@ vline!([m2], label="", color=:green, lw=2)
 savefig("normal_wide.pdf")
 plot(range, pdf(d3, range), label="", lw=2, color=:blue, fillrange=0, fillalpha=0.3, fillcolor=:blue)
 vline!([m3], label="", color=:blue, lw=2)
-savefig("laplace.pdf")
+savefig("gamma.pdf")

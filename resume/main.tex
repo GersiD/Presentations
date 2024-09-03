@@ -98,31 +98,27 @@
 
 \definecolor{Black}{RGB}{0, 0, 0}
 \newcommand{\seticon}[1]{\textcolor{Black}{\csname #1\endcsname}}
-
 %-------------------------------------------%
 %%%%%%  RESUME STARTS HERE  %%%%%
-
-%----------HEADING----------%
 \begin{tabularx}{\textwidth}{@{} X r @{}}
     \begin{minipage}[t]{\textwidth}
         \textbf{\Huge \scshape Gersi Doko} \\[0.5em]
-        \textbf{Adm. No.  }22JEXXXX \quad \small\seticon{faPhone} (603)-848-0604 \\
+        \href{https://gersid.github.io}{GersiD.github.io} \quad \small\seticon{faPhone} (603)-848-0604 \\
         \href{mailto:firstlast@gmail.com}{\seticon{faEnvelope} \underline{Gersi.Doko@unh.edu}} \quad
         \href{https://www.linkedin.com/in/gersi-doko}{\seticon{faLinkedin} \underline{linkedin.com/in/GersiDoko}} \quad
         \href{https://github.com/GersiD}{\seticon{faGithub} \underline{github.com/GersiD}}
     \end{minipage} &
     \begin{minipage}[t]{2cm}
-        \raisebox{-0.5\height}{\includegraphics[width=2.4cm]{./unhseal_rgb.png}}
+      \raisebox{-0.5\height}{\href{https://gersid.github.io}{\includegraphics[width=2.4cm]{./unhseal_rgb.png}}}
     \end{minipage}
 \end{tabularx}
-
-%-----------EDUCATION-----------%
+\vfill
 \section{Education}
     \resumeSubHeadingListStart
 
     \resumeSubheading
     {University of New Hampshire}{ Completed May 2022}
-    {Bachelor of Science in Computer Science (GPA: 3.98 / 4.00)}{Durham, New Hampshire}
+    {Bachelor of Science in Computer Science \textbf{Summa Cum Laude} (GPA: 3.98 / 4.00)}{Durham, New Hampshire}
     \resumeItemListStart
         \resumeItem{\textbf{Relevant Coursework:}  Data Structures and Algorithms (C++), Prob \& Stat in CS (Python), Intro to CS II (C++), 
           Linear Algebra w/Computational Applications (Python),
@@ -131,73 +127,68 @@
 
     \resumeSubheading
     {University of New Hampshire}{ Expected May 2026}
-    {Doctor of Philosophy in Computer Science }{Durham, New Hampshire}
+    {Doctor of Philosophy (PhD) in Computer Science }{Durham, New Hampshire}
     \resumeItemListStart
         \resumeItem{\textbf{Relevant Coursework:}  Advanced Algorithms in Machine Learning (Bandits and Partial Monitoring), Deep-Q Learning,
           Inverse Reinforcement Learning Publication (see below), Risk Sensitive Reinforcement Learning}
     \resumeItemListEnd
 
     \resumeSubHeadingListEnd
-
-%-----------EXPERIENCE-----------%
-\section{Experience}
-\resumeSubHeadingListStart
-
-    \resumeSubheading
-    {Liberty Mutual}{Jan 20XX -- May 20XX}
-    {Software Engineer}{City, State}
-    \resumeItemListStart
-        \resumeItem{Implemented microservices architecture using Node.js and Express, improving API response time by 25\% and reducing server load by 30\%.}
-        \resumeItem{Led a cross-functional team in implementing a new feature using React and Redux, resulting in a 20\% increase in user engagement within the first month.}
-        \resumeItem{Optimized MySQL database queries, reducing page load times by 15\% and enhancing overall application performance.}
-    \resumeItemListEnd
-    
-     
-
-\resumeSubHeadingListEnd
-%-----------PROJECTS-----------%
-\section{Pulbications}
+\vfill
+\section{Publications}
 \resumeSubHeadingListStart
 
     \resumeProjectHeading
-    {\textbf{Project Name 1} $|$ \emph{React.js, Angular, Vue.js, Django, Flask, Ruby on Rails}}    {}
+    {\href{https://gersid.github.io/publications/}{\textbf{ROIL: Robust Offline Imitation Learning}} $|$ \emph{First publication accepted to RLJ (Reinforcement
+    Learning Journal)}}    {}
     \resumeItemListStart
-        \resumeItem {Led the development of a microservices-based e-commerce platform using Node.js, resulting in a 40\% increase in daily transactions within the first quarter.}
-        \resumeItem{Designed and deployed a scalable RESTful API using Django and Django REST Framework, achieving a 30\% improvement in data retrieval speed.}
-        \resumeItem{Implemented a real-time chat feature using WebSocket and Socket.io, enhancing user engagement and reducing response time by 20\%.}
+        \resumeItem {Discovered a new robust method for training agents from data using offline imitation learning.}
+        \resumeItem {Improved on all existing IRL method by not relying on samples to come from the same state distribution as the expert.}
     \resumeItemListEnd
-
 \resumeSubHeadingListEnd
-%-----------SKILLS-----------%
+\vfill
+\section{Experience}
+\resumeSubHeadingListStart{}
+    \resumeSubheading
+    {UNH RL$^2$ Lab}{June 2022 -- Present}
+    {Research Assistant}{Durham, NH}
+    \resumeItemListStart
+        \resumeItem{Studying under \href{https://gersid.github.io/people/}{Dr. Marek Petrik} in the RL$^2$ Lab.}
+        \resumeItem{Researching robust solutions to offline reinforcement learning problems.}
+        \resumeItem{\href{https://github.com/RiskAverseRL}{Efficiently implementing and testing RL algorithms in Julia}.}
+    \resumeItemListEnd
+    \resumeSubheading
+    {Liberty Mutual}{June 2021 -- June 2022}
+    {Software Engineer}{Dover, NH}
+    \resumeItemListStart
+        \resumeItem{Fostered code reuse by creating a shared Python library, reducing code duplication by more than 80\%.}
+        \resumeItem{Developed new data storage and retreival system using AWS S3, reducing on-prem storage costs by 25\%.}
+        \resumeItem{Optimized team's CI/CD pipeline, reducing build times, and allowing for rapid deployment cycles.}
+    \resumeItemListEnd
+    \resumeSubheading
+    {UNH Interoperability Lab}{June 2018 -- June 2021}
+    {Senior Test Engineer}{Durham, NH}
+    \resumeItemListStart
+        \resumeItem{Reviewed and developed test media for IEEE Standard 802.3, improving test coverage for backplane and Base-T.}
+    \resumeItemListEnd
+\resumeSubHeadingListEnd
+\vfill
 \section{Technical Skills}
     \begin{itemize}[leftmargin=0.15in, label={}]
 	\small{\item{
-		\textbf{Languages}{: Rust, Kotlin, Swift, Go, Scala, TypeScript, R, Perl, Haskell, Groovy, Julia, Dart} \\
-		\textbf{Technologies}{: React.js, Angular, Vue.js, Django, Flask, Ruby on Rails, Spring Boot, Express.js, TensorFlow, PyTorch, jQuery, Bootstrap, Laravel, Flask, ASP.NET, Node.js, Electron, Android SDK, iOS SDK, Symfony} \\
-		\textbf{Concepts}{: Compiler, Operating System, Virtual Memory, Cache Memory, Encryption, Decryption, Artificial Intelligence, Machine Learning, Neural Networks, API, Database Normalization, Agile Methodology, Cloud Computing}
+		\textbf{Concepts}{: Bandits, Partial monitoring, Reinforcement learning, Inverse reinforcement learning, Risk sensitive machine learning, Transformers, Attention,LLMs} \\
+		\textbf{Research Interests}{: Risk sensitive optimization, Optimal decision making, Robust machine learning } \\
+                \textbf{Current Work}{: Deep risk sensitive reinforcement learning, Robust offline RL, Transformer based RL} \\
 	}}
     \end{itemize}
-
-%-----------ACHIEVEMENTS-----------%
+\vfill
 \section{Achievements}
 \begin{itemize} % Start an itemize environment
-    \item Graduated \textbf{summa cum laude} from the University of New Hampshire with a 3.98 GPA
+    \item Presented at the \emph{first} \textbf{RLC (Reinforcement Learning Conference)} in 2024
+    \item Presented at the \textbf{2022 UNH Undergraduate Research Conference}
     \item Received the \textbf{Dean's Award} for Academic Excellence in Computer Science
     \item Awarded the \textbf{President's Scholarship} for academic achievement and leadership.
+    \item Graduated \textbf{summa cum laude} from the University of New Hampshire
 \end{itemize} % End the itemize environment
-
-%-----------POR-----------%
-\section{Social Engagements}
-    \begin{itemize}[leftmargin=0.15in, label={}]
-	\small{\item{
-		\textbf{Vice-President}{: Of Association of Exploration Geophysicist - Student Chapter, IIT Dhanbad} \\
-		\textbf{Club Member}{ : at CYBER LABS -tech society of IIT Dhanbad } \\
-		\textbf{Volunteer}{: at KARTAVYA - NGO run by students of IIT Dhanbad to educate underprivileged childrens.} \\
-  		\textbf{Organisor}{:Concetto'22 (Tech-fest)  Khanan'22 (Geo-Mining fest) .} \\
-        \textbf{Sports-Engagements}{: Badminton(state-level) , chess , cricket ,table-tennis.}
-	}}
-    \end{itemize}
-
-
 %-------------------------------------------%
 \end{document}
