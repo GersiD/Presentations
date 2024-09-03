@@ -109,7 +109,7 @@ The environment is a Markov Decision Process (MDP) defined by a tuple $\mathcal{
         \item $\gamma \in [0, 1$ is the discount factor.
 \end{itemize} 
 Finally, we define the set of all deterministic policies $\Pi_D = \mathcal{A}^\mathcal{S}$. 
-And the set of all randomized policies $\Pi_R = [\Delta^\mathcal{A}]^\mathcal{S}$.
+And the set of all randomized policies $\Pi_R = {[\Delta^\mathcal{A}]}^\mathcal{S}$.
 We encourage the reader to refer to~\cite{Puterman1994} for a more detailed introduction to MDPs.
 
 \section{Risk and Reward}\label{sec:risk-and-reward}
@@ -148,12 +148,11 @@ It is important to note the converse of Proposition~\ref{prop:coherent-convex} i
 \begin{definition}[Variance]\label{def:variance}
         The variance of a random variable $X$ is defined as 
         \[
-          \text{Var}(\tilde{x}) = \mathbb{E}[(\tilde{x} - \mathbb{E}[\tilde{x}])^2].
+                \text{Var}(\tilde{x}) = \mathbb{E}[{(\tilde{x} - \mathbb{E}[\tilde{x}])}^2].
         \]
 \end{definition}
 
-\begin{definition}[Expectation]
-        \label{def:expectation}
+\begin{definition}[Expectation]\label{def:expectation}
         A common risk measure is the expectation of a random variable. Given a random variable $X: \Omega \to \Real$, the expectation of $X$ is defined as
         \[
           \mathbb{E}[\tilde{x}] = \sum_{\omega \in \Omega} \tilde{x}(\omega) \mathbb{P}(\omega).
@@ -164,7 +163,7 @@ It is important to note the converse of Proposition~\ref{prop:coherent-convex} i
         For $\alpha \in [0, 1]$, the Value-at-Risk of a random variable 
         $\tilde{x}$ at risk-level $\alpha$ is defined as
         \[
-                \varalpha(\tilde{x}) = \sup_{t \in \Real} \left\{ \mathbb{P}(\tilde{x} < t) \leq \alpha \right\} = \inf_{t \in \Real} \left\{ \mathbb{P}(\tilde{x} \leq t) > \alpha \right\}.
+                \normalfont{\varalpha(\tilde{x})} = \sup_{t \in \Real} \left\{ \mathbb{P}(\tilde{x} < t) \leq \alpha \right\} = \inf_{t \in \Real} \left\{ \mathbb{P}(\tilde{x} \leq t) > \alpha \right\}.
         \]
 \end{definition}
 
@@ -172,14 +171,13 @@ It is important to note the converse of Proposition~\ref{prop:coherent-convex} i
         For $\alpha \in [0, 1]$, the Conditional-Value-at-Risk of a random variable 
         $\tilde{x}$ with pdf $p$ at risk-level $\alpha$ is defined as
         \[
-                \cvaralpha(\tilde{x}) = \sup_{t \in \Real} \left\{ t - \frac{1}{\alpha} \mathbb{E}{[t - \tilde{x}]}_+ \right\} =
+                \normalfont{\cvaralpha(\tilde{x})} = \sup_{t \in \Real} \left\{ t - \frac{1}{\alpha} \mathbb{E}{[t - \tilde{x}]}_+ \right\} =
                 \inf_{\xi \in \Delta^n} \left\{ \xi\tr x \mid \alpha \cdot \xi \leq p \right\}.
         \]
 \end{definition}
 
 From the definitions of both $\var$ and $\cvar$ we can see that $\var_1[\tilde{x}] = \infty$ and $\cvar_1[\tilde{x}] = \mathbb{E}[\tilde{x}]$.
-$\cvar_0[\tilde{x}] = \essinf[\tilde{x}]$ where $\essinf[\tilde{x}]$ is the essential infimum of $\tilde{x}$ with pdf
-$p$ (smallest value with nonzero probability).
+$\cvar_0[\tilde{x}] = \essinf[\tilde{x}]$ where $\essinf[\tilde{x}]$ is the essential infimum of $\tilde{x}$ with pdf $p$ (smallest value with nonzero probability).
 
 
 \begin{figure}[ht!]
@@ -198,10 +196,10 @@ $p$ (smallest value with nonzero probability).
                 \includegraphics[width=0.4\linewidth]{julia_figures/gamma.pdf}
                 \caption{$\Gamma(2,2) - 4$}\label{fig:gamma}
         \end{subfigure}
-        \caption{Probability density functions (PDFs) of various distributions. All with a shared mean of 0 dentoted by the vertical line.}\label{fig:pdfs}
+        \caption{Probability density functions (PDFs) of various distributions. All with a shared mean of 0 denoted by the vertical line.}\label{fig:pdfs}
 \end{figure}
 
-The simpliest, and most accesible coherent risk measure is the expectation operator $\mathbb{E}$, see definition~\ref{def:expectation}. \label{sec:explanation-of-why-risk-measures-are-important}
+The simplest, and most accessible coherent risk measure is the expectation operator $\mathbb{E}$, see definition~\ref{def:expectation}.\label{sec:explanation-of-why-risk-measures-are-important}
 Expectation often ignores tail risk, and reduces a random variable to its mean as seen in Figure~\ref{fig:pdfs}.
 Expectation also cannot easily be parameterized to capture the risk preferences of the agent.
 As such
@@ -209,8 +207,7 @@ As such
 
 Our introduction of the concept of risk is largely inspired by the influential work of~\cite{follmer2016}. We refer the reader there for a more delicate and detailed treatment of risk measures and their subsequent properties.
 
-\section{Vanilla Reinforcement Learning}
-\label{sec:vanilla-reinforcement-learning}
+\section{Vanilla Reinforcement Learning}\label{sec:vanilla-reinforcement-learning}
 
 In order to make decisions one must adopt a policy which prescribes the agent's behavior.
 A policy is a mapping from states to actions, and the goal of reinforcement learning is to find an optimal policy that maximizes the expected return.
@@ -275,7 +272,8 @@ consider deterministic policies in our definition here, the Bellman equation can
 
 While Proposition~\ref{prop:optimal_policy_value} seems obvious, and indeed the proof is trivial by contradiction. We include it here to illustrate a key idea which allows our goal of finding an optimal policy that maximizes the expected return by dynamic programming.
 
-We urge the reader to consider the work of~\cite{sutton2018} for a more detailed introduction to reinforcement learning.
+We urge the reader to consider the work of~\cite{sutton2018} for a more detailed introduction to reinforcement learning beyond dynamic programming.
+For a more detailed account of the theoretical results glossed over in this summary, please see~\cite{Puterman1994}.
 
 \section{Risk-Averse Reinforcement Learning}
 
@@ -287,12 +285,12 @@ However, expectation is already a coherent risk measure, so the question arises,
 We refer the reader to the discussion in Section~\ref{sec:explanation-of-why-risk-measures-are-important} of this
 work and to the work of~\cite{Bauerle2011, follmer2016, howard1972} for further motivation. 
 
-In contrast to Section~\ref{sec:vanilla-reinforcement-learning} we now consider the set of all policies to be history dependant randomized polcies instead of stationary deterministic policies. That is to say, from now on 
+In contrast to Section~\ref{sec:vanilla-reinforcement-learning} we now consider the set of all policies to be history dependent randomized policies instead of stationary deterministic policies. That is to say, from now on 
 \[ 
         \Pi = \Pi_{\text{HR}} = \left\{ \pi : {[\mathcal{S} \times \mathcal{A}]}_{0}^{t} \to \Delta^\mathcal{A} \right\}.
 \]
 This group of policies is more general than the set of deterministic policies, and allows for a more flexible representation of the agent's behavior.
-For the particular reader who is interested in why we only considerered stationary deterministic policies in Section~\ref{sec:vanilla-reinforcement-learning} we refer them to the work of~\cite{Puterman1994} (Proposition 4.4.3).
+For the particular reader who is interested in why we only considered stationary deterministic policies in Section~\ref{sec:vanilla-reinforcement-learning} we refer them to the work of~\cite{Puterman1994} (Proposition 4.4.3).
 
 There has been prior work on embedding a utility function within the expectation, perhaps one encoding the preferences of an agent who
 desires higher returns less and less~\cite{howard1972}.\todo{Ask Marek why this doesn't suffice} 
@@ -309,7 +307,7 @@ desires higher returns less and less~\cite{howard1972}.\todo{Ask Marek why this 
         An optimal risk-averse policy $\pi^\star \in \argmax_{\pi \in \Pi} \hat{\rho}(\pi)$.
 \end{definition}
 
-Here however we depart from the standard procedure of defining the value function recursivly as would be required for dynamic programming and as was done in Section~\ref{sec:vanilla-reinforcement-learning}.
+Here however we depart from the standard procedure of defining the value function recursively as would be required for dynamic programming and as was done in Section~\ref{sec:vanilla-reinforcement-learning}.
 The reason for this is that the risk measure $\psi$ does not usually satisfy the tower property, which is a key property for the Bellman equation to hold.
 
 An open research question is how to decompose different risk measures as in Section~\ref{sec:risk-and-reward} into a recursive form that would allow for dynamic programming to be used for policy optimization.
