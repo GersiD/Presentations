@@ -137,9 +137,9 @@ We encourage the reader to refer to~\cite{Puterman1994} for a more detailed intr
         \begin{proof}
           Let $\psi$ be a coherent risk measure. Then for $\tilde{x}, \tilde{y} \in \mathcal{X}$ and $\lambda \in [0, 1]$ we have
                 \begin{align*}
-                  \psi(\lambda \tilde{x} + (1 - \lambda) \tilde{y}) &\leq \psi(\lambda \tilde{x}) + \psi((1 - \lambda) \tilde{y}) \\
-                  &= \lambda \psi(\tilde{x}) + (1 - \lambda) \psi(\tilde{y}) \\
-                \end{align*} \\
+                        \psi(\lambda \tilde{x} + (1 - \lambda) \tilde{y}) &\leq \psi(\lambda \tilde{x}) + \psi((1 - \lambda) \tilde{y}) &&\text{Sub-Additivity}\\
+                        &= \lambda \psi(\tilde{x}) + (1 - \lambda) \psi(\tilde{y}) &&\text{Positive Homogeneity}\\
+                \end{align*}
         \end{proof}
 \end{proposition}
 
@@ -182,25 +182,30 @@ $\cvar_0[\tilde{x}] = \essinf[\tilde{x}]$ where $\essinf[\tilde{x}]$ is the esse
 $p$ (smallest value with nonzero probability).
 
 
-\begin{figure}[ht!]\label{fig:pdfs}
-        \begin{subfigure}[t]{0.5\textwidth}\label{fig:normal}
+\begin{figure}[ht!]
+        \begin{subfigure}[t]{0.5\textwidth}
                 \centering
                 \includegraphics[width=0.7\linewidth]{julia_figures/normal.pdf}
-                \caption{$\mathcal{N}(0,1)$}
+                \caption{$\mathcal{N}(0,1)$}\label{fig:normal}
         \end{subfigure}
-        \begin{subfigure}[t]{0.5\textwidth}\label{fig:normal_wide}
+        \begin{subfigure}[t]{0.5\textwidth}
                 \centering
                 \includegraphics[width=0.7\linewidth]{julia_figures/normal_wide.pdf}
-                \caption{$\mathcal{N}(0,2)$}
+                \caption{$\mathcal{N}(0,2)$}\label{fig:normal_wide}
         \end{subfigure}
-        \begin{subfigure}[t]{1.0\textwidth}\label{fig:gamma}
+        \begin{subfigure}[t]{1.0\textwidth}
                 \centering
                 \includegraphics[width=0.4\linewidth]{julia_figures/gamma.pdf}
-
-                \caption{$\Gamma(2,2) - 4$}
+                \caption{$\Gamma(2,2) - 4$}\label{fig:gamma}
         \end{subfigure}
-        \caption{Probability Density Functions of Various Distributions. All with a shared mean of 0.}
+        \caption{Probability density functions (PDFs) of various distributions. All with a shared mean of 0 dentoted by the vertical line.}\label{fig:pdfs}
 \end{figure}
+
+The simpliest, and most accesible coherent risk measure is the expectation operator $\mathbb{E}$, see definition~\ref{def:expectation}. \label{sec:explanation-of-why-risk-measures-are-important}
+Expectation often ignores tail risk, and reduces a random variable to its mean as seen in Figure~\ref{fig:pdfs}.
+Expectation also cannot easily be parameterized to capture the risk preferences of the agent.
+As such
+
 
 Our introduction of the concept of risk is largely inspired by the influential work of~\cite{follmer2016}. We refer the reader there for a more delicate and detailed treatment of risk measures and their subsequent properties.
 
@@ -275,12 +280,15 @@ We urge the reader to consider the work of~\cite{sutton2018} for a more detailed
 
 Consider the return function $\rho(\pi)$, which is of key importance in reinforcement learning~\ref{def:rl_obj}. 
 The inner expectation of $\rho(\pi)$ is a risk measure, as such one can imagine replacing the expectation
-with a different risk measure.
+with a different risk measure, more generally some risk measure $\psi$.
 
-However, expectation is already a coherent risk measure, so the question arises, why would one want to replace it with a different risk measure?
-Simply put, one cannot easily parameterize expectation to capture the risk preferences of the agent. There has been
-prior work on embedding a utility function within the expectation, perhaps one encoding the preferences of an agent who
-desires higher returns less and less~\cite{howard1972}.\todo{Ask Marek why this doesn't suffice}
+\todo{I think this paragraph needs alot of work especially in the motivation}
+
+However, expectation is already a coherent risk measure, so the question arises, why would one want to replace it with a different risk measure? 
+We refer the reader to the discussion in Section~\ref{sec:explanation-of-why-risk-measures-are-important} of this
+work and to the work of~\cite{Bauerle2011, follmer2016, howard1972}. 
+There has been prior work on embedding a utility function within the expectation, perhaps one encoding the preferences of an agent who
+desires higher returns less and less~\cite{howard1972}.\todo{Ask Marek why this doesn't suffice} 
 
 \begin{definition}[Risk-Averse Reinforcement Learning]\label{def:risk_averse_rl}
         Given a risk measure $\psi$, the objective of risk-averse reinforcement learning is as follows
@@ -296,7 +304,7 @@ desires higher returns less and less~\cite{howard1972}.\todo{Ask Marek why this 
 \begin{definition}[Optimal Risk-Averse Value Function]\label{def:optimal_risk_averse_value_function}
         Given an optimal risk-averse policy $\pi^\star$, the optimal risk-averse value function starting at time $l \in [0\ldots T-1]$ $V^\star_l = V^{\pi^\star}_l : \mathcal{S} \to \Real$ is defined as
         \[
-          V^\star_l(s) = r(s,\pi(s)) + \psi \left( \sum_{t=l+1}^{T} \gamma^t r(\tilde{s}_t, \pi^\star(\tilde{s}_t)) \right).
+                V^\star_l(s) = r(s,\pi^\star(s)) + \psi_\mathcal{P} \left( \sum_{t=l+1}^{T} \gamma^t r(\tilde{s}_t, \pi^\star(\tilde{s}_t)) \right).
         \]
         Where $\tilde{s}_{l+1} \sim \mathcal{P}(s, \pi(s))$ and
         \[
@@ -304,7 +312,7 @@ desires higher returns less and less~\cite{howard1972}.\todo{Ask Marek why this 
         \]
 \end{definition}
 
-\todo{I have to stop here because I don't really know if what I said above makes sense or is true}
+\todo{I have to stop here because I don't really know if what I said above makes sense or is true since tower property is not satisfied by all coherent risk measures.}
 
 
 
