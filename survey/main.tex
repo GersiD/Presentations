@@ -83,7 +83,7 @@ future. Choosing an objective function that accurately captures the desired beha
 We would hope the objective that an RL agent aims to optimize would consider the `risk' of the actions it takes. Before even phrasing such an objective, one first needs to consider how to quantify risk into a numerical value. A value that encapsulates the uncertainty of the outcome of an action,
 so that an agent can distinguish between actions that are risky and those that are safe.
 
-There is a vast field of research that focuses on developing risk measures \todo{cite somethin}~\cite{howard1972}. The goal of a risk measure is to quantify the uncertainty of a random variable, often while being interpretable and computationally tractable. The intersections of risk and reinforcement learning is the topic of this review, where we will explore the field of risk-averse reinforcement learning.
+There is a vast field of research that focuses on developing risk measures \todo{Cite something}~\cite{howard1972}. The goal of a risk measure is to quantify the uncertainty of a random variable, often while being interpretable and computationally tractable. The intersections of risk and reinforcement learning is the topic of this review, where we will explore the field of risk-averse reinforcement learning.
 
 One must be cautious when optimizing a risk sensitive objective due to the
 common pitfalls that arise even in the published
@@ -95,7 +95,8 @@ misunderstanding of the optimization literature or the risk measure itself.
 
 In order to introduce the concepts of risk-averse reinforcement learning, we first need to define some basic concepts in probability theory and reinforcement learning.
 
-Unless explicitly stated we assume all variables are discrete, and finite.
+Unless explicitly stated we assume all variables are discrete, and finite. We adopt the notation that all random
+variables are adorned with a $\tilde{\cdot}$ unless obvious from context, all matrices are capitalized, and all sets are calligraphic.
 
 We adopt the common notation that $\Delta^n$ denotes the $n$-dimensional simplex. For two sets $A$ and $B$, $A^B$ denotes the set of all functions from $B$ to $A$. For a set $A$, $|A|$ denotes the cardinality of $A$.
 
@@ -113,13 +114,12 @@ We encourage the reader to refer to~\cite{Puterman1994} for a more detailed intr
 
 \section{Risk and Reward}
 
-\begin{definition}[Risk Measure]
-        \label{def:risk}
-        A Risk Measure is a mapping from a random variable to a real number. Quantifying the uncertainty of an outcome.
+\begin{definition}[Risk Measure]\label{def:risk}
+        A Risk Measure is a mapping from a random variable $\tilde{x}$ to a real number. Quantifying the uncertainty of an outcome.
         Given a metric space ($\Omega$, $\mathcal{F}$, $P$), a risk measure is a function $\psi: \mathcal{X} \to \Real$. Satisfying
         \begin{enumerate}
-                \item Monotonicity: $X \leq Y \implies \psi(X) \leq \psi(Y)$
-                \item Translation Invariance: $\psi(X + c) = \psi(X) + c \quad \forall c \in \Real$
+          \item Monotonic: $\tilde{x} \leq \tilde{y} \implies \psi(\tilde{x}) \leq \psi(\tilde{y})$
+          \item Translation Invariance: $\psi(\tilde{x} + c) = \psi(\tilde{x}) + c \quad \forall c \in \Real$
         \end{enumerate}
 \end{definition}
 
@@ -127,81 +127,79 @@ We encourage the reader to refer to~\cite{Puterman1994} for a more detailed intr
         Given a metric space ($\Omega$, $\mathcal{F}$, $P$), a coherent risk measure is a function $\psi: \mathcal{X} \to \Real$. Satisfying
         \begin{enumerate}
                 \item All items in definition~\ref{def:risk}
-                \item Subadditivity: $\psi(X + Y) \leq \psi(X) + \psi(Y)$
-                \item Positive Homogeneity: $\psi(\lambda X) = \lambda \psi(X)$ for $\lambda \in \Real_+$
+                \item Sub-additivity: $\psi(\tilde{x} + \tilde{y}) \leq \psi(\tilde{x}) + \psi(\tilde{y})$
+                \item Positive Homogeneity: $\psi(\lambda \tilde{x}) = \lambda \psi(\tilde{x})$ for $\lambda \in \Real_+$
         \end{enumerate}
 \end{definition}
 
 \begin{proposition}\label{prop:coherent-convex}
         All coherent risk measures are convex risk measures.
         \begin{proof}
-                Let $\psi$ be a coherent risk measure. Then for $X, Y \in \mathcal{X}$ and $\lambda \in [0, 1]$ we have
+          Let $\psi$ be a coherent risk measure. Then for $\tilde{x}, \tilde{y} \in \mathcal{X}$ and $\lambda \in [0, 1]$ we have
                 \begin{align*}
-                        \psi(\lambda X + (1 - \lambda) Y) &\leq \psi(\lambda X) + \psi((1 - \lambda) Y) \\
-                        &= \lambda \psi(X) + (1 - \lambda) \psi(Y) \\
+                  \psi(\lambda \tilde{x} + (1 - \lambda) \tilde{y}) &\leq \psi(\lambda \tilde{x}) + \psi((1 - \lambda) \tilde{y}) \\
+                  &= \lambda \psi(\tilde{x}) + (1 - \lambda) \psi(\tilde{y}) \\
                 \end{align*} \\
         \end{proof}
 \end{proposition}
 
-It is important to note the the converse of Proposition~\ref{prop:coherent-convex} is not true. That is, not all convex risk measures are coherent. This is due to positive homogeneity.
+It is important to note the converse of Proposition~\ref{prop:coherent-convex} is not true. That is, not all convex risk measures are coherent. This is due to positive homogeneity.
 
 \begin{definition}[Variance]\label{def:variance}
         The variance of a random variable $X$ is defined as 
         \[
-                \text{Var}(X) = \mathbb{E}[(X - \mathbb{E}[X])^2].
+          \text{Var}(\tilde{x}) = \mathbb{E}[(\tilde{x} - \mathbb{E}[\tilde{x}])^2].
         \]
 \end{definition}
 
 \begin{definition}[Expectation]
         \label{def:expectation}
         A common risk measure is the expectation of a random variable. Given a random variable $X: \Omega \to \Real$, the expectation of $X$ is defined as
-        $$\mathbb{E}[X] = \sum_{\omega \in \Omega} X(\omega) P(\omega).$$
+        \[
+          \mathbb{E}[\tilde{x}] = \sum_{\omega \in \Omega} \tilde{x}(\omega) \mathbb{P}(\omega).
+        \]
 \end{definition}
 
 \begin{definition}[Value-at-Risk --- $\varalpha$]\label{def:var}
         For $\alpha \in [0, 1]$, the Value-at-Risk of a random variable 
-        $X$ at risk-level $\alpha$ is defined as
+        $\tilde{x}$ at risk-level $\alpha$ is defined as
         \[
-                \varalpha(X) = \sup_{t \in \Real} \left\{ P(X < t) \leq \alpha \right\} = \inf_{t \in \Real} \left\{ P(X \leq t) > \alpha \right\}.
+                \varalpha(\tilde{x}) = \sup_{t \in \Real} \left\{ \mathbb{P}(\tilde{x} < t) \leq \alpha \right\} = \inf_{t \in \Real} \left\{ \mathbb{P}(\tilde{x} \leq t) > \alpha \right\}.
         \]
 \end{definition}
 
 \begin{definition}[Conditional Value-at-Risk --- $\cvaralpha$]\label{def:cvar}
         For $\alpha \in [0, 1]$, the Conditional-Value-at-Risk of a random variable 
-        $X$ at risk-level $\alpha$ is defined as
+        $\tilde{x}$ with pdf $p$ at risk-level $\alpha$ is defined as
         \[
-                \cvaralpha(X) = \sup_{t \in \Real} \left\{ t - \frac{1}{\alpha} \mathbb{E}{[t - X]}_+ \right\} =
-                \inf_{\xi \in \Delta^n} \left\{ \xi\tr x \mid \alpha \cdot \xi \leq q \right\}.
+                \cvaralpha(\tilde{x}) = \sup_{t \in \Real} \left\{ t - \frac{1}{\alpha} \mathbb{E}{[t - \tilde{x}]}_+ \right\} =
+                \inf_{\xi \in \Delta^n} \left\{ \xi\tr x \mid \alpha \cdot \xi \leq p \right\}.
         \]
 \end{definition}
 
 From the definitions of both $\var$ and $\cvar$ we can see that $\var_1[\tilde{x}] = \infty$ and $\cvar_1[\tilde{x}] = \mathbb{E}[\tilde{x}]$.
 $\cvar_0[\tilde{x}] = \essinf[\tilde{x}]$ where $\essinf[\tilde{x}]$ is the essential infimum of $\tilde{x}$ with pdf
-$q$ (smalles value with nonzero probability).
+$p$ (smallest value with nonzero probability).
 
 
-\begin{figure}[ht!]
-        \begin{subfigure}[t]{0.5\textwidth}
+\begin{figure}[ht!]\label{fig:pdfs}
+        \begin{subfigure}[t]{0.5\textwidth}\label{fig:normal}
                 \centering
                 \includegraphics[width=0.7\linewidth]{julia_figures/normal.pdf}
                 \caption{$\mathcal{N}(0,1)$}
-                \label{fig:normal}
         \end{subfigure}
-        \begin{subfigure}[t]{0.5\textwidth}
+        \begin{subfigure}[t]{0.5\textwidth}\label{fig:normal_wide}
                 \centering
                 \includegraphics[width=0.7\linewidth]{julia_figures/normal_wide.pdf}
                 \caption{$\mathcal{N}(0,2)$}
-                \label{fig:normal_wide}
         \end{subfigure}
-        \begin{subfigure}[t]{1.0\textwidth}
+        \begin{subfigure}[t]{1.0\textwidth}\label{fig:gamma}
                 \centering
                 \includegraphics[width=0.4\linewidth]{julia_figures/gamma.pdf}
 
                 \caption{$\Gamma(2,2) - 4$}
-                \label{fig:gamma}
         \end{subfigure}
         \caption{Probability Density Functions of Various Distributions. All with a shared mean of 0.}
-        \label{fig:pdfs}
 \end{figure}
 
 Our introduction of the concept of risk is largely inspired by the influential work of~\cite{follmer2016}. We refer the reader there for a more delicate and detailed treatment of risk measures and their subsequent properties.
@@ -214,11 +212,11 @@ Policies may depend on time, and the agent may have a horizon of $T$ time steps 
 In this paper we assume a finite horizon, with each $s \in S$ having a time component, thus we omit the subscript $t$ on all variables for simplicity.
 
 \begin{definition}[Finite Horizon Expected Discounted Return]
-        Given a policy $\pi : \mathcal{S} \to \Delta^\mathcal{A}$ the expected finite horizon discounted return $\rho(\pi)$ can be defined as
+        Given a policy $\pi : \mathcal{S} \to \mathcal{A}$ the expected finite horizon discounted return $\rho(\pi)$ can be defined as
         \[ 
-                \rho(\pi) = \mathbb{E}_{\pi, \mathcal{P}} \left[ \sum_{t=0}^{T} \gamma^t r(s_t, \pi(s_t)) \right].
+          \rho(\pi) = \mathbb{E}_{\pi, \mathcal{P}} \left[ \sum_{t=0}^{T} \gamma^t r(\tilde{s}_t, \pi(\tilde{s}_t)) \right].
         \]
-        Where $s_0 \sim p_0$ and $s_{t+1} \sim \mathcal{P}(s_t, \pi(s_t))$, $\gamma$ is the discount factor, and $T$ is the time horizon.
+        Where $\tilde{s}_0 \sim p_0$ and $\tilde{s}_{t+1} \sim \mathcal{P}(s_t, \pi(s_t))$, $\gamma$ is the discount factor, and $T$ is the time horizon.
 \end{definition}
 
 \begin{definition}[Objective of Reinforcement Learning]\label{def:rl_obj}
@@ -233,9 +231,13 @@ In this paper we assume a finite horizon, with each $s \in S$ having a time comp
 \end{definition}
 
 \begin{definition}[Optimal Value Function]\label{def:optimal_value_function}
-        Given an optimal policy $\pi^\star$, the optimal value function starting at time $l \in [0...T]$ $V^\star_l = V^{\pi^\star}_l : \mathcal{S} \to \Real]$ is defined as
+        Given an optimal policy $\pi^\star$, the optimal value function starting at time $l \in [0\ldots T-1]$ $V^\star_l = V^{\pi^\star}_l : \mathcal{S} \to \Real]$ is defined as
         \[
-                V^\star_l(s) = \mathbb{E}_{\mathcal{P}} \left[ \sum_{t=l}^{T} \gamma^t r(s_t, \pi^\star(s_t)) \right].
+          V^\star_l(s) = r(s,\pi(s)) + \mathbb{E}_{\mathcal{P}} \left[ \sum_{t=l+1}^{T} \gamma^t r(\tilde{s}_t, \pi^\star(\tilde{s}_t)) \right].
+        \]
+        Where $\tilde{s}_{l+1} \sim \mathcal{P}(s, \pi(s))$ and
+        \[
+          V^\star_T(s) = r(s).
         \]
 \end{definition}
 
@@ -265,13 +267,46 @@ consider deterministic policies in our definition here, the Bellman equation can
         There exists an optimal policy $\pi^\star$ such that $V^\star_l(s) = V^{\pi^\star}_l(s)$ for all $s \in \mathcal{S}$ and for all $l \in [1\ldots T]$.
 \end{proposition}
 
-While Proposition~\ref{prop:optimal_policy_value} seems obvious, and indeed the proof is trivial by contradiction. We include it here to illustrate a key step twoards our goal of finding an optimal policy that maximizes the expected return by dynamic programming.
+While Proposition~\ref{prop:optimal_policy_value} seems obvious, and indeed the proof is trivial by contradiction. We include it here to illustrate a key idea which allows our goal of finding an optimal policy that maximizes the expected return by dynamic programming.
 
 We urge the reader to consider the work of~\cite{sutton2018} for a more detailed introduction to reinforcement learning.
 
 \section{Risk-Averse Reinforcement Learning}
 
-Consider the return function $\rho(\pi)$, which is of key importance in reinforcement learning~\ref{def:rl_obj}.
+Consider the return function $\rho(\pi)$, which is of key importance in reinforcement learning~\ref{def:rl_obj}. 
+The inner expectation of $\rho(\pi)$ is a risk measure, as such one can imagine replacing the expectation
+with a different risk measure.
+
+However, expectation is already a coherent risk measure, so the question arises, why would one want to replace it with a different risk measure?
+Simply put, one cannot easily parameterize expectation to capture the risk preferences of the agent. There has been
+prior work on embedding a utility function within the expectation, perhaps one encoding the preferences of an agent who
+desires higher returns less and less~\cite{howard1972}.\todo{Ask Marek why this doesn't suffice}
+
+\begin{definition}[Risk-Averse Reinforcement Learning]\label{def:risk_averse_rl}
+        Given a risk measure $\psi$, the objective of risk-averse reinforcement learning is as follows
+        \[
+        \max_{\pi \in \Pi} \hat{\rho}(\pi) = \max_{\pi \in \Pi} \psi \left( \sum_{t=0}^{T} \gamma^t r(\tilde{s}_t, \pi(\tilde{s}_t)) \right).
+        \]
+\end{definition}
+
+\begin{definition}[Optimal Risk-Averse Policy]\label{def:optimal_risk_averse_policy}
+        An optimal risk-averse policy $\pi^\star \in \argmax_{\pi \in \Pi} \hat{\rho}(\pi)$.
+\end{definition}
+
+\begin{definition}[Optimal Risk-Averse Value Function]\label{def:optimal_risk_averse_value_function}
+        Given an optimal risk-averse policy $\pi^\star$, the optimal risk-averse value function starting at time $l \in [0\ldots T-1]$ $V^\star_l = V^{\pi^\star}_l : \mathcal{S} \to \Real$ is defined as
+        \[
+          V^\star_l(s) = r(s,\pi(s)) + \psi \left( \sum_{t=l+1}^{T} \gamma^t r(\tilde{s}_t, \pi^\star(\tilde{s}_t)) \right).
+        \]
+        Where $\tilde{s}_{l+1} \sim \mathcal{P}(s, \pi(s))$ and
+        \[
+          V^\star_T(s) = r(s).
+        \]
+\end{definition}
+
+\todo{I have to stop here because I don't really know if what I said above makes sense or is true}
+
+
 
 \section{Methods}
 
