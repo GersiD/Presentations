@@ -75,7 +75,7 @@
 
 \section{Introduction}
 
-Reinforcement learning (RL) is a powerful framework for developing agents that can learn to make decisions in complex, uncertain environments~\cite{MEHTA2007237, Hall2018}.
+Reinforcement learning (RL) is a powerful framework for developing agents that can learn to make decisions in complex, uncertain environments~\cite{sutton2018, Puterman1994, MEHTA2007237, Hall2018}.
 The core goal of RL is to tractably compute an optimal policy for acting in such an environment. A key challenge in RL is 
 that the environment is often stochastic, and decisions made now can affect state distributions encountered in the
 future. Choosing an objective function that accurately captures the desired behavior of the agent is a difficult task.
@@ -83,7 +83,7 @@ future. Choosing an objective function that accurately captures the desired beha
 We would hope the objective that an RL agent aims to optimize would consider the `risk' of the actions it takes. Before even phrasing such an objective, one first needs to consider how to quantify risk into a numerical value. A value that encapsulates the uncertainty of the outcome of an action,
 so that an agent can distinguish between actions that are risky and those that are safe.
 
-There is a vast field of research that focuses on developing risk measures \todo{Cite something}~\cite{howard1972}. The goal of a risk measure is to quantify the uncertainty of a random variable, often while being interpretable and computationally tractable. The intersections of risk and reinforcement learning is the topic of this review, where we will explore the field of risk-averse reinforcement learning.
+There is a vast field of research that focuses on developing risk measures~\cite{follmer2016, Hau2023OnDP, Bauerle2011, howard1972}. The goal of a risk measure is to quantify the uncertainty of a random variable, often while being interpretable and computationally tractable. The intersections of risk and reinforcement learning is the topic of this review, where we will explore the field of risk-averse reinforcement learning.
 
 One must be cautious when optimizing a risk sensitive objective due to the
 common pitfalls that arise even in the published
@@ -112,7 +112,7 @@ Finally, we define the set of all deterministic policies $\Pi_D = \mathcal{A}^\m
 And the set of all randomized policies $\Pi_R = [\Delta^\mathcal{A}]^\mathcal{S}$.
 We encourage the reader to refer to~\cite{Puterman1994} for a more detailed introduction to MDPs.
 
-\section{Risk and Reward}
+\section{Risk and Reward}\label{sec:risk-and-reward}
 
 \begin{definition}[Risk Measure]\label{def:risk}
         A Risk Measure is a mapping from a random variable $\tilde{x}$ to a real number. Quantifying the uncertainty of an outcome.
@@ -210,6 +210,7 @@ As such
 Our introduction of the concept of risk is largely inspired by the influential work of~\cite{follmer2016}. We refer the reader there for a more delicate and detailed treatment of risk measures and their subsequent properties.
 
 \section{Vanilla Reinforcement Learning}
+\label{sec:vanilla-reinforcement-learning}
 
 In order to make decisions one must adopt a policy which prescribes the agent's behavior.
 A policy is a mapping from states to actions, and the goal of reinforcement learning is to find an optimal policy that maximizes the expected return.
@@ -280,40 +281,39 @@ We urge the reader to consider the work of~\cite{sutton2018} for a more detailed
 
 Consider the return function $\rho(\pi)$, which is of key importance in reinforcement learning~\ref{def:rl_obj}. 
 The inner expectation of $\rho(\pi)$ is a risk measure, as such one can imagine replacing the expectation
-with a different risk measure, more generally some risk measure $\psi$.
-
-\todo{I think this paragraph needs alot of work especially in the motivation}
+with a different risk measure $\psi$.
 
 However, expectation is already a coherent risk measure, so the question arises, why would one want to replace it with a different risk measure? 
 We refer the reader to the discussion in Section~\ref{sec:explanation-of-why-risk-measures-are-important} of this
-work and to the work of~\cite{Bauerle2011, follmer2016, howard1972}. 
+work and to the work of~\cite{Bauerle2011, follmer2016, howard1972} for further motivation. 
+
+In contrast to Section~\ref{sec:vanilla-reinforcement-learning} we now consider the set of all policies to be history dependant randomized polcies instead of stationary deterministic policies. That is to say, from now on 
+\[ 
+        \Pi = \Pi_{\text{HR}} = \left\{ \pi : {[\mathcal{S} \times \mathcal{A}]}_{0}^{t} \to \Delta^\mathcal{A} \right\}.
+\]
+This group of policies is more general than the set of deterministic policies, and allows for a more flexible representation of the agent's behavior.
+For the particular reader who is interested in why we only considerered stationary deterministic policies in Section~\ref{sec:vanilla-reinforcement-learning} we refer them to the work of~\cite{Puterman1994} (Proposition 4.4.3).
+
 There has been prior work on embedding a utility function within the expectation, perhaps one encoding the preferences of an agent who
 desires higher returns less and less~\cite{howard1972}.\todo{Ask Marek why this doesn't suffice} 
 
 \begin{definition}[Risk-Averse Reinforcement Learning]\label{def:risk_averse_rl}
         Given a risk measure $\psi$, the objective of risk-averse reinforcement learning is as follows
         \[
-        \max_{\pi \in \Pi} \hat{\rho}(\pi) = \max_{\pi \in \Pi} \psi \left( \sum_{t=0}^{T} \gamma^t r(\tilde{s}_t, \pi(\tilde{s}_t)) \right).
+                \max_{\pi \in \Pi} \hat{\rho}(\pi) = \max_{\pi \in \Pi} \psi_\mathcal{P} \left( \sum_{t=1}^{T} \gamma^t r(\tilde{s}_t, \pi(\tilde{h}_t)) \right).
         \]
+        Where $\tilde{s}_1 \sim p_0$ and $\tilde{s}_{t+1} \sim \mathcal{P}(s_t, \pi(\tilde{h}_t))$, $\tilde{h}_t = (\tilde{s}_1, \tilde{a}_1, \ldots, \tilde{s}_{t-1}, \tilde{a}_{t-1})$ and $\pi(\tilde{h}_t) \in \Delta^\mathcal{A}$.
 \end{definition}
 
 \begin{definition}[Optimal Risk-Averse Policy]\label{def:optimal_risk_averse_policy}
         An optimal risk-averse policy $\pi^\star \in \argmax_{\pi \in \Pi} \hat{\rho}(\pi)$.
 \end{definition}
 
-\begin{definition}[Optimal Risk-Averse Value Function]\label{def:optimal_risk_averse_value_function}
-        Given an optimal risk-averse policy $\pi^\star$, the optimal risk-averse value function starting at time $l \in [0\ldots T-1]$ $V^\star_l = V^{\pi^\star}_l : \mathcal{S} \to \Real$ is defined as
-        \[
-                V^\star_l(s) = r(s,\pi^\star(s)) + \psi_\mathcal{P} \left( \sum_{t=l+1}^{T} \gamma^t r(\tilde{s}_t, \pi^\star(\tilde{s}_t)) \right).
-        \]
-        Where $\tilde{s}_{l+1} \sim \mathcal{P}(s, \pi(s))$ and
-        \[
-          V^\star_T(s) = r(s).
-        \]
-\end{definition}
+Here however we depart from the standard procedure of defining the value function recursivly as would be required for dynamic programming and as was done in Section~\ref{sec:vanilla-reinforcement-learning}.
+The reason for this is that the risk measure $\psi$ does not usually satisfy the tower property, which is a key property for the Bellman equation to hold.
 
-\todo{I have to stop here because I don't really know if what I said above makes sense or is true since tower property is not satisfied by all coherent risk measures.}
-
+An open research question is how to decompose different risk measures as in Section~\ref{sec:risk-and-reward} into a recursive form that would allow for dynamic programming to be used for policy optimization.
+This topic is a difficult one, and we refer the reader to the work of~\cite{Hau2023OnDP, Bauerle2011, follmer2016} for a more detailed treatment of this topic.
 
 
 \section{Methods}
