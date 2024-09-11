@@ -18,6 +18,7 @@
 \usepackage{mathtools}
 \usepackage{amssymb}
 \usepackage{bbm}
+\usepackage[dvipsnames]{xcolor} % Saved my life during a conference once
 
 
 \usetikzlibrary{arrows,automata,backgrounds,positioning,decorations,intersections,matrix}
@@ -70,12 +71,11 @@
 
 \begin{frame}
 	\frametitle{Imitation Learning}
-	\textbf{Objective}: Learn a policy from expert demonstrations
+	\textbf{Objective}: Learn from expert demonstrations
 	\begin{itemize}
-	\item Health care: automating and improving ER care
-	\item Robotics: self-driving cars, manufacturing, etc.
-	\item Retail: recommendation systems, customer service
-	
+		\item Health care: automating and improving ER care
+		\item Robotics: self-driving cars, manufacturing, etc.
+		\item Retail: recommendation systems, customer service
 	\end{itemize}
 	\vfill
 	\textbf{Offline IL}: Given fixed dataset of expert demonstrations
@@ -85,89 +85,136 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Why Imitation Learning?}
+\frametitle{Imitation Learning}
 	\begin{itemize}
-		\item Models are hard to specify
-		\item Even harder to solve
+		\item RL requires rewards
+		\vfill
+		\item Rewards are hard to specify
+		\vfill
 		\item Often have access to expert demonstrations
-		\item Usually don't have access to a simulator
+		\vfill
+		\item \emph{Key Idea}: Supervised learning from expert demonstrations
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Imitation Learning}
+	\textbf{Behavioral Cloning (BC)}: Supervised learning from expert demonstrations
+	\[ 
+		\min_{\theta} \sum_{(s,a) \in D_e} loss \left(\pi_\theta(s) - a \right)
+	\]
+	\vfill
+	\textbf{Benifits}
+	\begin{itemize}
+		\item Simple, Natural, Easy to implement
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Imitation Learning Difficulties}
-	\textbf{Central Issue}: \emph{Covariate Shift}, true expert behavior may not be the same as the expert demonstrations
+	\[ 
+		\min_{\theta} \sum_{(s,a) \in D_e} loss \left(\pi_\theta(s) - a \right)
+	\]
 	\vfill
-	\textbf{Example}: An expert who only wishes to show the most demonstrative states
-	\vfill
-	\textbf{Methods Affected} LPAL, GAIL, GWAL, MWAL, BC, and many others
+	\textbf{Central Issues}
+	\begin{itemize}
+		\item Sample inefficient
+		\item Expert demonstrations may not be optimal
+		\item Sensitive to dataset collection (e.g. an expert who only shows a subset of the state space)
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Robust Offline Imitation Learning}
-	\textbf{Objective}: Learn a policy under difficult learning conditions i.e. covariate shift
-
+	\frametitle{Inverse Reinforcement Learning}
+	\textbf{Objective}: Learn from expert data
+	\begin{itemize}
+		\item Leverage model dynamics to reduce sample complexity
+		\item Aims to match experts state-action distribution
+		\item Known model dynamics allow for generalization
+	\end{itemize}
 	\vfill
+	\textbf{Key Idea}: Learn a reward function from expert demonstrations, then use RL to learn a policy
+\end{frame}
 
-	\textbf{Key Idea}: Generate a convex set of consistent experts, then minimize regret
+\begin{frame}
+	\frametitle{Inverse Reinforcement Learning}
+	\textbf{Objective}: Learn from expert data $D_e$
+	\[ 
+		\min_{\pi \in \Pi} \max_{r \in \mathcal{R}} \rho(\hat{\pi}_{D_e}, r) - \rho(\pi, r)
+	\]
+	\vfill
+	\textbf{Benifits}
+	\begin{itemize}
+		\item Able to generalize to unseen states
+		\item Can learn from suboptimal demonstrations
+	\end{itemize}
+	\vfill
+	\textbf{Central Issues}
+	\begin{itemize}
+		\item \textcolor{blue}{Estimating the expert's policy $\hat{\pi}_{D_e}$}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Off-Policy IRL}
+\begin{figure}
+  \begin{center}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \emph{On-Policy}\\
+    \textbf{Expert's Occ Freq $u_e$}
+    \includegraphics[width=\linewidth]{./plots/all_state/ue.pdf}
+    LPAL Return $= 86/87$
+  \end{minipage}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \emph{Off-Policy}\\
+    \textbf{Estimated Occ Freq $\hat{u}_e$}
+    \includegraphics[width=\linewidth]{./plots/all_state/uehat.pdf}
+    LPAL Return $= 38/87$
+  \end{minipage}
+  \end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Off-Policy IRL}
+\begin{figure}
+  \begin{center}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \emph{On-Policy}\\
+    \textbf{Expert's Occ Freq $u_e$}
+    \includegraphics[width=\linewidth]{./plots/all_state/ue.pdf}
+    LPAL Return $= 86/87$ \\
+    \textcolor{green}{\textbf{ROIL Return $= 79/87$}}
+  \end{minipage}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \emph{Off-Policy}\\
+    \textbf{Estimated Occ Freq $\hat{u}_e$}
+    \includegraphics[width=\linewidth]{./plots/all_state/uehat.pdf}
+    LPAL Return $= 38/87$ \\
+    \textcolor{green}{\textbf{ROIL Return $= 82/87$}}
+  \end{minipage}
+  \end{center}
+\end{figure}
 \end{frame}
 
 \begin{frame}
 	\frametitle{This Talk}
-	Computing policies that minimize worst case regret, with respect to the worst case expert
-
+	\textbf{Objective}: \textcolor{red}{Don't} estimate the expert's policy
+	\[
+		\min_{\pi \in \Pi} \max_{r \in \mathcal{R}} \rho(\textcolor{red}{\hat{\pi}_{D_e}}, r) - \rho(\pi, r)
+	\]
 	\vfill
-	\emph{Key Idea}: Generate a convex set of consistent experts, then minimize regret
-
-	\textbf{Outline}
-	\begin{itemize}
-	\item \emph{Motivation}: Why study IRL?
-	\item \emph{Domain Introduction}: What is IRL?
-	\item \emph{Robust Offline IL}: New approach to solving the robust IRL objective
-	\end{itemize}
+	\textbf{Key Idea}: Minimize worst case regret
+	\[
+		\min_{\pi \in \Pi} \textcolor{blue}{\max_{\pi_e \in \Pi_{D_e}}} \max_{r \in \mathcal{R}} \rho(\textcolor{blue}{\pi_e}, r) - \rho(\pi, r)
+	\]
 \end{frame}
 
-\section*{Domain Introduction}
-
-\begin{frame}
-\frametitle{Domain Introduction}
-Two approaches to learning from demonstrations:
-\begin{itemize}
-	\item \emph{Inverse Reinforcement Learning (IRL)}: Learn a reward function from expert demonstrations then use RL to learn a policy
-	\item \emph{Imitation Learning (IL)}: Learn a policy directly from expert demonstrations
-\end{itemize}
-\textbf{Distinction}: Inverse Reinforcement Learning (IRL) \emph{typically} assumes problem dynamics are known, Imitation Learning (IL) \emph{typically} does not
-\end{frame}
-
-\begin{frame}
-\frametitle{Domain Introduction}
-	\begin{itemize}
-		\item Similar to Reinforcement Learning, except $r^\star : \mathcal{S} \times \mathcal{A} \to \Real$
-		\item $$D_e = (s_i, \pi_e(s_i))_{i=1}^N$$
-		\item Generally demonstrations are given as state-action pairs collected along expert trajectories with horizon $N$
-		\item We make no assumptions on the experts' optimality, nor the temporal structure of the demonstrations
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Notation}
-	\begin{itemize}
-		\item Let $m, n$ be positive integers
-		\item $\Real^{mn}$ denotes the set of $m \cdot n$-dimensional real vectors
-		\item $\Real^{m \times n}$ denotes the set of $m \times n$ real matrices
-		\item $\Delta^m$ denotes the $m$-dimensional probability simplex
-		\item $\Pi$ denotes the set of all randomized Markov policies
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-\frametitle{Domain Introduction}
-	\begin{itemize}
-		\item We do not attempt to learn the experts' reward function
-		\item We don't even estimate the experts' behavior
-		\item minimize the regret with respect to the \emph{worst case expert} consistent with the demonstrations $D_e$
-	\end{itemize}
-\end{frame}
+\section*{Problem Formulation}
 
 \begin{frame} \frametitle{Markov Decision Process}
   \textbf{Model} (tabular in this talk) \par
@@ -187,6 +234,57 @@ Two approaches to learning from demonstrations:
     \]
     \vfill
     \textbf{Random variables}: $\tilde{\rho}, \tilde{s}, \tilde{a}, \tilde{x}, \dots $ adorned with tilde
+\end{frame}
+
+\begin{frame} \frametitle{Occupancy Frequencies}
+	\[
+		\mathcal{U}
+		\; =\; 
+		\left\{ u^{\pi} \mid  \pi \in \Pi \right\}
+		\; =\;
+		\Bigl\{ u\in \Real^{SA}_{+} \mid \sum_{a\in \mathcal{A}} (I - \gamma\cdot P\tr_a) \cdot u(\cdot, a) = p_0 \Bigr\}.
+	\]
+	Intuitively, $u_\pi(s,a)$ is the probability of being in state $s$ and taking action $a$.
+	\[
+		u_\pi(s,a) \propto \mathbb{P}(\tilde{s}_t = s, \tilde{a}_t = a \mid \tilde{s}_0 \sim p_0)
+	\]
+	\vfill
+	\[
+		\min_{\pi \in \Pi} \max_{\pi_e \in \Pi_{D_e}} \max_{r \in \mathcal{R}} \rho(\pi_e, r) - \rho(\pi, r)
+	\]
+	\[
+		\min_{\textcolor{blue}{u \in \mathcal{U}}} \max_{\textcolor{ForestGreen}{u_e \in \mathcal{U}_{D_e}}} \max_{r \in \mathcal{R}} \rho(\textcolor{ForestGreen}{u_e}, r) - \rho(\textcolor{blue}{u}, r)
+	\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Domain Introduction}
+	\begin{itemize}
+		\item Similar to Reinforcement Learning, except $r^\star : \mathcal{S} \times \mathcal{A} \to \Real$
+		$$D_e = (s_i, \pi_e(s_i))_{i=1}^N$$
+		\item Generally demonstrations are given as state-action pairs collected along expert trajectories with horizon $N$
+		\item We make no assumptions on the experts' optimality, nor the temporal structure of the demonstrations
+	\end{itemize}
+\end{frame}
+
+% \begin{frame}
+% 	\frametitle{Notation}
+% 	\begin{itemize}
+% 		\item Let $m, n$ be positive integers
+% 		\item $\Real^{mn}$ denotes the set of $m \cdot n$-dimensional real vectors
+% 		\item $\Real^{m \times n}$ denotes the set of $m \times n$ real matrices
+% 		\item $\Delta^m$ denotes the $m$-dimensional probability simplex
+% 		\item $\Pi$ denotes the set of all randomized Markov policies
+% 	\end{itemize}
+% \end{frame}
+
+\begin{frame}
+\frametitle{Domain Introduction}
+	\begin{itemize}
+		\item We do not attempt to learn the experts' reward function
+		\item We don't even estimate the experts' behavior
+		\item minimize the regret with respect to the \emph{worst case expert} consistent with the demonstrations $D_e$
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -213,6 +311,18 @@ Two approaches to learning from demonstrations:
 	There are other viable choices of $\mathcal{W}$, which we accommodate for as an extension to our work.
 \end{frame}
 
+\begin{frame}
+	\frametitle{On-Policy vs Off-Policy}
+	\begin{equation*} \label{eq:definition_u_hat}
+	\hat{u}_e(s,a)
+	\;=\; \sum_{(t, s',a') \in D_e} \gamma^t \cdot  \I{s=s' \wedge\; a=a'},
+	\end{equation*}
+	\vfill
+	\begin{itemize}
+		\item \textbf{Definition}: A set of demonstrations $D_e$ is said to be \emph{On Policy} if $$\lim_{N \to \infty} \| \hat{u}_e(D_e^N) - u_e \|_\infty  = 0$$
+	\end{itemize}
+\end{frame}
+
 
 \section*{Our Approach}
 
@@ -228,7 +338,6 @@ Two approaches to learning from demonstrations:
 	\[ \rho(\tilde{\pi}, r) = \lim_{t \to \infty} \mathbb{E}^{\tilde{\pi}, \mathcal{P}} \lbrack \sum_{t=0}^T \gamma^t r(\tilde{s_t}, \tilde{\pi}(\tilde{s_t})) \rbrack \]
 	\[ \Pi_R(D) = \lbrace \pi \in \Pi \mid \pi(s,a) = 1 \quad \forall (s,a) \in D \rbrace \]
 \end{frame}
-
 
 \begin{frame}
 	\frametitle{Our Approach}
@@ -309,18 +418,6 @@ Two approaches to learning from demonstrations:
 \section*{Experiments}
 
 \begin{frame}
-	\frametitle{On-Policy vs Off-Policy}
-	\begin{equation*} \label{eq:definition_u_hat}
-	\hat{u}_e(s,a)
-	\;=\; \sum_{(t, s',a') \in D_e} \gamma^t \cdot  \I{s=s' \wedge\; a=a'},
-	\end{equation*}
-	\vfill
-	\begin{itemize}
-		\item \textbf{Definition}: A set of demonstrations $D_e$ is said to be \emph{On Policy} if $$\lim_{N \to \infty} \| \hat{u}_e(D_e^N) - u_e \|_\infty  = 0$$
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
 \frametitle{40x40 Gridworld}
 
 \begin{figure}
@@ -383,7 +480,17 @@ Two approaches to learning from demonstrations:
   \end{center}
 \caption{Regret of All Methods on 40x40 Gridworld}
 \end{figure}
+\end{frame}
 
+\begin{frame}
+	\frametitle{Conclusion}
+	\begin{itemize}
+		\item Need offline IRL methods that are robust to covariate shift
+		\vfill
+		\item Existing methods fail to learn a robust policy
+		\vfill
+		\item ROIL is a principled approach to solving the robust offline IRL problem
+	\end{itemize}
 \end{frame}
 
 \end{document} 
