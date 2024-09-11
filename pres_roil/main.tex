@@ -236,40 +236,30 @@
     \textbf{Random variables}: $\tilde{\rho}, \tilde{s}, \tilde{a}, \tilde{x}, \dots $ adorned with tilde
 \end{frame}
 
-\begin{frame} \frametitle{Occupancy Frequencies}
-	\[
-		\mathcal{U}
-		\; =\; 
-		\left\{ u^{\pi} \mid  \pi \in \Pi \right\}
-		\; =\;
-		\Bigl\{ u\in \Real^{SA}_{+} \mid \sum_{a\in \mathcal{A}} (I - \gamma\cdot P\tr_a) \cdot u(\cdot, a) = p_0 \Bigr\}.
-	\]
-	Intuitively, $u_\pi(s,a)$ is the probability of agent $\pi$ being in state $s$ and taking action $a$.
-	\[
-		u_\pi(s,a) \propto \mathbb{P}(\tilde{s}_t = s, \tilde{a}_t = a \mid \tilde{s}_0 \sim p_0)
-	\]
-\end{frame}
-
-\begin{frame} \frametitle{Consistent Occupancy Frequencies}
-	We are given a dataset
-	\[
-		D_e = {(s_i, \pi_e(s_i))}_{i=1}^N.
-	\]
-	\textbf{Definition}: The set of consistent occupancy frequencies $\Upsilon$ is defined as
-	\[
-		\Upsilon = \left\{ u \in \mathcal{U} \mid u(s,a) = 0 \iff (s,a) \notin D_e \;\; \text{and} \;\; (s,a^\prime) \in D_e \right\},
-	\]
-\end{frame}
-
-\begin{frame}
-\frametitle{Domain Introduction}
-	\begin{itemize}
-		\item Similar to Reinforcement Learning, except $r^\star : \mathcal{S} \times \mathcal{A} \to \Real$
-		$$D_e = (s_i, \pi_e(s_i))_{i=1}^N$$
-		\item Generally demonstrations are given as state-action pairs collected along expert trajectories with horizon $N$
-		\item We make no assumptions on the experts' optimality, nor the temporal structure of the demonstrations
-	\end{itemize}
-\end{frame}
+% \begin{frame} \frametitle{Occupancy Frequencies}
+% 	\[
+% 		\mathcal{U}
+% 		\; =\; 
+% 		\left\{ u^{\pi} \mid  \pi \in \Pi \right\}
+% 		\; =\;
+% 		\Bigl\{ u\in \Real^{SA}_{+} \mid \sum_{a\in \mathcal{A}} (I - \gamma\cdot P\tr_a) \cdot u(\cdot, a) = p_0 \Bigr\}.
+% 	\]
+% 	Intuitively, $u_\pi(s,a)$ is the probability of agent $\pi$ being in state $s$ and taking action $a$.
+% 	\[
+% 		u_\pi(s,a) \propto \mathbb{P}(\tilde{s}_t = s, \tilde{a}_t = a \mid \tilde{s}_0 \sim p_0)
+% 	\]
+% \end{frame}
+%
+% \begin{frame} \frametitle{Consistent Occupancy Frequencies}
+% 	We are given a dataset
+% 	\[
+% 		D_e = {(s_i, \pi_e(s_i))}_{i=1}^N.
+% 	\]
+% 	\textbf{Definition}: The set of consistent occupancy frequencies $\Upsilon$ is defined as
+% 	\[
+% 		\Upsilon = \left\{ u \in \mathcal{U} \mid u(s,a) = 0 \iff (s,a) \notin D_e \;\; \text{and} \;\; (s,a^\prime) \in D_e \right\},
+% 	\]
+% \end{frame}
 
 % \begin{frame}
 % 	\frametitle{Notation}
@@ -408,6 +398,54 @@
 	\item $\Psi(\mathcal{W}) = \lbrace w \in \mathcal{W} \mid \hat{u}_e\tr \Phi w >= 0 \rbrace $
 \end{itemize}
 
+\end{frame}
+
+\section*{Example}
+
+\begin{frame}
+\frametitle{Example}
+
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[->,shorten >=1pt,auto,node distance=2cm,
+		thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+
+	\node[main node] (1) {$s_1$};
+	\node[main node] (2) [left of=1] {$s_2$};
+	\node[main node] (3) [right of=1] {$s_3$};
+
+	\path[every node/.style={font=\sffamily\small}]
+	(1) edge node [above] {$a_1$} (2)
+	edge node [above] {$a_2$} (3)
+	(2) edge [loop left] node {$a_1$} (2)
+	(3) edge [loop right] node {$a_1$} (3);
+	\end{tikzpicture}
+  \caption{MDP}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{plots/visual_U.pdf}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{plots/visual_U_and_Upsilon.pdf}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{plots/visual_solve_cheb.pdf}
+\end{figure}
 \end{frame}
 
 \section*{Experiments}
