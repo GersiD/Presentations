@@ -244,16 +244,20 @@
 		\; =\;
 		\Bigl\{ u\in \Real^{SA}_{+} \mid \sum_{a\in \mathcal{A}} (I - \gamma\cdot P\tr_a) \cdot u(\cdot, a) = p_0 \Bigr\}.
 	\]
-	Intuitively, $u_\pi(s,a)$ is the probability of being in state $s$ and taking action $a$.
+	Intuitively, $u_\pi(s,a)$ is the probability of agent $\pi$ being in state $s$ and taking action $a$.
 	\[
 		u_\pi(s,a) \propto \mathbb{P}(\tilde{s}_t = s, \tilde{a}_t = a \mid \tilde{s}_0 \sim p_0)
 	\]
-	\vfill
+\end{frame}
+
+\begin{frame} \frametitle{Consistent Occupancy Frequencies}
+	We are given a dataset
 	\[
-		\min_{\pi \in \Pi} \max_{\pi_e \in \Pi_{D_e}} \max_{r \in \mathcal{R}} \rho(\pi_e, r) - \rho(\pi, r)
+		D_e = {(s_i, \pi_e(s_i))}_{i=1}^N.
 	\]
+	\textbf{Definition}: The set of consistent occupancy frequencies $\Upsilon$ is defined as
 	\[
-		\min_{\textcolor{blue}{u \in \mathcal{U}}} \max_{\textcolor{ForestGreen}{u_e \in \mathcal{U}_{D_e}}} \max_{r \in \mathcal{R}} \rho(\textcolor{ForestGreen}{u_e}, r) - \rho(\textcolor{blue}{u}, r)
+		\Upsilon = \left\{ u \in \mathcal{U} \mid u(s,a) = 0 \iff (s,a) \notin D_e \;\; \text{and} \;\; (s,a^\prime) \in D_e \right\},
 	\]
 \end{frame}
 
@@ -279,16 +283,7 @@
 % \end{frame}
 
 \begin{frame}
-\frametitle{Domain Introduction}
-	\begin{itemize}
-		\item We do not attempt to learn the experts' reward function
-		\item We don't even estimate the experts' behavior
-		\item minimize the regret with respect to the \emph{worst case expert} consistent with the demonstrations $D_e$
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Domain Introduction}
+	\frametitle{Features}
 	\begin{itemize}
 		\item Matrix of features $\Phi \in \Real^{\mathcal{S}\mathcal{A} \times k}$
 		\item Enable generalization across unseen states
