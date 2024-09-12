@@ -20,6 +20,7 @@
 \usepackage{bbm}
 \usepackage[dvipsnames]{xcolor} % Saved my life during a conference once
 \DeclareMathOperator{\regret}{Regret}
+\DeclareMathOperator{\loss}{Loss}
 
 
 \usetikzlibrary{arrows,automata,backgrounds,positioning,decorations,intersections,matrix}
@@ -65,7 +66,7 @@
 		\begin{figure}
 			\centering
 			\includegraphics[width=\linewidth]{plots/rainbow_road.jpeg}
-			\caption{Super Mario Kart 64 Rainbow Road}
+			% \caption{Super Mario Kart 64 Rainbow Road}
 		\end{figure}
 	\end{minipage}
 \end{frame}
@@ -102,10 +103,10 @@
 \frametitle{Imitation Learning}
 	\textbf{Behavioral Cloning (BC)}: Supervised learning from expert demonstrations
 	\[ 
-		\min_{\theta} \sum_{(s,a)}^{D_e} \mathcal{L} \left(\pi_\theta(s) - a \right)
+		\min_{\theta} \sum_{(s,a)}^{D_e} \loss \left(\pi_\theta(s) - a \right)
 	\]
 	\vfill
-	\textbf{Benifits}
+	\textbf{Benefits}
 	\begin{itemize}
 		\item Simple, Natural, Easy to implement
 	\end{itemize}
@@ -114,7 +115,7 @@
 \begin{frame}
 	\frametitle{Imitation Learning Difficulties}
 	\[ 
-		\min_{\theta} \sum_{(s,a)}^{D_e} \mathcal{L} \left(\pi_\theta(s) - a \right)
+		\min_{\theta} \sum_{(s,a)}^{D_e} \loss \left(\pi_\theta(s) - a \right)
 	\]
 	\vfill
 	\textbf{Central Issues}
@@ -144,7 +145,7 @@
 		\min_{\pi \in \Pi} \max_{r \in \mathcal{R}} \rho(\hat{\pi}_{D_e}, r) - \rho(\pi, r)
 	\]
 	\vfill
-	\textbf{Benifits}
+	\textbf{Benefits}
 	\begin{itemize}
 		\item Able to generalize to unseen states
 		\item Can learn from suboptimal demonstrations
@@ -163,14 +164,14 @@
   \begin{minipage}{0.45\linewidth}
     \centering
     \emph{On-Policy}\\
-    \textbf{Expert's Occ Freq $u_e$}
+    \textbf{True Expert $\pi_e$}
     \includegraphics[width=\linewidth]{./plots/all_state/ue.pdf}
     LPAL Return $= 86/87$
   \end{minipage}
   \begin{minipage}{0.45\linewidth}
     \centering
     \emph{Off-Policy}\\
-    \textbf{Estimated Occ Freq $\hat{u}_e$}
+    \textbf{Estimated Expert $\hat{\pi}_{D_e}$}
     \includegraphics[width=\linewidth]{./plots/all_state/uehat.pdf}
     LPAL Return $= 38/87$
   \end{minipage}
@@ -185,7 +186,7 @@
   \begin{minipage}{0.45\linewidth}
     \centering
     \emph{On-Policy}\\
-    \textbf{Expert's Occ Freq $u_e$}
+    \textbf{True Expert $\pi_e$}
     \includegraphics[width=\linewidth]{./plots/all_state/ue.pdf}
     LPAL Return $= 86/87$ \\
     \textcolor{green}{\textbf{ROIL Return $= 79/87$}}
@@ -193,7 +194,7 @@
   \begin{minipage}{0.45\linewidth}
     \centering
     \emph{Off-Policy}\\
-    \textbf{Estimated Occ Freq $\hat{u}_e$}
+    \textbf{Estimated Expert $\hat{\pi}_{D_e}$}
     \includegraphics[width=\linewidth]{./plots/all_state/uehat.pdf}
     LPAL Return $= 38/87$ \\
     \textcolor{green}{\textbf{ROIL Return $= 82/87$}}
@@ -225,7 +226,7 @@
    ~~~Transition probabilities $\mathcal{P} \in \Real^{\mathcal{S} \times \mathcal{A} \times \mathcal{S} }$ \par
    ~~~Initial state distribution $p_0 \in \Delta^\mathcal{S}$ \par
    ~~~Discount factor $\gamma \in \Real$ \par
-   ~~~Features $\Phi \in \Real^{\mathcal{S} \times \mathcal{A} \times k}$ \par
+   ~~~Features $\Phi \in \Real^{\mathcal{S} \mathcal{A} \times k}$ \par
    ~~~\sout{Rewards $r \in \Real^{\mathcal{S} \times \mathcal{A}}$}}
     \vfill 
     \textbf{Solution}: Policy ${\pi}\colon \mathcal{S} \to \Delta^\mathcal{A}$
@@ -275,7 +276,7 @@
 % \end{frame}
 
 \begin{frame}
-	\frametitle{Realizeable Rewards}
+	\frametitle{Realizable Rewards}
 	\textbf{Common assumption} : $r^\star$ can be realized by our features $\Phi \in \Real^{\mathcal{S}\mathcal{A} \times k}$
 	and a weight vector $w \in \mathcal{W}$ such that $r^\star = \Phi w$.
 	\vfill
