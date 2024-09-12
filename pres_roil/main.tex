@@ -374,27 +374,26 @@
 \begin{frame}
 	\frametitle{ROIL-P}
 	\begin{itemize}
-		\item \textbf{Key Strength}: ROIL does not estimate the occupancy frequency of the expert $\hat{u}_e$
+		\item \textbf{Key Strength}: ROIL does not estimate the expert's policy $\hat{\pi}_e$
 		\vfill
-		\item \textbf{Problem}: In On-policy domains, the expert's occupancy frequency is free of covariate shift
+		\item \textbf{Problem}: In on-policy domains, estimates of $\hat{\pi}_e$ are close to the true expert
 		\vfill
-		\item \textbf{Solution}: ROIL-P, a variant of ROIL that estimates the expert's occupancy frequency, and prunes the set of reward functions
+		\item \textbf{Solution}: ROIL-P, a variant of ROIL that estimates $\hat{\pi}_e$, and prunes the set of reward functions
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
 	\frametitle{ROIL-P}
 	\textbf{Solution}: ROIL-P, a variant of ROIL that estimates the expert's occupancy frequency, and prunes the set of reward functions
-\[ \begin{mprog}
-	\minimize{t \in \Real, u \in \Real^{\mathcal{S} \times \mathcal{A}}} t
-	\stc t \geq \max_{u_e \in \Upsilon} u_e\tr r - u\tr r,\quad \forall \; r \in ext(\Psi(\mathcal{R})),
-        \cs u\in \Upsilon
-\end{mprog} \]
-
-\begin{itemize}
-	\item $\Psi(\mathcal{R}) = \lbrace r \in \mathcal{R} \mid \hat{u}_e\tr r >= 0 \rbrace $
-\end{itemize}
-
+	\vfill
+	\[ 
+	\begin{mprog}
+		\minimize{t \in \Real, u \in \Real^{\mathcal{S} \times \mathcal{A}}} t
+		\stc t \geq \max_{u_e \in \Upsilon} u_e\tr r - u\tr r,\quad \forall \; r \in ext(\textcolor{blue}{\lbrace r \in \mathcal{R} \mid \hat{u}_e\tr r >= 0 \rbrace}),
+			\cs u\in \Upsilon
+	\end{mprog} 
+	\]
+	% $\small{\Psi(\mathcal{R}) = \lbrace r \in \mathcal{R} \mid \hat{u}_e\tr r >= 0 \rbrace}$
 \end{frame}
 
 \section*{Example}
