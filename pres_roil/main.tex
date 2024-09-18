@@ -138,85 +138,9 @@
 	\textbf{Key Idea}: Learn a reward function from expert demonstrations, then use RL to learn a policy
 \end{frame}
 
-\begin{frame}
-	\frametitle{Inverse Reinforcement Learning}
-	\textbf{Objective}: Learn from expert data $D_e$
-	\[ 
-		\min_{\pi \in \Pi} \max_{r \in \mathcal{R}} \rho(\hat{\pi}_{D_e}, r) - \rho(\pi, r)
-	\]
-	\vfill
-	\textbf{Benefits}
-	\begin{itemize}
-		\item Able to generalize to unseen states
-		\item Can learn from suboptimal demonstrations
-	\end{itemize}
-	\vfill
-	\textbf{Central Issues}
-	\begin{itemize}
-		\item \textcolor{blue}{Estimating the expert's policy $\hat{\pi}_{D_e}$}
-	\end{itemize}
-\end{frame}
 
-\begin{frame}
-\frametitle{Off-Policy IRL}
-\begin{figure}
-  \begin{center}
-  \begin{minipage}{0.45\linewidth}
-    \centering
-    \emph{On-Policy}\\
-    \textbf{True Expert $\pi_e$}
-    \includegraphics[width=\linewidth]{./plots/all_state/ue.pdf}
-    LPAL Return $= 86/87$
-  \end{minipage}
-  \begin{minipage}{0.45\linewidth}
-    \centering
-    \emph{Off-Policy}\\
-    \textbf{Estimated Expert $\hat{\pi}_{D_e}$}
-    \includegraphics[width=\linewidth]{./plots/all_state/uehat.pdf}
-    LPAL Return $= 38/87$
-  \end{minipage}
-  \end{center}
-\end{figure}
-\end{frame}
 
-\begin{frame}
-\frametitle{Off-Policy IRL}
-\begin{figure}
-  \begin{center}
-  \begin{minipage}{0.45\linewidth}
-    \centering
-    \emph{On-Policy}\\
-    \textbf{True Expert $\pi_e$}
-    \includegraphics[width=\linewidth]{./plots/all_state/ue.pdf}
-    LPAL Return $= 86/87$ \\
-    \textcolor{green}{\textbf{ROIL Return $= 79/87$}}
-  \end{minipage}
-  \begin{minipage}{0.45\linewidth}
-    \centering
-    \emph{Off-Policy}\\
-    \textbf{Estimated Expert $\hat{\pi}_{D_e}$}
-    \includegraphics[width=\linewidth]{./plots/all_state/uehat.pdf}
-    LPAL Return $= 38/87$ \\
-    \textcolor{green}{\textbf{ROIL Return $= 82/87$}}
-  \end{minipage}
-  \end{center}
-\end{figure}
-\end{frame}
-
-\begin{frame}
-	\frametitle{This Talk}
-	\textbf{Objective}: \textcolor{red}{Don't} estimate the expert's policy
-	\[
-		\min_{\pi \in \Pi} \max_{r \in \mathcal{R}} \rho(\textcolor{red}{\hat{\pi}_{D_e}}, r) - \rho(\pi, r)
-	\]
-	\vfill
-	\textbf{Key Idea}: Minimize worst case regret
-	\[
-		\min_{\pi \in \Pi} \textcolor{blue}{\max_{\pi_e \in \Pi_{D_e}}} \max_{r \in \mathcal{R}} \rho(\textcolor{blue}{\pi_e}, r) - \rho(\pi, r)
-	\]
-\end{frame}
-
-\section*{Preliminaries}
+\section*{IRL}
 
 \begin{frame} \frametitle{Markov Decision Process}
   \textbf{Model} (tabular in this talk) \par
@@ -277,12 +201,30 @@
 
 \begin{frame}
 	\frametitle{Realizable Rewards}
-	\textbf{Common assumption} : $r^\star$ can be realized by our features $\Phi \in \Real^{\mathcal{S}\mathcal{A} \times k}$
+	\textbf{Common assumption} : $r^\star$ can be linearly realized by our features $\Phi \in \Real^{\mathcal{S}\mathcal{A} \times k}$
 	and a weight vector $w \in \mathcal{W}$ such that $r^\star = \Phi w$.
 	\vfill
 	Prior work has restricted the weight vector to the L1 norm ball:
 	\[ \mathcal{W} = \lbrace w \in \Real^k \mid \lvert \lvert w \rvert \rvert_1 \leq 1 \rbrace \]
-	There are other viable choices of $\mathcal{W}$, which we accommodate for as an extension to our work.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Inverse Reinforcement Learning}
+	\textbf{Objective}: Learn from expert data $D_e$
+	\[ 
+		\textcolor{PineGreen}{\min_{\pi \in \Pi}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}} \rho(\hat{\pi}_{D_e}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{\pi}, \textcolor{RedOrange}{r})
+	\]
+	\vfill
+	\textbf{Benefits}
+	\begin{itemize}
+		\item Able to generalize to unseen states
+		\item Can learn from suboptimal demonstrations
+	\end{itemize}
+	\vfill
+	\textbf{Central Issues}
+	\begin{itemize}
+		\item \textcolor{blue}{Estimating the expert's policy $\hat{\pi}_{D_e}$}
+	\end{itemize}
 \end{frame}
 
 % \begin{frame}
@@ -346,6 +288,81 @@
 % \end{frame}
 
 \section*{ROIL}
+
+\begin{frame}
+\frametitle{A Key Distinction}
+\[
+ \pi(s) = \pi_e(s)
+\]
+\vfill
+\[
+	\text{DOES NOT MEAN}
+\]
+\vfill
+\[
+	u_\pi(s,a) = u_{\pi_e}(s,a) \propto \mathbb{P}(\tilde{s} = s, \tilde{a} = a)
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Off-Policy IRL}
+\begin{figure}
+  \begin{center}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \emph{On-Policy}\\
+    \textbf{True Expert $\pi_e$}
+    \includegraphics[width=\linewidth]{./plots/all_state/ue.pdf}
+    LPAL Return $= 86/87$
+  \end{minipage}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \emph{Off-Policy}\\
+    \textbf{Estimated Expert $\hat{\pi}_{D_e}$}
+    \includegraphics[width=\linewidth]{./plots/all_state/uehat.pdf}
+    LPAL Return $= 38/87$
+  \end{minipage}
+  \end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Off-Policy IRL}
+\begin{figure}
+  \begin{center}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \emph{On-Policy}\\
+    \textbf{True Expert $\pi_e$}
+    \includegraphics[width=\linewidth]{./plots/all_state/ue.pdf}
+    LPAL Return $= 86/87$ \\
+    \textcolor{green}{\textbf{ROIL Return $= 79/87$}}
+  \end{minipage}
+  \begin{minipage}{0.45\linewidth}
+    \centering
+    \emph{Off-Policy}\\
+    \textbf{Estimated Expert $\hat{\pi}_{D_e}$}
+    \includegraphics[width=\linewidth]{./plots/all_state/uehat.pdf}
+    LPAL Return $= 38/87$ \\
+    \textcolor{green}{\textbf{ROIL Return $= 82/87$}}
+  \end{minipage}
+  \end{center}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{This Talk}
+	\textbf{Objective}: \textcolor{red}{Don't} estimate the expert's policy
+	\[
+		\min_{\pi \in \Pi} \max_{r \in \mathcal{R}} \rho(\textcolor{red}{\hat{\pi}_{D_e}}, r) - \rho(\pi, r)
+	\]
+	\vfill
+	\textbf{Key Idea}: Minimize worst case regret
+	\[
+		\min_{\pi \in \Pi} \textcolor{blue}{\max_{\pi_e \in \Pi_{D_e}}} \max_{r \in \mathcal{R}} \rho(\textcolor{blue}{\pi_e}, r) - \rho(\pi, r)
+	\]
+\end{frame}
+
 \begin{frame}
 	\frametitle{ROIL: Robust Offline Imitation Learning}
 	\[
@@ -494,25 +511,6 @@
 	\textcolor{red}{GAIL Return $= 50\%$}\\
 \end{center}
 
-\end{frame}
-
-\begin{frame}
-\frametitle{A Surprising Failure}
-\begin{figure}
-  \begin{center}
-  \begin{minipage}{0.46\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{plots/all_state/gail_loss.pdf}
-    \subcaption{On-Policy}
-  \end{minipage}
-  \hspace{0.05\linewidth}
-  \begin{minipage}{0.46\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{plots/all_state/lpal_loss.pdf}
-    \subcaption{Off-Policy}
-  \end{minipage}
-  \end{center}
-\end{figure}
 \end{frame}
 
 \section*{Experiments}
