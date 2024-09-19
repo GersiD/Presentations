@@ -14,10 +14,7 @@
 \usepackage{natbib}
 \usepackage{tabularx}
 \usepackage{multirow}
-\usepackage{amsmath}
-\usepackage{mathtools}
-\usepackage{amssymb}
-\usepackage{bbm}
+\usepackage{dsfont}
 \usepackage[dvipsnames]{xcolor} % Saved my life during a conference once
 \DeclareMathOperator{\regret}{Regret}
 \DeclareMathOperator{\loss}{Loss}
@@ -66,6 +63,17 @@
 		\begin{figure}
 			\centering
 			\includegraphics[width=\linewidth]{plots/rainbow_road.jpeg}
+			% \caption{Super Mario Kart 64 Rainbow Road}
+		\end{figure}
+	\end{minipage}
+\end{frame}
+\begin{frame}
+	\frametitle{Imitation Learning}
+	\centering
+	\begin{minipage}{0.9\linewidth}
+		\begin{figure}
+			\centering
+			\includegraphics[width=\linewidth,height=0.8\linewidth]{plots/200px-MarioKartTour_SNESRainbowRoad.jpg}
 			% \caption{Super Mario Kart 64 Rainbow Road}
 		\end{figure}
 	\end{minipage}
@@ -199,6 +207,7 @@
 		\; =\;
 		\Bigl\{ u\in \Real^{SA}_{+} \mid \sum_{a\in \mathcal{A}} (I - \gamma\cdot P\tr_a) \cdot u(\cdot, a) = p_0 \Bigr\}.
 	\]
+	\vfill
 	Intuitively, $u_\pi(s,a)$ is the joint probability of agent $\pi$ being in state $s$ and taking action $a$.
 	\[
 		u_\pi(s,a) \propto \sum_{t=0}^{\infty} \mathbb{P}(\tilde{s}_t = s, \tilde{a}_t = a \mid \tilde{s}_0 \sim p_0)
@@ -240,7 +249,7 @@
 	\frametitle{Inverse Reinforcement Learning}
 	\textbf{Objective}: Learn from expert data $D_e$
 	\[ 
-		\textcolor{PineGreen}{\min_{\pi \in \Pi}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}} \rho(\hat{\pi}_{D_e}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{\pi}, \textcolor{RedOrange}{r})
+		\textcolor{PineGreen}{\min_{\pi \in \Pi}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}} \left[ \rho(\hat{\pi}_{D_e}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{\pi}, \textcolor{RedOrange}{r}) \right]
 	\]
 	\vfill
 	\textbf{Benefits}
@@ -253,6 +262,22 @@
 	\begin{itemize}
 		\item \textcolor{blue}{Estimating the expert's policy $\hat{\pi}_{D_e}$}
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Inverse Reinforcement Learning}
+	\textbf{Objective}: Learn from expert data $D_e$
+	\[ 
+		\textcolor{PineGreen}{\min_{\pi \in \Pi}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}} \left[ \rho(\hat{\pi}_{D_e}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{\pi}, \textcolor{RedOrange}{r}) \right]
+	\]
+	\vfill
+	\[
+		\textcolor{PineGreen}{\min_{u \in \mathcal{U}}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}} \left[ \rho(\hat{u}_e, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{u}, \textcolor{RedOrange}{r}) \right]
+	\]
+	\vfill
+	\[
+		\hat{u}_e(s,a) = \sum_{(t, s',a')}^{D_e} \gamma^t \mathds{1} \left\{s=s' \wedge\; a=a'\right\}
+	\]
 \end{frame}
 
 % \begin{frame}
