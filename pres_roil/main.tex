@@ -62,18 +62,7 @@
 	\begin{minipage}{0.9\linewidth}
 		\begin{figure}
 			\centering
-			\includegraphics[width=\linewidth]{plots/rainbow_road.jpeg}
-			% \caption{Super Mario Kart 64 Rainbow Road}
-		\end{figure}
-	\end{minipage}
-\end{frame}
-\begin{frame}
-	\frametitle{Imitation Learning}
-	\centering
-	\begin{minipage}{0.9\linewidth}
-		\begin{figure}
-			\centering
-			\includegraphics[width=\linewidth,height=0.8\linewidth]{plots/200px-MarioKartTour_SNESRainbowRoad.jpg}
+			\includegraphics[width=\linewidth,height=0.8\linewidth]{plots/Gemini_Generated_Image_3qbenb3qbenb3qbe.jpeg}
 			% \caption{Super Mario Kart 64 Rainbow Road}
 		\end{figure}
 	\end{minipage}
@@ -183,15 +172,17 @@
 \end{frame}
 
 \begin{frame} \frametitle{Naieve Approach}
-	\textbf{Objective}: Learn policy $\pi$ from data $D_e$
+	\textbf{Assumption}: Expert policy $\pi_e$ is deterministic
+	\vfill
+	\textbf{Objective}: Learn policy $\pi$ from data $D_e = {(s_t, \pi_e(s_t))}_{t=0}^{T}$
 	\vfill
 \end{frame}
 
 \begin{frame} \frametitle{Naieve Approach}
-	\textbf{Objective}: Learn policy $\pi$ from data $D_e$
+	\textbf{Objective}: Learn policy $\pi$ from data $D_e = {(s_t, \pi_e(s_t))}_{t=0}^{T}$
 	\vfill
 \[
-	\hat{\pi}_{D_e} = 
+	\hat{\pi}_{D_e}(s) = 
 	\begin{cases}
 		a & \text{if } (s,a) \in D_e \\
 		\sim \Delta^{\mathcal{A}} & \text{otherwise}
@@ -217,7 +208,7 @@
 \begin{frame} \frametitle{Consistent Occupancy Frequencies}
 	We are given a dataset
 	\[
-		D_e = {(s_i, \pi_e(s_i))}_{i=1}^N.
+		D_e = {(s_t, \pi_e(s_t))}_{t=1}^T.
 	\]
 	\textbf{Definition}: The set of consistent occupancy frequencies $\Upsilon$ is defined as
 	\[
@@ -268,15 +259,15 @@
 	\frametitle{Inverse Reinforcement Learning}
 	\textbf{Objective}: Learn from expert data $D_e$
 	\[ 
-		\textcolor{PineGreen}{\min_{\pi \in \Pi}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}} \left[ \rho(\hat{\pi}_{D_e}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{\pi}, \textcolor{RedOrange}{r}) \right]
+		\textcolor{PineGreen}{\min_{\pi \in \Pi}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}}\; \rho(\hat{\pi}_{D_e}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{\pi}, \textcolor{RedOrange}{r})
 	\]
 	\vfill
 	\[
-		\textcolor{PineGreen}{\min_{u \in \mathcal{U}}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}} \left[ \rho(\hat{u}_e, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{u}, \textcolor{RedOrange}{r}) \right]
+		\textcolor{PineGreen}{\min_{u \in \mathcal{U}}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}}\; \rho(\hat{u}_{D_e}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{u}, \textcolor{RedOrange}{r})
 	\]
 	\vfill
 	\[
-		\hat{u}_e(s,a) = \sum_{(t, s',a')}^{D_e} \gamma^t \mathds{1} \left\{s=s' \wedge\; a=a'\right\}
+		\hat{u}_{D_e}(s,a) = \sum_{(t, s',a')}^{D_e} \gamma^t \mathds{1} \left\{s=s' \wedge\; a=a'\right\}
 	\]
 \end{frame}
 
@@ -343,9 +334,9 @@
 \section*{ROIL}
 
 \begin{frame}
-\frametitle{A Key Distinction}
+\frametitle{The Central Issue}
 \[
-	\pi(s, a) = \pi_e(s, a) = \mathbb{P}(\tilde{a}_t = a \mid \textcolor{blue}{\tilde{s}_t = s})
+	\hat{\pi}_{D_e} \approx \pi_e(s, a) = \mathbb{P}(\tilde{a}_t = a \mid \textcolor{blue}{\tilde{s}_t = s})
 \]
 \vfill
 \[
@@ -353,7 +344,7 @@
 \]
 \vfill
 \begin{align*}
-	u_\pi(s,a) = u_{\pi_e}(s,a) &\propto \sum_{t=0}^{\infty}\mathbb{P}(\textcolor{blue}{\tilde{s}_t = s} \;\text{and}\; \tilde{a}_t = a)\\
+	\hat{u}_{D_e}(s,a) \approx u_{\pi_e}(s,a) &\propto \sum_{t=0}^{\infty}\mathbb{P}(\textcolor{blue}{\tilde{s}_t = s} \;\text{and}\; \tilde{a}_t = a)\\
 	&= \mathbb{P}(\textcolor{blue}{\tilde{s} = s} \;\text{and}\; \tilde{a} = a)
 \end{align*}
 \end{frame}
@@ -409,14 +400,14 @@
   \begin{minipage}{0.45\linewidth}
     \centering
     \emph{On-Policy}\\
-    \textbf{True Expert $\pi_e$}
+    \textbf{True Expert $u_e$}
     \includegraphics[width=\linewidth]{./plots/all_state/ue.pdf}
     LPAL Return $= 86/87$
   \end{minipage}
   \begin{minipage}{0.45\linewidth}
     \centering
     \emph{Off-Policy}\\
-    \textbf{Estimated Expert $\hat{\pi}_{D_e}$}
+    \textbf{Estimated Expert $\hat{u}_{D_e}$}
     \includegraphics[width=\linewidth]{./plots/all_state/uehat.pdf}
     LPAL Return $= 38/87$
   \end{minipage}
@@ -431,7 +422,7 @@
   \begin{minipage}{0.45\linewidth}
     \centering
     \emph{On-Policy}\\
-    \textbf{True Expert $\pi_e$}
+    \textbf{True Expert $u_e$}
     \includegraphics[width=\linewidth]{./plots/all_state/ue.pdf}
     LPAL Return $= 86/87$ \\
     \textcolor{green}{\textbf{ROIL Return $= 79/87$}}
@@ -439,7 +430,7 @@
   \begin{minipage}{0.45\linewidth}
     \centering
     \emph{Off-Policy}\\
-    \textbf{Estimated Expert $\hat{\pi}_{D_e}$}
+    \textbf{Estimated Expert $\hat{u}_{D_e}$}
     \includegraphics[width=\linewidth]{./plots/all_state/uehat.pdf}
     LPAL Return $= 38/87$ \\
     \textcolor{green}{\textbf{ROIL Return $= 82/87$}}
@@ -472,6 +463,17 @@
 	\frametitle{ROIL: Robust Offline Imitation Learning}
 	\[
 		\min_{\pi \in \Pi} \textcolor{blue}{\max_{\pi_e \in \Pi_{D_e}}} \max_{r \in \mathcal{R}} \rho(\textcolor{blue}{\pi_e}, r) - \rho(\pi, r)
+	\]
+	\vfill
+	\[
+		\min_{u \in \mathcal{U}} \textcolor{blue}{\max_{u_e \in \Upsilon}} \max_{r \in \mathcal{R}} \rho(\textcolor{blue}{u_e}, r) - \rho(u, r)
+	\]
+\end{frame}
+
+\begin{frame}
+	\frametitle{ROIL: Robust Offline Imitation Learning}
+	\[
+		\min_{u \in \mathcal{U}} \textcolor{blue}{\max_{u_e \in \Upsilon}} \max_{r \in \mathcal{R}} \rho(\textcolor{blue}{u_e}, r) - \rho(u, r)
 	\]
 	\vfill
 	\[ 
