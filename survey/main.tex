@@ -114,6 +114,10 @@ We encourage the reader to refer to~\cite{Puterman1994} for a more detailed intr
 
 \section{Risk and Reward}\label{sec:risk-and-reward}
 
+In this section we introduce the concept of risk measures, and how they are used to quantify the uncertainty of a random variable.
+We do not delve into the mathematical consequences of risk measures, but rather focus on their interpretation and use in reinforcement learning.
+For a more detailed approach, we refer the reader to the work of~\cite{follmer2016}.
+
 \begin{definition}[Risk Measure]\label{def:risk}
         A Risk Measure is a mapping from a random variable $\tilde{x}$ to a real number. Quantifying the uncertainty of an outcome.
         Given a metric space ($\Omega$, $\mathcal{F}$, $P$), a risk measure is a function $\psi: \mathcal{X} \to \Real$. Satisfying
@@ -167,6 +171,9 @@ It is important to note the converse of Proposition~\ref{prop:coherent-convex} i
         \]
 \end{definition}
 
+Value at Risk can be interpreted as the maximum loss that will not be exceeded with probability $\alpha$. In other
+words it is a \emph{guarantee} that in the worst $\alpha$ percent of cases the loss will not exceed $\varalpha(\tilde{x})$.
+
 \begin{definition}[Conditional Value-at-Risk --- $\cvaralpha$]\label{def:cvar}
         For $\alpha \in [0, 1]$, the Conditional-Value-at-Risk of a random variable 
         $\tilde{x}$ with pdf $p$ at risk-level $\alpha$ is defined as
@@ -175,6 +182,11 @@ It is important to note the converse of Proposition~\ref{prop:coherent-convex} i
                 \inf_{\xi \in \Delta^n} \left\{ \xi\tr x \mid \alpha \cdot \xi \leq p \right\}.
         \]
 \end{definition}
+
+Conditional Value at Risk can be interpreted as the expected loss given that the loss exceeds the $\alpha$ percentile. 
+In other words it is a \emph{guarantee} that in the worst $\alpha$ percent of cases the expected loss will not exceed $\cvaralpha(\tilde{x})$.
+This is a subtle difference from Value at Risk, but an important one to make because $\cvar$ is convex, while $\var$ is
+not.
 
 From the definitions of both $\var$ and $\cvar$ we can see that $\var_1[\tilde{x}] = \infty$ and $\cvar_1[\tilde{x}] = \mathbb{E}[\tilde{x}]$.
 $\cvar_0[\tilde{x}] = \essinf[\tilde{x}]$ where $\essinf[\tilde{x}]$ is the essential infimum of $\tilde{x}$ with pdf $p$ (smallest value with nonzero probability).
@@ -202,7 +214,7 @@ $\cvar_0[\tilde{x}] = \essinf[\tilde{x}]$ where $\essinf[\tilde{x}]$ is the esse
 The simplest, and most accessible coherent risk measure is the expectation operator $\mathbb{E}$, see definition~\ref{def:expectation}.\label{sec:explanation-of-why-risk-measures-are-important}
 Expectation often ignores tail risk, and reduces a random variable to its mean as seen in Figure~\ref{fig:pdfs}.
 Expectation also cannot easily be parameterized to capture the risk preferences of the agent.
-As such
+As such other risk measures have been developed to capture the risk preferences of the agent, such as $\var$ and $\cvar$.
 
 
 Our introduction of the concept of risk is largely inspired by the influential work of~\cite{follmer2016}. We refer the reader there for a more delicate and detailed treatment of risk measures and their subsequent properties.
@@ -293,7 +305,7 @@ This group of policies is more general than the set of deterministic policies, a
 For the particular reader who is interested in why we only considered stationary deterministic policies in Section~\ref{sec:vanilla-reinforcement-learning} we refer them to the work of~\cite{Puterman1994} (Proposition 4.4.3).
 
 There has been prior work on embedding a utility function within the expectation, perhaps one encoding the preferences of an agent who
-desires higher returns less and less~\cite{howard1972}.\todo{Ask Marek why this doesn't suffice} 
+desires higher returns less and less~\cite{howard1972}. This approach while natural, requires the utility function to be known a priori, instead we take a different path and only require a user to specify their risk level $\alpha \in [0,1]$. This risk level has different understandings between risk measures, however it generally measures how risky an agent is willing to be with $1$ being completely risk seeking, and $0$ being completely risk averse.
 
 \begin{definition}[Risk-Averse Reinforcement Learning]\label{def:risk_averse_rl}
         Given a risk measure $\psi$, the objective of risk-averse reinforcement learning is as follows
@@ -313,8 +325,11 @@ The reason for this is that the risk measure $\psi$ does not usually satisfy the
 An open research question is how to decompose different risk measures as in Section~\ref{sec:risk-and-reward} into a recursive form that would allow for dynamic programming to be used for policy optimization.
 This topic is a difficult one, and we refer the reader to the work of~\cite{Hau2023OnDP, Bauerle2011, follmer2016} for a more detailed treatment of this topic.
 
-
-\section{Methods}
+A goal of my research is to develop a dynamic program for the $\cvar$~(Definition~\ref{def:cvar}) risk measure. 
+This is a difficult task, as $\cvar$ does not satisfy the tower property, and as such cannot easily be decomposed into a recursive form that would allow for dynamic programming to be used for policy optimization.
+Recently techniques have been developed for
+$\var$~(Definition~\ref{def:var})~\cite{Hau2023OnDP}, and we hope that
+similar ideas can be extended to $\cvar$.
 
 \bibliography{main.bib}
 
