@@ -172,25 +172,6 @@
     \textbf{Random variables}: $\tilde{\rho}, \tilde{s}, \tilde{a}, \tilde{x}, \dots $ adorned with tilde
 \end{frame}
 
-\begin{frame} \frametitle{Naive Approach}
-	\textbf{Assumption}: Expert policy $\pi_e$ is deterministic
-	\vfill
-	\textbf{Objective}: Learn policy $\pi$ from data $D_e = {(s_t, \pi_e(s_t))}_{t=0}^{T}$
-	\vfill
-\end{frame}
-
-\begin{frame} \frametitle{Naive Approach}
-	\textbf{Objective}: Learn policy $\pi$ from data $D_e = {(s_t, \pi_e(s_t))}_{t=0}^{T}$
-	\vfill
-\[
-	\hat{\pi}_{D_e}(s) = 
-	\begin{cases}
-		a & \text{if } (s,a) \in D_e \\
-		\sim \Delta^{\mathcal{A}} & \text{otherwise}
-	\end{cases}
-\]
-\end{frame}
-
 \begin{frame} \frametitle{Occupancy Frequencies}
 	\[
 		\mathcal{U}
@@ -229,12 +210,30 @@
 % 	Prior work has restricted the weight vector to the L1 norm ball:
 % 	\[ \mathcal{W} = \lbrace w \in \Real^k \mid \lvert \lvert w \rvert \rvert_1 \leq 1 \rbrace \]
 % \end{frame}
+% \begin{frame} \frametitle{Naive Approach}
+% 	\textbf{Assumption}: Expert policy $\pi_e$ is deterministic
+% 	\vfill
+% 	\textbf{Objective}: Learn policy $\pi$ from data $D_e = {(s_t, \pi_e(s_t))}_{t=0}^{T}$
+% 	\vfill
+% \end{frame}
+%
+% \begin{frame} \frametitle{Naive Approach}
+% 	\textbf{Objective}: Learn policy $\pi$ from data $D_e = {(s_t, \pi_e(s_t))}_{t=0}^{T}$
+% 	\vfill
+% \[
+% 	\hat{\pi}_{D_e}(s) = 
+% 	\begin{cases}
+% 		a & \text{if } (s,a) \in D_e \\
+% 		\sim \Delta^{\mathcal{A}} & \text{otherwise}
+% 	\end{cases}
+% \]
+% \end{frame}
 
 \begin{frame}
 	\frametitle{Inverse Reinforcement Learning}
 	\textbf{Objective}: Learn from expert data $D_e$
 	\[ 
-		\textcolor{PineGreen}{\min_{\pi \in \Pi}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}} \; \rho(\hat{\pi}_{D_e}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{\pi}, \textcolor{RedOrange}{r})
+		\textcolor{PineGreen}{\min_{\pi \in \Pi}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}} \; \rho(\textcolor{blue}{\hat{\pi}_{D_e}}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{\pi}, \textcolor{RedOrange}{r})
 	\]
 	\vfill
 	\textbf{Benefits}
