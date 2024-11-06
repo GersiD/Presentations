@@ -266,15 +266,14 @@
 \begin{frame}
 	\frametitle{Inverse Reinforcement Learning}
 	\textbf{Objective}: Learn from expert data $D_e$
-	\[ 
+	\begin{equation}
 		\textcolor{PineGreen}{\min_{\pi \in \Pi}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}}\; \rho(\hat{\pi}_{D_e}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{\pi}, \textcolor{RedOrange}{r})
-	\]
+	\end{equation}
+	\center{\textcolor{red}{Not convex!}}
 	\vfill
-	More convenient to work with occupancy frequencies
-	\[
+	\begin{equation}
 		\textcolor{PineGreen}{\min_{u \in \mathcal{U}}} \textcolor{RedOrange}{\max_{r \in \mathcal{R}}}\; \rho(\hat{u}_{D_e}, \textcolor{RedOrange}{r}) - \rho(\textcolor{PineGreen}{u}, \textcolor{RedOrange}{r})
-	\]
-	\vfill
+	\end{equation}
 	\[
 		\hat{u}_{D_e}(s,a) = \sum_{(t, s',a')}^{D_e} \gamma^t \mathds{1} \left\{s=s' \wedge\; a=a'\right\}
 	\]
@@ -370,24 +369,10 @@
 \begin{align*}
 	\hat{u}_{D_e}(s,a) \approx u_{\pi_e}(s,a) = \mathbb{P}(\textcolor{blue}{\tilde{s} = s} \;\text{and}\; \tilde{a} = a)
 \end{align*}
-\end{frame}
-
-\begin{frame}\frametitle{Example MDP}
-\begin{figure}
-  \centering
-	\begin{tikzpicture}[->,shorten >=1pt,auto,node distance=2cm,
-		thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
-
-	\node[main node] (1) {$s_1$};
-	\node[main node] (2) [right of=1] {$s_2$};
-
-	\path[every node/.style={font=\sffamily\small}]
-	(1) edge node [above] {$a_2$} (2)
-	(2) edge node [above] {$a_2$} (1)
-	(1) edge [loop left] node {$a_1$} (1)
-	(2) edge [loop right] node {$a_1$} (2);
-	\end{tikzpicture}
-\end{figure}
+\vfill
+\begin{align*}
+	\textcolor{orange}{\hat{\pi}_{D_e}(s, a)} \cdot \textcolor{blue}{\mathbb{P}(\tilde{s} = s)} = \hat{u}_{D_e}(s,a)
+\end{align*}
 \end{frame}
 
 \begin{frame}\frametitle{Off-Policy IRL}
@@ -460,6 +445,64 @@
   \end{minipage}
   \end{center}
 \end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Full State Coverage}
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[->,shorten >=1pt,auto,node distance=2cm,
+		thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+
+	\node[main node] (1) {$\textcolor{blue}{s_1}$};
+	\node[main node] (2) [below right of=1] {$\textcolor{Orange}{s_2}$};
+	\node[main node] (3) [below left of=1] {$\textcolor{ForestGreen}{s_3}$};
+
+	\path[every node/.style={font=\sffamily\small}]
+	(1) edge [loop above] node {$a_1$} (1)
+	(1) edge node [above] {$a_2$} (2)
+	(2) edge node [above] {$a_2$} (3)
+	(3) edge node [above] {$a_2$} (1)
+	(2) edge [loop right] node {$a_1$} (2)
+	(3) edge [loop left] node {$a_1$} (3);
+	\end{tikzpicture}
+\end{figure}
+\vfill
+\[
+	D_e = \lbrace \textcolor{blue}{(s_1, a_2)}, \textcolor{Orange}{(s_2, a_2)}, \textcolor{ForestGreen}{(s_3, a_1)} \rbrace
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Full State Coverage}
+\begin{figure}
+  \centering
+	\begin{tikzpicture}[->,shorten >=1pt,auto,node distance=2cm,
+		thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+
+	\node[main node] (1) {$\textcolor{blue}{s_1}$};
+	\node[main node] (2) [below right of=1] {$\textcolor{Orange}{s_2}$};
+	\node[main node] (3) [below left of=1] {$\textcolor{ForestGreen}{s_3}$};
+
+	\path[every node/.style={font=\sffamily\small}]
+	(1) edge [loop above] node {$a_1$} (1)
+	(1) edge node [above] {$a_2$} (2)
+	(2) edge node [above] {$a_2$} (3)
+	(3) edge node [above] {$a_2$} (1)
+	(2) edge [loop right] node {$a_1$} (2)
+	(3) edge [loop left] node {$a_1$} (3);
+	\end{tikzpicture}
+\end{figure}
+\vfill
+\[
+	D_e = \lbrace \textcolor{blue}{(s_1, a_2)}, \textcolor{Orange}{(s_2, a_2)}, \textcolor{ForestGreen}{(s_3, a_1)} \rbrace
+\]
+\vfill
+\begin{center}
+	\textcolor{green}{ROIL Return $= 100\%$}\\
+	\textcolor{red}{LPAL Return $= 50\%$}\\
+	\textcolor{red}{GAIL Return $= 50\%$}\\
+\end{center}
 \end{frame}
 
 \begin{frame}
@@ -589,65 +632,6 @@
   \centering
   \includegraphics[width=\linewidth]{plots/visual_solve_cheb.pdf}
 \end{figure}
-\end{frame}
-
-\begin{frame}
-\frametitle{Full State Coverage}
-\begin{figure}
-  \centering
-	\begin{tikzpicture}[->,shorten >=1pt,auto,node distance=2cm,
-		thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
-
-	\node[main node] (1) {$\textcolor{blue}{s_1}$};
-	\node[main node] (2) [below right of=1] {$\textcolor{Orange}{s_2}$};
-	\node[main node] (3) [below left of=1] {$\textcolor{ForestGreen}{s_3}$};
-
-	\path[every node/.style={font=\sffamily\small}]
-	(1) edge [loop above] node {$a_1$} (1)
-	(1) edge node [above] {$a_2$} (2)
-	(2) edge node [above] {$a_2$} (3)
-	(3) edge node [above] {$a_2$} (1)
-	(2) edge [loop right] node {$a_1$} (2)
-	(3) edge [loop left] node {$a_1$} (3);
-	\end{tikzpicture}
-\end{figure}
-\vfill
-\[
-	D_e = \lbrace \textcolor{blue}{(s_1, a_2)}, \textcolor{Orange}{(s_2, a_2)}, \textcolor{ForestGreen}{(s_3, a_1)} \rbrace
-\]
-\end{frame}
-
-\begin{frame}
-\frametitle{Full State Coverage}
-\begin{figure}
-  \centering
-	\begin{tikzpicture}[->,shorten >=1pt,auto,node distance=2cm,
-		thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
-
-	\node[main node] (1) {$\textcolor{blue}{s_1}$};
-	\node[main node] (2) [below right of=1] {$\textcolor{Orange}{s_2}$};
-	\node[main node] (3) [below left of=1] {$\textcolor{ForestGreen}{s_3}$};
-
-	\path[every node/.style={font=\sffamily\small}]
-	(1) edge [loop above] node {$a_1$} (1)
-	(1) edge node [above] {$a_2$} (2)
-	(2) edge node [above] {$a_2$} (3)
-	(3) edge node [above] {$a_2$} (1)
-	(2) edge [loop right] node {$a_1$} (2)
-	(3) edge [loop left] node {$a_1$} (3);
-	\end{tikzpicture}
-\end{figure}
-\vfill
-\[
-	D_e = \lbrace \textcolor{blue}{(s_1, a_2)}, \textcolor{Orange}{(s_2, a_2)}, \textcolor{ForestGreen}{(s_3, a_1)} \rbrace
-\]
-\vfill
-\begin{center}
-	\textcolor{green}{ROIL Return $= 100\%$}\\
-	\textcolor{red}{LPAL Return $= 50\%$}\\
-	\textcolor{red}{GAIL Return $= 50\%$}\\
-\end{center}
-
 \end{frame}
 
 \section*{Experiments}
