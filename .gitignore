@@ -1,4 +1,4 @@
-*/build
+build/
 *.synctex.gz
 pres_roil/main.pdf
 resume/main.pdf
