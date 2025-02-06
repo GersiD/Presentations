@@ -61,7 +61,9 @@
 \frametitle{MDP}
 \begin{itemize}
   \item A Markov Decision Process (MDP) is a tuple $(S, A, f, R, \gamma, \eta)$
+  \vfill
   \item Here we consider continuous MDPs, with deterministic transitions and rewards for simplicity
+  \vfill
   \item $\frac{ds(t)}{dt} = f(s(t), a(t))$
 \end{itemize}
 \end{frame}
@@ -72,7 +74,7 @@
   $[(s^m_t, a^m_t, r^m_t)_{t=0}^{T}]_{m=0}^{M}$
   \vfill
   $$\hat{G}_m^\pi = \sum_{t=0}^{T} \gamma^t \tilde{R}^m_{t}$$
-  $$\hat{V}_M^\pi = \frac{1}{M} \sum_{m=0}^{M} \tilde{G}_t^m$$
+  $$\hat{V}_M^\pi = \frac{1}{M} \sum_{m=0}^{M} \hat{G}_m^\pi$$
   \vfill
   \textbf{What is the relationship between $M$, $T$ and $\lvert\lvert \tilde{V}_\pi - V_\pi \rvert\rvert_1$?}
 \end{frame}
@@ -84,20 +86,15 @@ To investigate this question the paper considers the continuous time case,
   $$G_T^\pi = \int_{0}^{T} \gamma^t r(s_t, \pi(s_t)) \; dt$$
   $$V_T^\pi = \mathbb{E}[G^\pi_T \mid s_0 \sim \eta]$$
 \vfill
-approximate the above integral over $T$ using discretization $N=[\tau_0, \tau_1, \dots]$
-  $$\hat{G}_m^\pi = \sum_{n=0}^{N} \gamma^t \tilde{R}^m_{t}$$
-  $$\hat{V}^\pi_M = \frac{1}{M} \sum_{m=0}^{M} \tilde{G}_m^\pi$$
+approximate the above integral over $T$ using discretization $N=[n_0, n_1, \dots]$
+  $$\hat{G}_m^\pi = \sum_{n=0}^{N} \gamma^t \bar{r}^m_{n}$$
+  $$\hat{V}^\pi_M = \frac{1}{M} \sum_{m=0}^{M} \hat{G}_m^\pi$$
 \end{frame}
 
 \begin{frame}
 \frametitle{Monte-Carlo Returns Continuous Case}
-To investigate this question the paper considers the continuous time case,
-\vfill
-  $$G_T^\pi = \int_{0}^{T} \gamma^t r(s_t, \pi(s_t)) \; dt$$
-  $$V_T^\pi = \mathbb{E}[G^\pi_T \mid s_0 \sim \eta]$$
-\vfill
-approximate the above integral over $T$ using discretization $N=[\tau_0, \tau_1, \dots]$
-  $$\hat{G}_m^\pi = \sum_{n=0}^{N} \gamma^t r(s_n^m, \pi(s_n^m))$$
+  $$\bar{r}_m(n) = \frac{\gamma^{t_n} r_m(t_n) + \gamma^{t_{n-1}} r_m(t_{n-1})}{2}(t_n - t_{n-1})$$
+  $$\hat{G}_m^\pi = \sum_{n=0}^{N} \gamma^t \bar{r}_m(n)$$
   $$\hat{V}^\pi_M = \frac{1}{M} \sum_{m=0}^{M} \tilde{G}_m^\pi$$
   \textbf{What is the relationship between $M$, $N$ and $\lvert\lvert \hat{V}^\pi_M - V_\pi \rvert\rvert_1$?}
 \end{frame}
@@ -147,7 +144,21 @@ approximate the above integral over $T$ using discretization $N=[\tau_0, \tau_1,
 \end{frame}
 
 \begin{frame}
+	\frametitle{Experiments Cont.}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{./imgs/experiments-mujoco.png} % Replace with your image file name
+    \caption{Dashed line is adaptive, solid line is uniform.}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
 	\frametitle{Conclusion}
+  \begin{itemize}
+    \item Don't always use all samples from Monte-Carlo rollouts
+    \item Adaptive discretization is better than Uniform generally
+    \item Better to use more samples with smaller discretization in uncertain regions of the state space
+  \end{itemize}
 \end{frame}
 
 \end{document} 
