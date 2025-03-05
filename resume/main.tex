@@ -117,9 +117,16 @@
       \raisebox{-0.5\height}{\href{https://gersid.github.io}{\includegraphics[width=2.4cm]{./unhseal_rgb.png}}}
     \end{minipage}
 \end{tabularx}
-\vfill
 \section{Education}
     \resumeSubHeadingListStart
+
+    \resumeSubheading
+    {University of New Hampshire}{ Expected May 2026}
+    {Doctor of Philosophy (PhD) in Computer Science}{Durham, New Hampshire}
+    \resumeItemListStart
+        \resumeItem{\textbf{Relevant Coursework:}  Advanced Algorithms in Machine Learning, Deep-Q Learning,
+          Reinforcement Learning, Risk Sensitive Decision-Making, LLM-Driven Optimization, Foundation Model Theory}
+    \resumeItemListEnd
 
     \resumeSubheading
     {University of New Hampshire}{ Completed May 2022}
@@ -127,19 +134,10 @@
     \resumeItemListStart
         \resumeItem{\textbf{Relevant Coursework:}  Data Structures and Algorithms (C++), Prob \& Stat in CS (Python), Intro to CS II (C++), 
           Linear Algebra w/Computational Applications (Python),
-          Reinforcement Learning (Python), Neural Networks (Impl. Python)} 
-    \resumeItemListEnd
-
-    \resumeSubheading
-    {University of New Hampshire}{ Expected May 2026}
-    {Doctor of Philosophy (PhD) in Computer Science }{Durham, New Hampshire}
-    \resumeItemListStart
-        \resumeItem{\textbf{Relevant Coursework:}  Advanced Algorithms in Machine Learning (Bandits and Partial Monitoring), Deep-Q Learning,
-          Inverse Reinforcement Learning Publication (see below), Risk Sensitive Reinforcement Learning}
+          Reinforcement Learning (Python), Neural Networks (Python)} 
     \resumeItemListEnd
 
     \resumeSubHeadingListEnd
-\vfill
 \section{Publications}
 \resumeSubHeadingListStart
 
@@ -147,18 +145,24 @@
     {\href{https://gersid.github.io/publications/}{\textbf{ROIL: Robust Offline Imitation Learning}} $|$ \emph{First publication accepted to RLJ (Reinforcement
     Learning Journal)}}    {}
     \resumeItemListStart
-        \resumeItem {Discovered a new robust method for training agents from data using offline imitation learning.}
-        \resumeItem {Improved on all existing IRL method by not relying on samples to come from the same state distribution as the expert.}
+        \resumeItem {Developed new robust method for training agents from data using offline imitation learning,
+        surpassing previous work by using our insight into consistent policy sets.}
+        \resumeItem {Improved on all existing IRL methods by not relying on samples to come from the same state distribution as the expert.}
     \resumeItemListEnd
     \resumeProjectHeading
     {\href{https://gersid.github.io/publications/}{\textbf{Deep Reinforcement Learning based Optimization of an Island
-        Energy-Water Microgrid System}} \\ \emph{Interdisciplinary work with UNH Civil Engineering Dept.}}    {}
+        Energy-Water Microgrid System}} \\ \emph{Interdisciplinary work with UNH Civil Engineering Dept.}}{}
     \resumeItemListStart
         \resumeItem {Developed a deep reinforcement learning model to optimize the energy and water usage of a microgrid.}
         \resumeItem {Real world implementation of RL which resulted in a $20\%$ increase in island sustainability.}
     \resumeItemListEnd
+    \resumeProjectHeading
+    {\href{https://gersid.github.io/publications/}{\textbf{LLM Thematic Analysis for Agriculture Research}} \\ \emph{Preprint}}{}
+    \resumeItemListStart
+        \resumeItem {Joint work with UNH Agriculture Dept. to develop a thematic analysis pipeline for categorizing
+        research laboratories across the United States.}
+    \resumeItemListEnd
 \resumeSubHeadingListEnd
-\vfill
 \section{Experience}
 \resumeSubHeadingListStart{}
     \resumeSubheading
@@ -166,7 +170,7 @@
     {Research Assistant}{Durham, NH}
     \resumeItemListStart
         \resumeItem{Studying under \href{https://gersid.github.io/people/}{Dr. Marek Petrik} in the RL$^2$ Lab.}
-        \resumeItem{Researching robust solutions to offline reinforcement learning problems.}
+        \resumeItem{Researching robust solutions to risk-averse decision-making problems.}
         \resumeItem{\href{https://github.com/RiskAverseRL}{Efficiently implementing and testing RL algorithms in Julia}.}
     \resumeItemListEnd
     \resumeSubheading
@@ -174,33 +178,31 @@
     {Software Engineer}{Dover, NH}
     \resumeItemListStart
         \resumeItem{Fostered code reuse by creating a shared Python library, reducing code duplication by more than 80\%.}
-        \resumeItem{Developed new data storage and retrieval system using AWS S3, reducing on-prem storage costs by 25\%.}
-        \resumeItem{Optimized team's CI/CD pipeline, reducing build times, and allowing for rapid deployment cycles.}
+        \resumeItem{Optimized new data storage and retrieval system using AWS S3, reducing on-premise storage costs by 25\%.}
     \resumeItemListEnd
     \resumeSubheading
     {UNH Interoperability Lab}{June 2018 -- June 2021}
     {Senior Test Engineer}{Durham, NH}
     \resumeItemListStart
-        \resumeItem{Reviewed and developed test media for IEEE Standard 802.3, improving test coverage for backplane and Base-T.}
+        \resumeItem{Reviewed and developed test media for IEEE Standard 802.3, improving test coverage for back-plane and Base-T.}
     \resumeItemListEnd
 \resumeSubHeadingListEnd
-\vfill
 \section{Technical Skills}
     \begin{itemize}[leftmargin=0.15in, label={}]
 	\small{\item{
-		\textbf{Concepts}{: Bandits, Partial monitoring, Reinforcement learning, Inverse reinforcement learning, Risk sensitive machine learning, Transformers, Attention,LLMs} \\
-		\textbf{Research Interests}{: Risk sensitive optimization, Optimal decision-making, Robust machine learning} \\
-                \textbf{Current Work}{: Deep risk sensitive reinforcement learning, Robust offline RL, Transformer based RL} \\
+		\textbf{Concepts}{: Bandits, Partial monitoring, Reinforcement learning, Inverse reinforcement learning, Risk sensitive machine learning, Transformers, Attention, LLMs} \\
+		\textbf{Research Interests}{: Risk sensitive optimization, Optimal decision-making, Human-LLM Collaboration} \\
+                \textbf{Current Work}{: Deep risk sensitive reinforcement learning, Robust RL, LLM Applications} \\
 	}}
     \end{itemize}
-\vfill
 \section{Achievements}
 \begin{itemize} % Start an itemize environment
+    \item Reviewer for the \href{https://rlj.cs.umass.edu/}{\textbf{Reinforcement Learning Journal}}
     \item Presented at the \emph{first} \textbf{RLC (Reinforcement Learning Conference)} in 2024
-    \item Presented at the \textbf{2022 UNH Undergraduate Research Conference}
     \item Received the \textbf{Dean's Award} for Academic Excellence in Computer Science
     \item Awarded the \textbf{President's Scholarship} for academic achievement and leadership.
     \item Graduated \textbf{summa cum laude} from the University of New Hampshire
+    \item Presented at the \textbf{2022 UNH Undergraduate Research Conference}
 \end{itemize} % End the itemize environment
 %-------------------------------------------%
 \end{document}
