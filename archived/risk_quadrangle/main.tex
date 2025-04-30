@@ -36,7 +36,7 @@
 %\usefonttheme[onlymath]{serif}
 \setbeamertemplate{footline}[frame number]
 
-\title{Mitigating the Curse of Horizon in Monte-Carlo Returns}
+\title{Risk Quadrangles}
 \author{Gersi Doko}
 \institute{Department of Computer Science \\ University of New Hampshire}
 \date{}
@@ -99,6 +99,8 @@
   \end{figure}
   \vfill
 \end{frame}
+
+\section*{Risk Quadrangle}
 \begin{frame}
 	\frametitle{Risk Quadrangle}
   \vfill
@@ -108,37 +110,99 @@
   \end{figure}
   \vfill
 \end{frame}
-
 \begin{frame}
-\frametitle{Risk Quadrangle}
+	\frametitle{Fundamental Theorem of Risk Quadrangles}
   \vfill
-  \emph{Today:} we focus on what relates all of these measures
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{./imgs/alleged_connections.png}
+  \end{figure}
+  \vfill
+\end{frame}
+\begin{frame}
+	\frametitle{Example Risk Quadrangle}
+  \vfill
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{./imgs/expectation_example.png}
+  \end{figure}
+  \vfill
+\end{frame}
+\begin{frame}
+	\frametitle{Example Risk Quadrangle}
+  \vfill
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{./imgs/quantile_example.png}
+  \end{figure}
+  \vfill
+\end{frame}
+\begin{frame}
+	\frametitle{Elicitability}
+  \vfill
+  Risk measure $\mathcal{R}$ is \textbf{elicitable} if there exists a function $S$ such that
+  $$\mathcal{R}(\tilde{X}) = \argmin_{z \in \Real}\mathbb{E}[S(\tilde{X}, z)]$$
+  \vfill
+  \textbf{Example:} $\mathcal{R}(\tilde{X}) = \mathbb{E}(\tilde{X})$ is elicitable with $S(\tilde{X}, z) = (\tilde{X} - z)^2$
+\end{frame}
+\begin{frame}
+	\frametitle{Regression}
+  \vfill
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{./imgs/5-6.png}
+  \end{figure}
+  \vfill
+\end{frame}
+\begin{frame}
+	\frametitle{Regression}
+  \vfill
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{./imgs/5-9.png}
+  \end{figure}
+  \vfill
+\end{frame}
+\begin{frame}
+	\frametitle{Elicitability}
+  \vfill
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{./imgs/is_var_elicitable.png}
+  \end{figure}
   \vfill
 \end{frame}
 
-\begin{frame}
-  \frametitle{$\mathcal{R}(\tilde{X})$}
-  \vfill
-  How should we give meaning to the statement
-  $$\tilde{X} \text{ "adequately" }\leq C$$
-  \vfill
-  $$\mathbb{E}(\tilde{X}) \leq C$$
-  $$\mathbb{E}(\tilde{X}) + \lambda \sigma(\tilde{X}) \leq C$$
-  $$q_\alpha(\tilde{X}) \leq C$$
-  $$\sup(\tilde{X}) \leq C$$
-\end{frame}
-
-\begin{frame}
-  \frametitle{$\mathcal{D}(\tilde{X})$}
-  \vfill
-  How should we give meaning to the statement
-  $$\tilde{X} \text{ "adequately" }\leq C$$
-  \vfill
-  $$\mathbb{E}(\tilde{X}) \leq C$$
-  $$\mathbb{E}(\tilde{X}) + \lambda \sigma(\tilde{X}) \leq C$$
-  $$q_\alpha(\tilde{X}) \leq C$$
-  $$\sup(\tilde{X}) \leq C$$
-\end{frame}
+% \begin{frame}
+% \frametitle{Risk Quadrangle}
+%   \vfill
+%   \emph{Today:} we focus on what relates all of these measures
+%   \vfill
+% \end{frame}
+%
+% \begin{frame}
+%   \frametitle{$\mathcal{R}(\tilde{X})$}
+%   \vfill
+%   How should we give meaning to the statement
+%   $$\tilde{X} \text{ "adequately" }\leq C$$
+%   \vfill
+%   $$\mathbb{E}(\tilde{X}) \leq C$$
+%   $$\mathbb{E}(\tilde{X}) + \lambda \sigma(\tilde{X}) \leq C$$
+%   $$q_\alpha(\tilde{X}) \leq C$$
+%   $$\sup(\tilde{X}) \leq C$$
+% \end{frame}
+%
+% \begin{frame}
+%   \frametitle{$\mathcal{D}(\tilde{X})$}
+%   \vfill
+%   How should we give meaning to the statement
+%   $$\tilde{X} \text{ "adequately" }\leq C$$
+%   \vfill
+%   $$\mathbb{E}(\tilde{X}) \leq C$$
+%   $$\mathbb{E}(\tilde{X}) + \lambda \sigma(\tilde{X}) \leq C$$
+%   $$q_\alpha(\tilde{X}) \leq C$$
+%   $$\sup(\tilde{X}) \leq C$$
+% \end{frame}
 
 
 \end{document} 
