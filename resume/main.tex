@@ -65,185 +65,250 @@
 \begin{document}
 % Custom commands
 \newcommand{\resumeItem}[1]{
-  \item\small{
+\item\small{
     {#1 \vspace{-2pt}}
   }
 }
 
 \newcommand{\resumeSubheading}[4]{
-  \vspace{-2pt}\item
-    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
-      \textbf{#1} & #2 \\
-      \textit{\small#3} & \textit{\small #4} \\
-    \end{tabular*}\vspace{-7pt}
+  \vspace{-2pt}
+\item
+  \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & #2 \\
+    \textit{\small#3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{-7pt}
 }
 
 \newcommand{\resumeSubSubheading}[2]{
-    \item
-    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
-      \textit{\small#1} & \textit{\small #2} \\
-    \end{tabular*}\vspace{-7pt}
+\item
+  \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+    \textit{\small#1} & \textit{\small #2} \\
+  \end{tabular*}\vspace{-7pt}
 }
 
 \newcommand{\resumeProjectHeading}[2]{
-    \item
-    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
-      \small#1 & #2 \\
-    \end{tabular*}\vspace{-7pt}
+\item
+  \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+    \small#1 & #2 \\
+  \end{tabular*}\vspace{-7pt}
 }
 
 \newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
 
 \renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
 
-\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
-\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
-\newcommand{\resumeItemListStart}{\begin{itemize}}
-\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+\newcommand{\resumeSubHeadingListStart}{
+\begin{itemize}[leftmargin=0.15in, label={}]}
+    \newcommand{\resumeSubHeadingListEnd}{
+\end{itemize}}
+\newcommand{\resumeItemListStart}{
+\begin{itemize}}
+    \newcommand{\resumeItemListEnd}{
+\end{itemize}\vspace{-5pt}}
 
 \definecolor{Black}{RGB}{0, 0, 0}
 \newcommand{\seticon}[1]{\textcolor{Black}{\csname #1\endcsname}}
 %-------------------------------------------%
 %%%%%%  RESUME STARTS HERE  %%%%%
 \begin{tabularx}{\textwidth}{@{} X r @{}}
-    \begin{minipage}[t]{\textwidth}
-        \textbf{\Huge \scshape Gersi Doko} \\[0.5em]
-        \textbf{Pronounced Ger-si Dough-co} \\
-        % \href{https://gersid.github.io}{\seticon{faDesktop} \underline{GersiD.github.io}} \quad \small\seticon{faPhone} (603)-848-0604 \\
-        \href{https://gersid.github.io}{\seticon{faDesktop} \underline{GersiD.github.io}} \quad \href{mailto:Gersi.Doko@unh.edu}{\seticon{faEnvelope} \underline{Gersi[.]Doko[@]unh[.]edu}} \\
-        \href{https://www.linkedin.com/in/gersi-doko}{\seticon{faLinkedin} \underline{linkedin.com/in/GersiDoko}} \quad
-        \href{https://github.com/GersiD}{\seticon{faGithub} \underline{github.com/GersiD}}\\
-        Location: Dover, New Hampshire \\
-    \end{minipage} &
-    \begin{minipage}[t]{2cm}
-      \raisebox{-0.5\height}{\href{https://gersid.github.io}{\includegraphics[width=2.4cm]{./unhseal_rgb.png}}}
-    \end{minipage}
+  \begin{minipage}[t]{\textwidth}
+    \textbf{\Huge \scshape Gersi Doko} \\[0.5em]
+    \textbf{Pronounced G-air-si Dough-co} \\
+    % \href{https://gersid.github.io}{\seticon{faDesktop}
+    % \underline{GersiD.github.io}} \quad \small\seticon{faPhone}
+    % (603)-848-0604 \\
+    \href{https://gersid.github.io}{\seticon{faDesktop}
+    \underline{GersiD.github.io}} \quad
+    \href{mailto:Gersi.Doko@unh.edu}{\seticon{faEnvelope}
+    \underline{Gersi[.]Doko[@]unh[.]edu}} \\
+    \href{https://www.linkedin.com/in/gersi-doko}{\seticon{faLinkedin}
+    \underline{linkedin.com/in/GersiDoko}} \quad
+    \href{https://github.com/GersiD}{\seticon{faGithub}
+    \underline{github.com/GersiD}}\\
+    Location: Dover, New Hampshire \\
+  \end{minipage} &
+  \begin{minipage}[t]{2cm}
+    \raisebox{-0.5\height}{\href{https://gersid.github.io}{\includegraphics[width=2.4cm]{./unhseal_rgb.png}}}
+  \end{minipage}
 \end{tabularx}
 \section{Education}
-    \resumeSubHeadingListStart
+\resumeSubHeadingListStart
 
-    \resumeSubheading
-    {University of New Hampshire}{ 2022 - Expected May 2026}
-    {Doctor of Philosophy - Computer Science}{Durham, New Hampshire}
-    \resumeItemListStart
-        \resumeItem{\textbf{Relevant Coursework:}  Advanced Algorithms in Machine Learning, Deep-Q Learning,
-          Reinforcement Learning, Risk Sensitive Decision-Making, LLM-Driven Optimization, Foundation Model Theory,
-        Pytorch, TensorFlow, Prototyping, Implementation, Robotics}
-    \resumeItemListEnd
+\resumeSubheading
+{University of New Hampshire}{ 2022 - Expected May 2026}
+{Doctor of Philosophy - Computer Science}{Durham, New Hampshire}
+\resumeItemListStart
+\resumeItem{\textbf{Relevant Coursework:}  Advanced Algorithms in
+  Machine Learning, Deep-Q Learning,
+  Reinforcement Learning, Risk Sensitive Decision-Making, LLM-Driven
+  Optimization, Foundation Model Theory,
+Pytorch, TensorFlow, Prototyping, Implementation, Robotics}
+\resumeItemListEnd
 
-    \resumeSubheading
-    {University of New Hampshire}{ 2022 - Completed May 2025}
-    {Masters of Science in Computer Science \textbf{Summa Cum Laude} (GPA: 4.00 / 4.00)}{Durham, New Hampshire}
+\resumeSubheading
+{University of New Hampshire}{ 2022 - Completed May 2025}
+{Masters of Science in Computer Science \textbf{Summa Cum Laude}
+(GPA: 4.00 / 4.00)}{Durham, New Hampshire}
 
-    \resumeSubheading
-    {University of New Hampshire}{ 2018 - Completed May 2022}
-    {Bachelor of Science in Computer Science \textbf{Summa Cum Laude} (GPA: 3.98 / 4.00)}{Durham, New Hampshire}
-    \resumeItemListStart
-        \resumeItem{\textbf{Relevant Coursework:}  Data Structures and Algorithms (C++), Prob \& Stat in CS (Python), Intro to CS II (C++), 
-          Linear Algebra w/Computational Applications (Python),
-        Reinforcement Learning (Python), Neural Networks (Python), AWS, Azure, REST, Software Development, Cloud Infrastructure}
-    \resumeItemListEnd
+\resumeSubheading
+{University of New Hampshire}{ 2018 - Completed May 2022}
+{Bachelor of Science in Computer Science \textbf{Summa Cum Laude}
+(GPA: 3.98 / 4.00)}{Durham, New Hampshire}
+\resumeItemListStart
+\resumeItem{\textbf{Relevant Coursework:}  Data Structures and
+  Algorithms (C++), Prob \& Stat in CS (Python), Intro to CS II (C++),
+  Linear Algebra w/Computational Applications (Python),
+  Reinforcement Learning (Python), Neural Networks (Python), AWS,
+Azure, REST, Software Development, Cloud Infrastructure}
+\resumeItemListEnd
 
-    \resumeSubHeadingListEnd
+\resumeSubHeadingListEnd
 \section{Experience}
 \resumeSubHeadingListStart{}
-    \resumeSubheading
-    {UNH RL$^2$ Lab}{May 2022 -- Present}
-    {Machine Learning Research Assistant}{Durham, NH}
-    \resumeItemListStart
-      \resumeItem{Studying machine learning and \textbf{reinforcement learning (RL)} under \href{https://gersid.github.io/people/}{Dr. Marek Petrik} in the RL$^2$ Lab}
-      \resumeItem{Doctoral research publishing new methods to risk-averse decision-making problems, with a focus on \textbf{RL} and \textbf{LLMs}}
-      \resumeItem{\href{https://github.com/RiskAverseRL}{Efficiently implementing and testing RL algorithms in Julia and Python (\textbf{Link})}}
-      \resumeItem{Job Skills: Python, Julia, TensorFlow, PyTorch, LLMs, Risk Sensitive Decision Making}
-    \resumeItemListEnd
-    \resumeSubheading
-    {Amazon}{September 2025 -- December 2025}
-    {Applied Scientist II Intern (L5)}{New York City, NY}
-    \resumeItemListStart
-      \resumeItem{Optimized large language model (LLM) performance for real-time applications}
-      \resumeItem{
-        Delivered scalable knowledge distillation approach for internal LLM application.
-        \textbf{Improved inference latency by 4.5x } while maintaining accuracy
-      }
-      \resumeItem{Collaborated with cross-functional teams to deploy distilled models into production at scale}
-      \resumeItem{Developed internal artifacts for vLLM deployments, Supervised Fine-Tuning (SFT), and Reinforcement Learning with Human Feedback (RLHF)}
-    \resumeItemListEnd
-    \resumeSubheading
-    {Northlight AI}{May 2025 -- August 2025}
-    {Machine Learning Engineer -- Intern}{Durham, NH}
-    \resumeItemListStart
-        \resumeItem{Driving real-world AI solutions for underserved markets by deploying pragmatic, ethical machine learning models in cloud environments to empower small-to-midsize enterprises.}
-        \resumeItem{Working in a dynamic, fast-paced team environment to deliver \textbf{high-impact AI solutions} that address real-world challenges in the additive and subtractive manufacturing space.}
-    \resumeItemListEnd
-    \resumeSubheading
-    {NextStep Health}{August 2021 -- May 2022}
-    {Data Scientist -- Intern}{Cambridge, MA}
-    \resumeItemListStart
-        \resumeItem{Implemented on-prem models to predict patient outcomes using Python and TensorFlow}
-        \resumeItem{Delivered internal tools that \textbf{reduced turnaround time for data analysis by 30\%}}
-        \resumeItem{Job Skills: Python, Multi-Model Classification, Cloud Deployment, Data Analysis, Data Visualization, Tableau, Power-BI}
-    \resumeItemListEnd
-    \resumeSubheading
-    {Liberty Mutual}{May 2021 -- May 2022}
-    {Software Engineer -- Intern}{Dover, NH}
-    \resumeItemListStart
-    \resumeItem{Fostered code reuse by creating a shared Python library, \textbf{reducing code duplication by more than 80\%}}
-    \resumeItem{Optimized new data storage and retrieval system using AWS S3, \textbf{reducing on-premise storage costs by 25\%}}
-        \resumeItem{Job Skills: Python, AWS, Azure, Docker, Git, Go, Java, Data Storage and Retrieval}
-    \resumeItemListEnd
-    \resumeSubheading
-    {UNH Interoperability Lab}{June 2018 -- May 2021}
-    {Senior Test Engineer}{Durham, NH}
-    \resumeItemListStart
-    \resumeItem{Reviewed and \textbf{engineered test media for IEEE Standard 802.3}, improving test coverage for back-plane and Base-T}
-        \resumeItem{Job Skills: Python, C++, Java, Test Engineering, Standardization, IEEE 802.3, Robotics, Hands on
-        Experience}
-    \resumeItemListEnd
+\resumeSubheading
+{UNH RL$^2$ Lab}{May 2022 -- Present}
+{Machine Learning Research Assistant}{Durham, NH}
+\resumeItemListStart
+\resumeItem{Studying machine learning and \textbf{reinforcement
+  learning (RL)} under \href{https://gersid.github.io/people/}{Dr.
+Marek Petrik} in the RL$^2$ Lab}
+\resumeItem{Doctoral research publishing new methods to risk-averse
+decision-making problems, with a focus on \textbf{RL} and \textbf{LLMs}}
+\resumeItem{\href{https://github.com/RiskAverseRL}{Efficiently
+implementing and testing RL algorithms in Julia and Python (\textbf{Link})}}
+\resumeItem{Job Skills: Python, Julia, TensorFlow, PyTorch, LLMs,
+Risk Sensitive Decision Making}
+\resumeItemListEnd
+\resumeSubheading
+{Amazon}{September 2025 -- December 2025}
+{Applied Scientist II Intern (L5)}{New York City, NY}
+\resumeItemListStart
+\resumeItem{Optimized large language model (LLM) performance for
+real-time applications}
+\resumeItem{
+  Delivered scalable knowledge distillation approach for internal LLM
+  application.
+  \textbf{Improved inference latency by 4.5x } while maintaining accuracy
+}
+\resumeItem{Collaborated with cross-functional teams to deploy
+distilled models into production at scale}
+\resumeItem{Developed internal artifacts for vLLM deployments,
+  Supervised Fine-Tuning (SFT), and Reinforcement Learning with Human
+Feedback (RLHF)}
+\resumeItemListEnd
+\resumeSubheading
+{Northlight AI}{May 2025 -- August 2025}
+{Machine Learning Engineer -- Intern}{Durham, NH}
+\resumeItemListStart
+\resumeItem{Driving real-world AI solutions for underserved markets
+  by deploying pragmatic, ethical machine learning models in cloud
+environments to empower small-to-midsize enterprises.}
+\resumeItem{Working in a dynamic, fast-paced team environment to
+  deliver \textbf{high-impact AI solutions} that address real-world
+challenges in the additive and subtractive manufacturing space.}
+\resumeItemListEnd
+\resumeSubheading
+{NextStep Health}{August 2021 -- May 2022}
+{Data Scientist -- Intern}{Cambridge, MA}
+\resumeItemListStart
+\resumeItem{Implemented on-prem models to predict patient outcomes
+using Python and TensorFlow}
+\resumeItem{Delivered internal tools that \textbf{reduced turnaround
+time for data analysis by 30\%}}
+\resumeItem{Job Skills: Python, Multi-Model Classification, Cloud
+Deployment, Data Analysis, Data Visualization, Tableau, Power-BI}
+\resumeItemListEnd
+\resumeSubheading
+{Liberty Mutual}{May 2021 -- May 2022}
+{Software Engineer -- Intern}{Dover, NH}
+\resumeItemListStart
+\resumeItem{Fostered code reuse by creating a shared Python library,
+\textbf{reducing code duplication by more than 80\%}}
+\resumeItem{Optimized new data storage and retrieval system using AWS
+S3, \textbf{reducing on-premise storage costs by 25\%}}
+\resumeItem{Job Skills: Python, AWS, Azure, Docker, Git, Go, Java,
+Data Storage and Retrieval}
+\resumeItemListEnd
+\resumeSubheading
+{UNH Interoperability Lab}{June 2018 -- May 2021}
+{Senior Test Engineer}{Durham, NH}
+\resumeItemListStart
+\resumeItem{Reviewed and \textbf{engineered test media for IEEE
+Standard 802.3}, improving test coverage for back-plane and Base-T}
+\resumeItem{Job Skills: Python, C++, Java, Test Engineering,
+  Standardization, IEEE 802.3, Robotics, Hands on
+Experience}
+\resumeItemListEnd
 \resumeSubHeadingListEnd
 \section{Achievements}
 \begin{itemize} % Start an itemize environment
-    \item Graduated \textbf{summa cum laude} for both my B.S. and M.S. from the University of New Hampshire
-    \item Technical reviewer for the \href{https://rlj.cs.umass.edu/}{\textbf{Reinforcement Learning Journal}}
-    \item Presented at the \emph{first} \textbf{RLC (Reinforcement Learning Conference)} in 2024
-    \item Received the \textbf{Dean's Award} for Academic Excellence in Computer Science
-    \item Awarded the \textbf{President's Scholarship} for academic achievement and leadership for \textbf{2 years in a row}
-    \item Presented at the \textbf{2022 UNH Undergraduate Research Conference}
+  \item Graduated \textbf{summa cum laude} for both my B.S. and M.S.
+    from the University of New Hampshire
+  \item Technical reviewer for the
+    \href{https://rlj.cs.umass.edu/}{\textbf{Reinforcement Learning Journal}}
+  \item Presented at the \emph{first} \textbf{RLC (Reinforcement
+    Learning Conference)} in 2024
+  \item Received the \textbf{Dean's Award} for Academic Excellence in
+    Computer Science
+  \item Awarded the \textbf{President's Scholarship} for academic
+    achievement and leadership for \textbf{2 years in a row}
+  \item Presented at the \textbf{2022 UNH Undergraduate Research Conference}
 \end{itemize} % End the itemize environment
 \section{Technical Skills}
-    \begin{itemize}[leftmargin=0.15in, label={}]
+\begin{itemize}[leftmargin=0.15in, label={}]
     \small{
-      \item{
-      \textbf{Tools}{: Python, AWS, Azure, Docker, Git, Go, Java, TensorFlow, PyTorch, LangChain, Tableau, Power-BI, Postgres, ChromaDB, JSON Schema, RESTFul Spring Boot, Kubernetes} \\[0.5em]
-      \textbf{Skills}{: Agentic AI Implementation, Deep Learning, Large Scale Data Analysis, Machine Learning Research, Computer Vision, Optimal decision-making, Human LLM Collaboration, Reinforcement learning, Risk sensitive machine learning, Transformers, LLMs, Scientific Publication} \\ [0.5em]
-      \textbf{Soft Skills}{: Science Communication, Idea Organizer, Team Player, Problem Solver, Critical Thinker, Self-Motivated, Strong Work Ethic, Leadership, Collaborator} \\ [0.5em]
+    \item{
+        \textbf{Tools}{: Python, AWS, Azure, Docker, Git, Go, Java,
+          TensorFlow, PyTorch, LangChain, Tableau, Power-BI, Postgres,
+        ChromaDB, JSON Schema, RESTFul Spring Boot, Kubernetes} \\[0.5em]
+        \textbf{Skills}{: Agentic AI Implementation, Deep Learning,
+          Large Scale Data Analysis, Machine Learning Research,
+          Computer Vision, Optimal decision-making, Human LLM
+          Collaboration, Reinforcement learning, Risk sensitive machine
+        learning, Transformers, LLMs, Scientific Publication} \\ [0.5em]
+        \textbf{Soft Skills}{: Science Communication, Idea Organizer,
+          Team Player, Problem Solver, Critical Thinker,
+        Self-Motivated, Strong Work Ethic, Leadership, Collaborator} \\ [0.5em]
       }
     }
-  \end{itemize}
+\end{itemize}
 \section{Publications}
 \resumeSubHeadingListStart
 
-    \resumeProjectHeading
-    {\href{https://gersid.github.io/publications/}{\textbf{ROIL: Robust Offline Imitation Learning}} $|$ \emph{First publication accepted to RLJ (Reinforcement
-    Learning Journal)}}    {}
-    \resumeItemListStart
-        \resumeItem {Led novel research on a robust method for training agents from data using offline imitation learning,
-        surpassing previous work by leveraging consistent policy sets}
-        \resumeItem {Improved on all existing IRL methods by allowing for covariate shift, which is common in the real-world}
-    \resumeItemListEnd
-    \resumeProjectHeading
-    {\href{https://gersid.github.io/publications/}{\textbf{Deep Reinforcement Learning based Optimization of an Island
-        Energy-Water Microgrid System}} \\ \emph{Interdisciplinary work with UNH Civil Engineering Dept.}}{}
-    \resumeItemListStart
-        \resumeItem {Developed a deep reinforcement learning model to optimize the energy and water usage of an off-shore microgrid}
-        \resumeItem {Real-world RL application which resulted in a $20\%$ increase in island sustainability, with less human intervention}
-    \resumeItemListEnd
-    \resumeProjectHeading
-    {\href{https://gersid.github.io/publications/}{\textbf{LLM Thematic Analysis for Agriculture Research}} \\ \emph{Preprint}}{}
-    \resumeItemListStart
-        \resumeItem {Led collaboration with UNH Agriculture Dept. to develop a thematic analysis pipeline for categorizing research laboratories across the USA}
-        \resumeItem {Implemented a human-in-the-loop LLM system to improve accuracy and reduce workload, leveraging
-        LangChain}
-    \resumeItemListEnd
+\resumeProjectHeading
+{\href{https://gersid.github.io/publications/}{\textbf{ROIL: Robust
+  Offline Imitation Learning}} $|$ \emph{First publication accepted
+    to RLJ (Reinforcement
+Learning Journal)}}    {}
+\resumeItemListStart
+\resumeItem {Led novel research on a robust method for training
+  agents from data using offline imitation learning,
+surpassing previous work by leveraging consistent policy sets}
+\resumeItem {Improved on all existing IRL methods by allowing for
+covariate shift, which is common in the real-world}
+\resumeItemListEnd
+\resumeProjectHeading
+{\href{https://gersid.github.io/publications/}{\textbf{Deep
+      Reinforcement Learning based Optimization of an Island
+  Energy-Water Microgrid System}} \\ \emph{Interdisciplinary work with
+UNH Civil Engineering Dept.}}{}
+\resumeItemListStart
+\resumeItem {Developed a deep reinforcement learning model to
+optimize the energy and water usage of an off-shore microgrid}
+\resumeItem {Real-world RL application which resulted in a $20\%$
+increase in island sustainability, with less human intervention}
+\resumeItemListEnd
+\resumeProjectHeading
+{\href{https://gersid.github.io/publications/}{\textbf{LLM Thematic
+Analysis for Agriculture Research}} \\ \emph{Preprint}}{}
+\resumeItemListStart
+\resumeItem {Led collaboration with UNH Agriculture Dept. to develop
+  a thematic analysis pipeline for categorizing research laboratories
+across the USA}
+\resumeItem {Implemented a human-in-the-loop LLM system to improve
+  accuracy and reduce workload, leveraging
+LangChain}
+\resumeItemListEnd
 \resumeSubHeadingListEnd
 %-------------------------------------------%
 \end{document}
