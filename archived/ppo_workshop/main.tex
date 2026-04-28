@@ -188,7 +188,7 @@
   \begin{enumerate}
     \item What are the inputs? - $(s_t, a_t, r_t, s_{t+1})_{t=0}^T \sim
       \pi_{\theta_{old}}$, $V^{\pi_{\theta_{old}}}(s_t)$
-    \item What are the outputs? - $(A_t)_{t=0}^T$
+    \item What are the outputs? - $(\hat{A}_t)_{t=0}^T$
   \end{enumerate}
 \end{frame}
 
@@ -233,6 +233,65 @@
       | s_t)}{\pi_{\theta_{old}}(a_t | s_t)}$, $\hat{A}_t$, $\epsilon$
     \item What are the outputs? - $L_t$!!!!!
   \end{enumerate}
+\end{frame}
+
+\section*{Pytorch}
+
+\begin{frame}
+  \frametitle{Pytorch}
+  \begin{enumerate}
+    \item Now we have a loss function $L_t$ that we want to minimize
+      by changing model parameters $\theta$
+      \vfill
+    \item How do we do that?
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Pytorch}
+  \begin{enumerate}
+    \item Now we have a loss function $L_t$ that we want to minimize
+      by changing model parameters $\theta$
+      \vfill
+    \item How do we do that? - Gradient descent!
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simple Linear Regression Example}
+  \vfill
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{./imgs/pytorch_lin.png}
+  \end{figure}
+  \vfill
+\end{frame}
+
+\begin{frame}
+  \frametitle{Simple Linear Regression Example}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{./imgs/pytorch_lin_fit.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{PPO Pytorch}
+  \begin{enumerate}
+    \item PPO Assumes an Actor-Critic architecture
+      \vfill
+    \item One network for the policy $\pi_\theta$ and one for the
+      value function $V^{\pi_\theta}$
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{PPO Pytorch}
+  \begin{centering}
+    \[
+      \text{To the code!}
+    \]
+  \end{centering}
 \end{frame}
 
 \begin{frame}{Thank you!}
