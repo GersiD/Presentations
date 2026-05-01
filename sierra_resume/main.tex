@@ -1,0 +1,190 @@
+%-------------------------
+%Resume in Latex
+% Author : Audric Serador
+% Inspired by: https://github.com/sb2nov/resume
+% License : MIT
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{fontawesome5}
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\setlength{\footskip}{4.08003pt}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{mwe} % for blindtext and example-image-a in example
+\usepackage{wrapfig}
+
+\input{glyphtounicode}
+
+% Custom font
+\usepackage[default]{lato}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.6in}
+\addtolength{\evensidemargin}{-0.6in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule\vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------%
+% Custom commands
+\begin{document}
+% Custom commands
+\newcommand{\resumeItem}[1]{
+\item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}
+\item
+  \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & #2 \\
+    \textit{\small#3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubHeadingListStart}{
+\begin{itemize}[leftmargin=0.15in, label={}]}
+    \newcommand{\resumeSubHeadingListEnd}{
+\end{itemize}}
+\newcommand{\resumeItemListStart}{
+\begin{itemize}}
+    \newcommand{\resumeItemListEnd}{
+\end{itemize}\vspace{-5pt}}
+
+\definecolor{Black}{RGB}{0, 0, 0}
+\newcommand{\seticon}[1]{\textcolor{Black}{\csname #1\endcsname}}
+%-------------------------------------------%
+%%%%%%  RESUME STARTS HERE  %%%%%
+\begin{tabularx}{\textwidth}{@{} X r @{}}
+  \begin{minipage}[t]{\textwidth}
+    \textbf{\Huge \scshape Sierra Brady} \\[0.5em]
+    \href{mailto:sierramb59@gmail.com}{\seticon{faEnvelope}
+    \underline{sierramb59[@]gmail[.]com}} \quad \small\seticon{faPhone}
+    (603) 507[-]4639 \quad
+    \href{https://www.linkedin.com/in/sierra-brady-a42100223/}{\seticon{faLinkedin}
+    \underline{linkedin}} \\
+    \\
+    Dover, NH
+  \end{minipage} &
+  \begin{minipage}[t]{4.2cm}
+    % \raisebox{-0.6\height}{\href{https://www.linkedin.com/in/sierra-brady-a42100223/}{\includegraphics[width=4cm]{./great_bay.png}}}
+    \raisebox{-0.6\height}{\href{https://www.linkedin.com/in/sierra-brady-a42100223/}{}}
+  \end{minipage}
+\end{tabularx}
+
+\section{Certifications}
+\begin{itemize}
+  \item \small{General Securities Representative Exam -- Series 7}
+  \item \small{NASAA Uniform Securities State Law Examination -- Series 63}
+  \item \small{NASAA Uniform Combined State Law Examination -- Series 66}
+  \item \small{Securities Industry Essentials -- SIE}
+\end{itemize}
+
+\section{Experience}
+\resumeSubHeadingListStart{}
+\resumeSubheading
+{Fidelity Investments}{October 2021 -- Present}
+{Wealth Management Service Specialist -- Managed Accounts}{Merrimack, NH}
+\resumeItemListStart
+\resumeItem{Support private wealth investors with
+  complex transactions across self-directed, managed, and alternative
+investment accounts.}
+\resumeItem{Deliver friendly and personable service while providing
+clear guidance on products, strategies, and account solutions.}
+\resumeItem{Lead team meetings, document and distribute detailed
+notes, and track key action items for my team.}
+\resumeItem{Coach peers in 1:1 sessions to enhance performance,
+accuracy, and client satisfaction.}
+\resumeItem{Contribute to budget planning and foster a collaborative,
+high-performing team culture.}
+\resumeItemListEnd
+
+\resumeSubheading
+{Granite State Management and Resources}{January 2021 -- October 2021}
+{Student Loan Servicer}{Concord, NH}
+\resumeItemListStart
+\resumeItem{Supported borrowers with federal student loan management.}
+\resumeItem{Used internal systems to update and maintain accounts.}
+\resumeItem{Explained repayment and assistance options clearly.}
+\resumeItem{Ensured accuracy and compliance in all servicing tasks.}
+\resumeItemListEnd
+
+\resumeSubheading
+{Wentworth Douglas Hospital}{June 2019 -- January 2021}
+{Licensed Nursing Assistant}{Dover, NH}
+\resumeItemListStart
+\resumeItem{Monitored and recorded vitals, intake/output, and patient status.}
+\resumeItem{Supported mobility, repositioning, and ambulation post-op.}
+\resumeItem{Reported changes in condition to nursing staff.}
+\resumeItem{Maintained accurate documentation and a safe care environment.}
+\resumeItemListEnd
+\resumeSubHeadingListEnd{}
+
+\section{Skills}
+\begin{itemize}[leftmargin=0.15in, label={}]
+  \item{\small{
+        \textbf{Core Competencies}{: Financial Account Management \&
+          Wealth Servicing, Investment Transactions \& Portfolio
+          Support, Retirement Planning, Regulatory Compliance \& Risk
+          Awareness, Analytical Thinking \& Problem Solving, Client
+          Relationship Management \& Retention, Peer Coaching,
+          Meeting Facilitation \& Operational Oversight, Attention to
+          Detail \& Accuracy, Salesforce CRM, Microsoft Office Suite,
+        Financial Software \& Tools}
+    }}
+\end{itemize}
+
+\section{Achievements}
+\begin{itemize}
+  \item \small{\textbf{Excellence in Action (EIA)} - Recognition for
+    outstanding performance and client service.}
+  \item \small{\textbf{Managerial and Peer Recognition} -
+    Acknowledged for leadership, teamwork, and contributions to team success.}
+  \item \small{\textbf{Exceptional Performance} - Consistently
+    exceeded performance metrics and client satisfaction goals.}
+\end{itemize}
+
+\section{Education}
+\resumeSubHeadingListStart
+\resumeSubheading
+{Great Bay Community College}{August 2022 -- May 2024}
+{Associates in Business Management}{Portsmouth, New Hampshire}
+\resumeItemListStart
+\resumeItem{\textbf{Relevant Coursework:} Graduated with an A.S. in B.M}
+\resumeItemListEnd
+\resumeSubHeadingListEnd
+%-------------------------------------------%
+\end{document}
