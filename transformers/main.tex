@@ -167,7 +167,7 @@
     \item<1-> Does order matter? - ``The fresh fish eats fluffy cat''?
     \item<1-> What does \textcolor{itcolor}{it} refer to?
     \item<1-> What is the \textcolor{catcolor}{cat} like?
-    \item<1-> Can one word ask several questions at once?
+    \item<1-> Can one word take on multiple meanings?
   \end{enumerate}
   \vfill
 \end{frame}
@@ -468,9 +468,7 @@ class PositionalEncoding(nn.Module):
   \vfill
   {\footnotesize
     \begin{enumerate}
-      \item<1-> Row 7 $= 22.6 \cdot \texttt{lut.weight[39]} + PE(7)$ -
-        ``the word \textcolor{itcolor}{\texttt{it}}, at position 7'' - it
-        knows nothing about \textcolor{catcolor}{\texttt{cat}} yet
+      \item<1-> ``the word \textcolor{itcolor}{\texttt{it}}'' - knows nothing about \textcolor{catcolor}{\texttt{cat}} or \textcolor{fishcolor}{\texttt{fish}}
     \end{enumerate}
   }
   \vfill
@@ -1128,46 +1126,10 @@ class DecoderOnlyLM(nn.Module):
   \vfill
   \begin{enumerate}
     \item Attention Is All You Need - https://arxiv.org/abs/1706.03762
-    \item The Annotated Transformer -
-      https://nlp.seas.harvard.edu/2018/04/03/attention.html
+    \item The Annotated Transformer - https://nlp.seas.harvard.edu/2018/04/03/attention.html
     \item Code - https://github.com/GersiD/ML/tree/main/transformer
     \item Slides - Email me Gersi.Doko@unh.edu
   \end{enumerate}
 \end{frame}
 
-% ---------------------------------------------------------------------------
-%
-% ---------------------------------------------------------------------------
-\begin{frame}
-  \frametitle{Limitation: When Do We Know Who \textcolor{itcolor}{it} Is?}
-  \vfill
-  \centering
-  \begin{tikzpicture}
-    \sentnodes{cw}
-    % invisible frame keeps the picture the same size on every overlay
-    \path (cw0.north west) ++(0, 1.45) (cw9.south east) ++(0, -1.15);
-    \only<1>{
-      \foreach \j in {0,1,3,4,6} {
-        \draw[-{Stealth}, gray!60] (cw7.north) to[bend right=30] (cw\j.north);
-      }
-      \draw[-{Stealth}, catcolor, line width=1.2pt] (cw7.north) to[bend right=30] (cw2.north);
-      \draw[-{Stealth}, fishcolor, line width=1.2pt] (cw7.north) to[bend right=30] (cw5.north);
-      \fill[white, opacity=0.75] ($(cw8.south west)+(-1pt,-1pt)$) rectangle ($(cw9.north east)+(1pt,1pt)$);
-      \node[font=\scriptsize, text=gray, anchor=north] at ($(cw8.south)!0.5!(cw9.south)$) {future - not read yet};
-    }
-    \only<2->{
-      \draw[-{Stealth}, itcolor, line width=1.6pt] (cw9.south) to[bend left=45] (cw7.south);
-      \draw[-{Stealth}, catcolor, line width=1.6pt] (cw9.south) to[bend left=25] (cw2.south);
-      \node[font=\scriptsize, anchor=south] at ($(cw9.north)+(0, 2pt)$) {settled here};
-    }
-  \end{tikzpicture}
-  \vfill
-  \raggedright
-  \setbeamerfont{itemize/enumerate body}{size=\footnotesize}
-  \begin{enumerate}
-    \item At \textcolor{itcolor}{\texttt{it}} the mask hides \texttt{is hungry} - \textcolor{catcolor}{\texttt{cat}} and \textcolor{fishcolor}{\texttt{fish}} both still fit
-    \item<2-> \texttt{hungry} looks back at \textcolor{itcolor}{\texttt{it}} \emph{and} \textcolor{catcolor}{\texttt{cat}} - the meaning is settled at \emph{later} positions
-    \item<3-> In deeper layers, later tokens gather from \textcolor{itcolor}{\texttt{it}} and \textcolor{catcolor}{\texttt{cat}}
-  \end{enumerate}
-\end{frame}
 \end{document}
