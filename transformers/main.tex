@@ -119,6 +119,41 @@
     \foreach \i in {0,...,9} {
       \node[font=\tiny, text=gray, below=1pt of op\i] {\i};
     }
+    % other meanings of cat: rows start under op0, labels end under op9
+    \foreach \r/\y in {1/-1.4, 2/-2.0, 3/-2.6, 4/-3.2} {
+      \coordinate (row\r) at ($(op0.west) + (0, \y)$);
+    }
+    \node[atok=catcolor, anchor=west] (ra0) at (row1) {cat};
+    \node[atok, right=2pt of ra0] (ra1) {that};
+    \node[atok, right=2pt of ra1] (ra2) {file};
+    \node[atok, right=2pt of ra2] (ra3) {to};
+    \node[atok, right=2pt of ra3] (ra4) {see};
+    \node[atok, right=2pt of ra4] (ra5) {what};
+    \node[atok, right=2pt of ra5] (ra6) {is};
+    \node[atok, right=2pt of ra6] (ra7) {inside};
+    \node[font=\scriptsize, text=gray, anchor=east] at (op9.east |- ra0) {Unix command};
+    \node[atok, anchor=west] (rb0) at (row2) {She};
+    \node[atok, right=2pt of rb0] (rb1) {is};
+    \node[atok, right=2pt of rb1] (rb2) {one};
+    \node[atok, right=2pt of rb2] (rb3) {cool};
+    \node[atok=catcolor, right=2pt of rb3] (rb4) {cat};
+    \node[font=\scriptsize, text=gray, anchor=east] at (op9.east |- rb0) {slang - a person};
+    \node[atok, anchor=west] (rc0) at (row3) {Someone};
+    \node[atok, right=2pt of rc0] (rc1) {let};
+    \node[atok, right=2pt of rc1] (rc2) {the};
+    \node[atok=catcolor, right=2pt of rc2] (rc3) {cat};
+    \node[atok, right=2pt of rc3] (rc4) {out};
+    \node[atok, right=2pt of rc4] (rc5) {of};
+    \node[atok, right=2pt of rc5] (rc6) {the};
+    \node[atok, right=2pt of rc6] (rc7) {bag};
+    \node[font=\scriptsize, text=gray, anchor=east] at (op9.east |- rc0) {idiom - a secret};
+    \node[atok, anchor=west] (rd0) at (row4) {The};
+    \node[atok, right=2pt of rd0] (rd1) {doctor};
+    \node[atok, right=2pt of rd1] (rd2) {ordered};
+    \node[atok, right=2pt of rd2] (rd3) {a};
+    \node[atok=catcolor, right=2pt of rd3] (rd4) {CAT};
+    \node[atok, right=2pt of rd4] (rd5) {scan};
+    \node[font=\scriptsize, text=gray, anchor=east] at (op9.east |- rd0) {acronym};
   \end{tikzpicture}
   \vfill
 \end{frame}
