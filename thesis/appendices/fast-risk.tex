@@ -1,0 +1,331 @@
+% !TEX root = ../main.tex
+\chapter{Supplementary Materials for \texorpdfstring{Chapter~\ref{ch:fast-risk}}{Chapter 5}}\label{app:fast-risk}
+
+% ---- ported from the appendix of ~/grad/fastcvar/main.tex ----
+\section{Supplemental Results for Section~\ref{sec:var-linear}} \label{sec:stand-var-algor}
+
+In this section, we summarize the standard and supporting algorithms for solving VaR. We also include selected technical proofs for correctness.
+
+\begin{lemma} \label{lem:prob-lumpy}
+For each $t\in \Real$:
+  \[
+    \P{\tilde{x} = t} > 0
+    \implies
+\exists \omega \in \Omega, \tilde{x}(\omega) = t.
+  \]
+\end{lemma}
+\begin{proof}
+$\P{\tilde{x}=t} = \sum_{\omega: \tilde{x}(\omega)=t} p_\omega > 0$, so the sum is non-empty.
+\end{proof}
+
+\begin{algorithm}
+\caption{Standard VaR algorithm}
+\label{alg:slow-quantile}
+\Input{$\bm{x}\in \Real^n$, $\bm{p}\in \Delta_n$, and $\alpha \in [0,1)$}
+\Output{$\varo_{\alpha}[\tilde{x}]$}
+Sort $\bm{x}$ indices to get $\sigma \colon 1{:}n \to 1{:}n$ such that $i > j \implies x_{\sigma(i)} \ge  x_{\sigma(j)}, \; \forall i, j \in 1{:}n$\;
+$q_0 \gets 0$
+\tcp*{$q_i = \P{\tilde{x} \le x_{\sigma (i)}}$ when $x_{\sigma(i)}$ unique}
+\For{$i\in 1{:}n$} {
+    $q_i \gets q_{i-1} + p_{\sigma(i)}$ \;
+    \lIf{$q_i > \alpha$} {\KwRet{$x_{\sigma(i)}$}}
+}
+\end{algorithm}
+
+\begin{proposition}
+For each $\bm{x} \in \Real^n$, $\bm{p}\in \Delta_n$, and $\alpha\in [0,1)$, \cref{alg:slow-quantile} returns $\var{\alpha}{\tilde{x}}$.
+\end{proposition}
+\begin{proof}
+  First, one can readily show by induction that for each $i\in 1{:}n$ (note that values of $\bm{x}$ need not be unique):
+\begin{equation} \label{eq:proof-q-j}
+  \P{\tilde{x} < x_{\sigma(i)}} \le q_{i-1} \le q_i \le \P{\tilde{x} \le x_{\sigma(i)}}.
+\end{equation}
+Since $\alpha < 1 = q_n$, the algorithm is guaranteed to terminate with some $i\opt \in 1{:}n$ and return $x_{\sigma(i\opt)}$. Therefore, $q_{i\opt-1} \le \alpha < q_{i\opt}$ and applying~\eqref{eq:proof-q-j} gives us that
+\[
+ \P{\tilde{x} < x_{\sigma(i\opt)}} \le q_{i\opt-1} \le \alpha < q_{i\opt} \le  \P{\tilde{x} \le x_{\sigma(i\opt)}},
+\]
+and the result holds by \cref{thm:quantile-in-finite-omega}.
+\end{proof}
+
+\begin{algorithm}
+  \caption{\texttt{partition}: Dutch national flag algorithm~\cite[chapter~14]{Dijkstra1976}}
+  \label{alg:partition}
+  \Input{$\bm{x} \in \Real^n$, $\bm{p} \in \Delta_n$, pivot $v = x_i, i\in f{:}b$, and front and back $f, b \in 1{:}n$, $f \le b$}
+  \Output{$l, g \in f{:}b$, $\bm{x} \in \Real^n$, $\bm{p} \in \Delta_n$ such that \cref{lem:hoare-partition} holds}
+  $l_0 \gets e_0 \gets f$; $g_0 \gets b$; $k \gets 0$ \;
+  \While{$e_k \leq g_k$}
+  {
+  \label{line:partition-while}
+    \If{$x_{e_k} < v$}{
+      swap: $x_{e_k} \leftrightarrow x_{l_k}$ and $p_{e_k} \leftrightarrow p_{l_k}$\; \label{line:swap1}
+      $l_{k+1} \gets l_k + 1$ ;
+      $e_{k+1} \gets e_k + 1$; $g_{k+1} \gets g_k$ \; \label{line:partition-e-1-1}
+    }
+    \ElseIf{$x_{e_k} > v$}{
+      swap: $x_{e_k}\leftrightarrow x_{g_k}$ and $p_{e_k} \leftrightarrow p_{g_k}$\; \label{line:swap2}
+      $g_{k+1} \gets g_{k} - 1$; $l_{k+1} \gets l_k; e_{k+1} \gets e_k$\; \label{line:partition-g-1}
+    }
+    \lElse {$e_{k+1} \gets e_{k} + 1$; $g_{k+1} \gets g_k; l_{k+1} \gets l_k$} \label{line:partition-e-1-2}
+    $k \gets k + 1$
+  }
+  \KwRet{$(l_k, g_k, \bm{x}, \bm{p})$}\;
+\end{algorithm}
+
+
+The following lemma proves the properties of the $\operatorname{partition}$ operator defined in \cref{alg:partition}. 
+\begin{lemma} \label{lem:hoare-partition}
+If $(l, g, \bm{x}', \bm{p}') = \operatorname{partition}(\bm{x}, \bm{p}, v, f, b)$ for $f \le b$, then:
+\begin{align} \label{eq:hoare-correspond}
+  \bm{x}_{f{:}(l-1)}' < v, \qquad
+  \bm{x}_{l{:}g}' = v,  \qquad
+  \bm{x}_{(g+1){:}b}' > v.
+\end{align}
+Moreover, $ \bm{x}_{f{:}b} = \bm{x}'_{\sigma(f{:}b)}, \bm{p}_{f{:}b} = \bm{p}'_{\sigma(f{:}b)}$ for some permutation $\sigma\colon f{:}b \to f{:}b$, and $\bm{x}_{1{:}(f-1)} = \bm{x}'_{1{:}(f-1)}, \bm{p}_{1{:}(f-1)} = \bm{p}'_{1{:}(f-1)}$, and $\bm{x}_{(b+1):n} = \bm{x}'_{(b+1):n}, \bm{p}_{(b+1):n} = \bm{p}'_{(b+1):n}$. The elements outside of the range $f{:}b$ are not modified. The algorithm runs in $O(b - f)$ time.
+\end{lemma}
+\begin{proof}[Proof of \cref{lem:hoare-partition}]
+Let $v$ be an input to \cref{alg:partition} and consider the following invariants.
+\begin{align}
+\label{eq:ho-inv-less}   x_j &< v, & j\in f{:}(l_k-1), \\
+\label{eq:ho-inv-equal}  x_j &= v, & j \in l_k{:}(e_k-1), \\
+\label{eq:ho-inv-more}   x_j &> v, & j \in (g_k+1){:}b.
+\end{align}
+  
+\emph{Initialization}. For $k=0$, conditions~\eqref{eq:ho-inv-less},~\eqref{eq:ho-inv-equal},~\eqref{eq:ho-inv-more} are true because the pertinent intervals are empty. 
+  
+\emph{Maintenance}. At each iteration of the loop that starts on line \ref{line:partition-while} of \cref{alg:partition}, there are 3 possible branches determined by the conditional logic: $x_{e_k} < v$, $x_{e_k} > v$, and $x_{e_k} = v$. Since $v, x_{e_k} \in \Real$ one of these branches must be executed for each iteration $k$.
+
+Each time the $x_{e_k} < v$ or $x_{e_k} > v$ branch is executed, conditions~\eqref{eq:ho-inv-less} and~\eqref{eq:ho-inv-more}, respectively, remain true since in each case we swap the necessary elements to preserve each condition. Notice also that $e_k$ is incremented alongside $l_k$ to maintain $e_k - l_k = e_{k+1} - l_{k+1}$ as is necessary for condition~\eqref{eq:ho-inv-equal}.
+
+When $x_{e_k} = v$, $e_k$ is incremented; since $e_0 = l_0$, this creates a difference between $e_{k+1}$ and $l_{k+1}$. Therefore, \eqref{eq:ho-inv-equal} remains true.   
+  
+\emph{Termination}. In the loop on line \ref{line:partition-while} there are 3 possible paths of execution determined by the conditional logic $x_{e_k} < v$, $x_{e_k} > v$, and $x_{e_k} = v$. Each of these paths of execution decreases $g_k - e_k$ by 1. This occurs on lines \ref{line:partition-e-1-1} and \ref{line:partition-e-1-2} by increasing $e_k$ by 1 and keeping $g_k$ the same, or on line \ref{line:partition-g-1} by decreasing $g_k$ by 1 and keeping $e_k$ the same.
+  
+Observe that  $g_0 - e_0 = b - f$ is non-negative since $f\le b$. The difference $g_k-e_k$ decreases by 1 at each iteration, and each iteration requires constant time to complete. Because the algorithm returns when $g_t - e_t = -1$, it finishes in $O(b-f)$ time.
+
+Let $t$ be the iteration at which the loop terminates, so that $e_t = g_t + 1$. Substituting $e_t - 1 = g_t$ into~\eqref{eq:ho-inv-less}, \eqref{eq:ho-inv-equal}, and~\eqref{eq:ho-inv-more} proves~\eqref{eq:hoare-correspond} with $l = l_t$ and $g = g_t$. Finally, $l \le g$ because the pivot $v$ occurs in $\bm{x}_{f:b}$, swaps only permute $\bm{x}_{f:b}$, and~\eqref{eq:hoare-correspond} places every element equal to $v$ in $l{:}g$.
+\end{proof}
+
+
+\begin{algorithm}
+  \caption{\texttt{QuickVaR}: Non-recursive adaptation of \cref{alg:quick-quantile}} \label{alg:quickvar-nonrecursive}
+  \Input{vector $\bm{x}^0$, pmf $\bm{p}^0$ and $\alpha_0 \in [0,1)$}
+  \Output{$\varo_{\alpha_0}[\tilde{x}]$}
+  $f_0 \gets 1$;~~~~$b_0 \gets n$;~~~~$k\gets 1$ \;
+  \While{$b_{k-1} > f_{k-1}$} {
+     $v_k \gets x^{k-1}_{\operatorname{rand}(f_{k-1}{:}b_{k-1})}$ \tcp*{Pivot} 
+     $l_k, g_k, \bm{x}^k, \bm{p}^k \gets \operatorname{partition}(\bm{x}^{k-1}, \bm{p}^{k-1}, v_k, f_{k-1}, b_{k-1})$
+    \tcp*{Alg.~\ref{alg:partition}, \cref{lem:hoare-partition}} \label{line:partion_line}    
+    $t_k \gets \sum_{j=f_{k-1}}^{l_k-1} p^k_j$ \; 
+    $e_k \gets \sum_{j = l_k}^{g_k} p^{k}_j $ \;  
+    \lIf{$\alpha_{k-1} < t_k$\label{line:determine_left}}
+    {
+      $f_k \gets f_{k-1}$;~$b_k \gets l_k-1$;~
+      $\alpha_k \gets \alpha_{k-1}$
+    }
+    \lElseIf{$t_k + e_k \le  \alpha_{k-1} \label{line:determine_right}$} 
+    {
+      $f_k \gets g_k+1$;~$b_k \gets b_{k-1}$;~$\alpha_k \gets \alpha_{k-1} - t_k - e_k$
+    }
+    \lElse{
+      $f_k \gets g_k$;~~~$b_k \gets g_k$
+    }
+    $k \gets k + 1$\; 
+  }
+  \KwRet{$x^{k-1}_{b_{k-1}}$}\;
+\end{algorithm}
+
+
+\section{Supplemental Results for Section~\ref{sec:phi-divergence}}
+
+The following proposition states the correctness of the standard polymatroid optimization algorithm when applied to a normalized polymatroid. 
+\begin{proposition} \label{prop:standard-polymatroid-works}
+Suppose that $f\colon  2^{1{:}n} \to \Real$ is submodular, monotone, $f(\emptyset) = 0$ and $f(1{:}n) = 1$, and let $\bm{x}\in \Real^n$. Then, \cref{alg:greedy-polymatroid} computes $\hat{\bm{q}}$ such that
+  \begin{equation} \label{eq:normalized-poly-opt}
+    \hat{\bm{q}}  \in  \argmin_{\bm{q}\in \widehat{\mathcal{Q}}_f}  \bm{x}\tr \bm{q}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+First, we show that $\hat{\bm{q}} \in \widehat{\mathcal{Q}}_f$. Because the construction of $\hat{\bm{q}}$ in \cref{alg:greedy-polymatroid} matches the construction in proposition~14.10 in \citet{Korte2012}, since $f(\emptyset) = 0$ and $\hat{q}_{\sigma(1)} = f(\left\{ \sigma(1) \right\}) - f(\emptyset) = f(\left\{ \sigma(1) \right\})$, we have that $\hat{\bm{q}}  \in \mathcal{Q}_f$. In addition, 
+  \[
+   \sum_{i=1}^n \hat{q}_i =  
+   \sum_{i=1}^n \hat{q}_{\sigma (i)} = f(1{:}n) - f(\emptyset) = 1, 
+  \]
+which implies that $\hat{\bm{q}} \in \Delta_n \cap \mathcal{Q}_f = \widehat{\mathcal{Q}}_f$, $\widehat{\mathcal{Q}}_f \neq \emptyset$, and the minimum~\eqref{eq:normalized-poly-opt} exists.
+
+To show that $\hat{\bm{q}} $ is optimal, we reduce the optimization in~\eqref{eq:normalized-poly-opt} to the standard linear polymatroid maximization problem with non-negative weights~\cite[section 14.2]{Korte2012} as follows:
+\begin{align*}
+  \min_{\bm{q}\in \widehat{\mathcal{Q}}_f}  \bm{x}\tr \bm{q}
+  &= \min_{\bm{q}\in \widehat{\mathcal{Q}}_f}  (\bm{x} - x_{\max}\cdot \bm{1}) \tr \bm{q} +  x_{\max}\\
+  &= -\max_{\bm{q}\in \widehat{\mathcal{Q}}_f}  (x_{\max}\cdot \bm{1} - \bm{x}) \tr \bm{q} + x_{\max}\\
+  &\ge -\max_{\bm{q}\in \mathcal{Q}_f}  (x_{\max}\cdot \bm{1} - \bm{x}) \tr \bm{q} + x_{\max}\\
+  &= - (x_{\max}\cdot \bm{1} - \bm{x}) \tr \hat{\bm{q}} + x_{\max} \\
+  &=  \bm{x}\tr \hat{\bm{q}}.
+\end{align*}
+Here, $x_{\max} := \max_{i\in 1{:}n} x_i $ and the equalities follow because $\widehat{\mathcal{Q}}_f$ is a normalized polymatroid and $\bm{1}\tr \hat{\bm{q}} = 1$. The second-to-last equality follows from theorem~14.11 in \citet{Korte2012} and the construction in the greedy polymatroid algorithm. The reverse inequality $\min_{\bm{q}\in \widehat{\mathcal{Q}}_f} \bm{x}\tr \bm{q} \le \bm{x}\tr \hat{\bm{q}}$ holds because $\hat{\bm{q}} \in \widehat{\mathcal{Q}}_f$, as shown above. 
+\end{proof}
+
+The following lemma is folklore in submodular optimization~\cite[theorem~4.5.1]{Bilmes18}. We state and prove it for completeness.
+\begin{lemma} \label{lem:submodular-concave}
+  Suppose that $\bm{\mu}\in \Real^n_{\ge 0}$ and $g \colon \Real_{\ge 0} \to \Real$ is concave and monotone. Then $f(\mathcal{A}) := g(\bm{1}\tr\bm{\mu}_{\mathcal{A}})$ is a submodular monotone function. 
+\end{lemma}
+\begin{proof}
+  The fact that $f$ is monotone follows from the composition of two monotone functions. To prove that $f$ is submodular, we use the following properties that hold for each $\mathcal{A}, \mathcal{B} \subseteq 1{:}n$:
+  \begin{align}
+    \label{eq:sets-bounds-nneg}
+    \bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}
+    &\le \bm{1}\tr\bm{\mu}_{\mathcal{A}} \le \bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}},
+    &
+    \bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}
+    &\le \bm{1}\tr\bm{\mu}_{\mathcal{B}} \le \bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}}, \\
+    \label{eq:mu-modular}
+    \bm{1}\tr\bm{\mu}_{\mathcal{A}} + \bm{1}\tr\bm{\mu}_{\mathcal{B}}
+    &= \bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}} + \bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}.
+  \end{align}
+The inequalities in~\eqref{eq:sets-bounds-nneg} hold because $\bm{\mu} \ge  \bm{0}$ and the equality in~\eqref{eq:mu-modular} holds because $\mathcal{A} \mapsto \bm{1}\tr\bm{\mu}_{\mathcal{A}}$ is modular. Suppose that $\bm{1}\tr \bm{\mu}_{\mathcal{A} \cap \mathcal{B}} < \bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}}$; otherwise the submodularity condition in~\eqref{eq:submod-proof-cond} below holds with equality.  Then, writing $\bm{1}\tr\bm{\mu}_{\mathcal{A}}$ and $\bm{1}\tr\bm{\mu}_{\mathcal{B}}$ as a convex combination of $\bm{1}\tr\bm{\mu}_{\mathcal{A}\cap \mathcal{B}}$ and $\bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}}$ using~\eqref{eq:sets-bounds-nneg} and the concavity of $g$ we get that
+  \begin{align}
+  \label{eq:ga-bound}
+    g(\bm{1}\tr\bm{\mu}_{\mathcal{A}})
+    &\ge
+      \frac{\bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}} - \bm{1}\tr\bm{\mu}_{\mathcal{A}}}{\bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}} - \bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}} g(\bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}) + 
+      \frac{\bm{1}\tr\bm{\mu}_{\mathcal{A}} - \bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}}{\bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}} - \bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}} g(\bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}}), \\
+  \label{eq:gb-bound}
+    g(\bm{1}\tr\bm{\mu}_{\mathcal{B}})
+    &\ge
+      \frac{\bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}} - \bm{1}\tr\bm{\mu}_{\mathcal{B}}}{\bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}} - \bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}} g(\bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}) + 
+      \frac{\bm{1}\tr\bm{\mu}_{\mathcal{B}} - \bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}}{\bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}} - \bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}} g(\bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}}).
+  \end{align}
+  Then summing~\eqref{eq:ga-bound} and~\eqref{eq:gb-bound} and algebraic manipulation yields that 
+  \begin{equation} \label{eq:submod-proof-cond}
+    f(\mathcal{A}) + f(\mathcal{B})
+    = g(\bm{1}\tr\bm{\mu}_{\mathcal{A}}) + g(\bm{1}\tr\bm{\mu}_{\mathcal{B}})
+    \ge
+      g(\bm{1}\tr\bm{\mu}_{\mathcal{A} \cap \mathcal{B}}) + 
+      g(\bm{1}\tr\bm{\mu}_{\mathcal{A} \cup \mathcal{B}})
+     = 
+      f(\mathcal{A} \cap \mathcal{B}) + 
+      f(\mathcal{A} \cup \mathcal{B}),
+\end{equation}
+    which proves that $f$ is submodular. 
+\end{proof}
+
+
+\begin{proof}[Proof of \cref{prop:cvar-ews-correct}]
+The function $f_{\alpha }^{\cvaro}$ is EWS by algebraic manipulation. The equality~\eqref{eq:cvar-correct} for $\alpha = 0$ follows by algebraic manipulation. To prove~\eqref{eq:cvar-correct} for $\alpha > 0$, we use \cref{prop:coherent-polymatroid} and show for each $\mathcal{O} \subseteq \Omega$ that
+\begin{equation}
+\label{eq:cvar-eq-submodular}
+  f_{\alpha}^{\cvaro}(\mathcal{O})
+  =
+  \min\left\{ \alpha^{-1} \bm{1}_{\mathcal{O}}\tr \bm{p},\; 1 \right\}
+= \max \left\{ \bm{1}_{\mathcal{O}}\tr \bm{q} \mid 
+\bm{q} \in \Delta_{n}, \,
+\bm{q} \le \alpha^{-1} \bm{p}
+\right\}
+=
+  -\cvar{\alpha }{- \tilde{1}_{\mathcal{O}}},
+\end{equation}
+using the dual CVaR formulation in~\eqref{eq:primal_cvar}. We prove~\eqref{eq:cvar-eq-submodular} as two inequalities.
+
+(i) The inequality 
+\[
+\min\left\{ \alpha^{-1} \bm{1}_{\mathcal{O}}\tr \bm{p},\; 1 \right\}
+\ge \max \left\{ \bm{1}_{\mathcal{O}}\tr \bm{q} \mid \bm{q} \in \Delta_{n}, \, \bm{q} \le \alpha^{-1} \bm{p}
+\right\},
+\]
+holds because $\bm{q}$ feasible in the right-hand side satisfies that 
+\(  \bm{1}_{\mathcal{O}}\tr \bm{q} \le \alpha^{-1} \bm{1}_{\mathcal{O}}\tr \bm{p},
+ \text{ and }
+  \bm{1}_{\mathcal{O}}\tr \bm{q} \le \bm{1}\tr \bm{q} = 1.
+\)
+
+(ii) To prove that 
+\begin{equation} \label{eq:cvar-proof-le}
+\min\left\{ \alpha^{-1} \bm{1}_{\mathcal{O}}\tr \bm{p},\; 1 \right\}
+\le \max \left\{ \bm{1}_{\mathcal{O}}\tr \bm{q} \mid \bm{q} \in \Delta_{n}, \, \bm{q} \le \alpha^{-1} \bm{p}
+\right\},
+\end{equation}
+we analyze the following two cases. 
+\begin{enumerate}[nosep]
+\item[(a)] When $\bm{1}_{\mathcal{O}}\tr  \bm{p} \ge \alpha$, let \(\bm{q} :=  (\bm{1}_{\mathcal{O}}\tr \bm{p})^{-1} \cdot \bm{p} \odot \bm{1}_{\mathcal{O}},
+\) which is
+feasible in the right-hand side of~\eqref{eq:cvar-proof-le} and $\odot$ is the Hadamard vector product. 
+\item[(b)] When $\bm{1}_{\mathcal{O}}\tr  \bm{p} < \alpha$, let \(\bm{q} := \alpha^{-1} \cdot \bm{p} \odot \bm{1}_{\mathcal{O}}
++  d \cdot \bm{p} \odot (\bm{1} - \bm{1}_{\mathcal{O}}), \) which is
+feasible in the right-hand side of~\eqref{eq:cvar-proof-le} and $d\in \Real $ solves that
+\(d \cdot \bm{1}\tr \bm{p} \odot (\bm{1} - \bm{1}_{\mathcal{O}}) = 1 - \alpha^{-1} \bm{1}_{\mathcal{O}}\tr \bm{p}.
+\)
+Such $d$ always exists because \(\bm{1}\tr \bm{p} \odot (\bm{1} - \bm{1}_{\mathcal{O}}) = 1 - \bm{1}_{\mathcal{O}}\tr \bm{p}  > 1 - \alpha \ge 0.
+\)
+It is easy to verify that $\bm{q} \ge \bm{0}$ and $\bm{1}\tr \bm{q} = 1$. The condition $\bm{q} \le \alpha^{-1} \bm{p}$ holds because $d \le \alpha^{-1}$ which follows from the inequality below after dividing by $\bm{1}\tr \bm{p} \odot (\bm{1} - \bm{1}_{\mathcal{O}}) > 0$:
+\[
+  d \cdot \bm{1}\tr \bm{p} \odot (\bm{1} - \bm{1}_{\mathcal{O}})
+  \; =\; 
+  1 - \frac{1}{\alpha } \bm{1}_{\mathcal{O}}\tr \bm{p}
+  \; \le\; 
+  \frac{1}{\alpha } \cdot \bm{1}\tr \bm{p} \odot (\bm{1} - \bm{1}_{\mathcal{O}}).
+\]
+Also, $\bm{q}\ge 0$ needs $d \ge 0$, which follows from $\bm{1}_{\mathcal{O}}\tr\bm{p} < \alpha$.
+\end{enumerate}
+\end{proof}
+
+\begin{proof}[Proof of \cref{prop:tvar-ews-correct}]
+  The function $f_{\alpha }^{\tvaro}$ is EWS by algebraic manipulation. The equality~\eqref{eq:tvar-correct} for $\alpha$ such that $\sqrt{\frac{1}{2} \log \frac{1}{\alpha} } \ge 1$, including $\alpha = 0$, follows by algebraic manipulation.
+
+  It remains to prove~\eqref{eq:tvar-correct} when $\sqrt{\frac{1}{2} \log \frac{1}{\alpha} } < 1$. We use \cref{prop:coherent-polymatroid} and show for each $\mathcal{O} \subseteq \Omega$ that
+\begin{equation}\label{eq:tvar-eq-submodular}
+  \begin{aligned}
+f_{\alpha}^{\tvaro}(\mathcal{O}) 
+  &=
+\min\left\{ \bm{1}_{\mathcal{O}}\tr \bm{p} + \sqrt{\frac{1}{2} \log \frac{1}{\alpha}},\; 1 \right\} \\
+  &=
+\max \left\{ \bm{1}_{\mathcal{O}}\tr \bm{q} \mid 
+\bm{q} \in \Delta_n, \,
+\|\bm{p} -\bm{q}\|_1 \le \sqrt{2 \log \frac{1}{\alpha}}, \,
+\bm{q} \ll \bm{p}
+\right\}
+=
+  -\tvar{\alpha }{- \tilde{1}_{\mathcal{O}}},
+  \end{aligned}
+\end{equation}
+using the TVaR definition in~\eqref{eq:tvar-dual}. We need to handle two special cases first. When $\bm{1}_{\mathcal{O}}\tr \bm{p} = 0$, then we have that $0 = f^{\tvaro}_{\alpha}(\mathcal{O}) = g(0) = -\tvaro_{\alpha}[-\tilde{1}_{\mathcal{O}}]$ since $\bm{q} \ll \bm{p}$ in the TVaR definition in~\eqref{eq:tvar-dual}. When $\bm{1}_{\mathcal{O}}\tr \bm{p} = 1$, then we have that $1 = f^{\tvaro}_{\alpha}(\mathcal{O}) = g(1) = -\tvaro_{\alpha}[-\tilde{1}_{\mathcal{O}}]$ since $\bm{q} \ll \bm{p}$ and $\bm{1}\tr \bm{q} = 1$ in the TVaR definition in~\eqref{eq:tvar-dual}.
+
+Finally, we prove~\eqref{eq:tvar-eq-submodular} as two inequalities when $0 < \bm{1}_{\mathcal{O}}\tr \bm{p} < 1$. 
+(i) To prove that 
+\[
+  \min\left\{ \bm{1}_{\mathcal{O}}\tr \bm{p} + \sqrt{\frac{1}{2} \log \frac{1}{\alpha}},\; 1 \right\}
+  \ge \max \left\{ \bm{1}_{\mathcal{O}}\tr \bm{q} \mid
+\bm{q} \in \Delta_n, \,
+\|\bm{p} -\bm{q}\|_1 \le \sqrt{2 \log \frac{1}{\alpha}}
+\right\},
+\]
+observe that $\bm{q}$ feasible in the right-hand side implies that \(  \|\bm{p} - \bm{q}\|_1 = \bm{1}_{\mathcal{O}}\tr |\bm{p} - \bm{q}| + (\bm{1} - \bm{1}_{\mathcal{O}})\tr |\bm{p} - \bm{q}|
+  \leq \sqrt{2 \log \frac{1}{\alpha }} \) and $(\bm{1} - \bm{1}_{\mathcal{O}})\tr (\bm{p} - \bm{q}) = \bm{1}_{\mathcal{O}}\tr  (\bm{q} - \bm{p})$ since $\bm{p},\bm{q}\in \Delta_n$.  Then
+\begin{align*}
+  \bm{1}_{\mathcal{O}}\tr \bm{q}
+  &= \bm{1}_{\mathcal{O}}\tr (\bm{q} - \bm{p}) + \bm{1}_{\mathcal{O}}\tr  \bm{p} 
+  = \frac{1}{2}\left(  \bm{1}_{\mathcal{O}}\tr (\bm{q} - \bm{p})  + (\bm{1} - \bm{1}_{\mathcal{O}})\tr  (\bm{p} - \bm{q}) \right)+ \bm{1}_{\mathcal{O}}\tr  \bm{p} \\
+  &\le \frac{1}{2}\left(  \bm{1}_{\mathcal{O}}\tr |\bm{q} - \bm{p}|  + (\bm{1} - \bm{1}_{\mathcal{O}})\tr |\bm{p} - \bm{q}| \right)+ \bm{1}_{\mathcal{O}}\tr  \bm{p} 
+  \le \sqrt{\frac{1}{2} \log \frac{1}{\alpha }} + \bm{1}_{\mathcal{O}}\tr  \bm{p},
+\end{align*}
+and  \(  \bm{1}_{\mathcal{O}}\tr \bm{q} \leq \bm{1}\tr \bm{q}  = 1.\)
+
+
+(ii) To prove that 
+\[
+  \min\left\{ \bm{1}_{\mathcal{O}}\tr \bm{p} + \sqrt{\frac{1}{2} \log \frac{1}{\alpha }},\; 1 \right\}
+\le \max \left\{ \bm{1}_{\mathcal{O}}\tr \bm{q} \mid 
+\bm{q} \in \Delta_n, \,
+\|\bm{p} -\bm{q}\|_{1} \le  \sqrt{2 \log \frac{1}{\alpha }}
+\right\},
+\]
+we analyze the following two cases:
+\begin{enumerate}[nosep]
+\item[(a)] When $\bm{1}_{\mathcal{O}}\tr  \bm{p} +  \sqrt{\frac{1}{2} \log \frac{1}{\alpha }} \ge 1$, let \(\bm{q} \;:=\;  (\bm{1}_{\mathcal{O}}\tr \bm{p})^{-1} \cdot \bm{p} \odot \bm{1}_{\mathcal{O}}, \)
+  where $\odot$ is the Hadamard vector product. This $\bm{q}$ is feasible in the right-hand side and satisfies the inequality. 
+\item[(b)] When $\bm{1}_{\mathcal{O}}\tr  \bm{p}  + \sqrt{\frac{1}{2} \log \frac{1}{\alpha }}< 1$, let 
+\[
+\bm{q} \;:=\; \frac{\bm{1}_{\mathcal{O}}\tr \bm{p} + \sqrt{\frac{1}{2} \log \frac{1}{\alpha }}}{\bm{1}_{\mathcal{O}}\tr \bm{p}} \cdot \bm{p} \odot \bm{1}_{\mathcal{O}}
++  \frac{(\bm{1} - \bm{1}_{\mathcal{O}}) \tr \bm{p} - \sqrt{\frac{1}{2} \log \frac{1}{\alpha }} }{(\bm{1} - \bm{1}_{\mathcal{O}}) \tr \bm{p}}\cdot \bm{p} \odot (\bm{1} - \bm{1}_{\mathcal{O}}),
+\]
+which is feasible in the right-hand side and satisfies the inequality. Neither one of the divisions is by $0$ since $0 < \bm{1}_{\mathcal{O}}\tr \bm{p} < 1$.
+\end{enumerate}
+\end{proof}

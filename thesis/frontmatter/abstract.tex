@@ -1,0 +1,17 @@
+% !TEX root = ../main.tex
+\frontchapter{ABSTRACT}
+
+\begin{center}
+  {\bfseries \thesistitle\par}
+  by\par
+  \thesisauthor\par
+  University of New Hampshire, \thesismonth, \thesisyear\par
+\end{center}
+
+Reinforcement Learning is a large area of active research that broadly studies how to make sequential decisions over time. This field is widely varied in its specialties and applications. This work focuses on understanding and broadening the understanding related to risk sensitive reinforcement learning. We build on the existing literature in three key ways. First we propose and solve a new formulation for the Inverse Reinforcement Learning problem. Second we answer an open question about the possibility to find an algorithm which can provably optimize the Conditional Value at Risk of a policy in the space of risk levels. Third we introduce a novel approach to compute risk measures such as Value at Risk and Conditional Value at Risk in expected linear time.
+
+We propose and solve a novel formulation for the Inverse Reinforcement Learning (IRL) problem which frames it as an adversarial game between a policy and a reward function. We show that many existing methods can be cast in this framework, and we provide a new algorithm which solves the optimization as an LP. Unlike existing methods which estimate an expert occupancy frequency directly our method avoids this and instead optimizes over a set of all consistent experts. This allows us to perform well in the offline regime where data comes from a different policy than the experts. We then extend this framework to handle suboptimal experts.
+
+Prior work~\cite{Hau2023DP,Durand2025} has shown that existing methods in risk sensitive reinforcement learning can fail to converge to an optimal policy in certain environments. In this work we purpose conditions on risk measure to enable convergence using standard RL procedures. We also describe a disutility based approach for understanding why some risk measures such as $\cvaro$ can fail to converge. We show that there is a fundamental limitation to these risk measures which prevents them from being optimized in the space of risk levels. \todo{come back after this paper abstract finished}
+
+Finally, we present a novel algorithm which computes risk measure such as Value at Risk and Conditional Value at Risk in expected linear time. This is a logarithmic improvement over existing methods which rely on sorting their inputs. We then demonstrate the effectiveness of our approach numerically on synthetic data and observe a near order of magnitude speed up over existing methods. We generalize our approach to other risk measures which can be optimized as an optimization over a polymatroid. Our solutions are  available publicly at \url{https://github.com/RiskAverseRL/RiskMeasures.jl}.
