@@ -1,0 +1,6 @@
+build/*
+*.toml
+*.DS_Store
+*.aider
+*.pdf
+*.synctex.gz

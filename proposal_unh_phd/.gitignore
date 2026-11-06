@@ -1,0 +1,4 @@
+build
+main.pdf
+*.synctex.gz
+/.DS_Store
