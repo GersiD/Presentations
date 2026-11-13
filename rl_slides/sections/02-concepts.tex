@@ -1,0 +1,43 @@
+% Closing frame of the History section (no section of its own).
+% Panels of the key-ideas frame; the colour argument must be a plain colour name (no a!b mixes)
+\tikzset{szpanel/.style={draw=#1, fill=#1!8, rounded corners=5pt, minimum width=5.1cm, minimum height=5.2cm}}
+
+% Idea 1 panel: the experience loop (agent <-> world)
+\newcommand{\szexperience}[1]{%
+  \node[szpanel=#1] at (0, 0.45) {};
+  \node[font=\Large\bfseries, text=#1, align=center] at (0, 2.2) {1. Learn from\\experience};
+  \node[rlbox=#1, minimum width=2.4cm, minimum height=0.9cm, font=\normalsize] (ag) at (0, 0.7) {agent};
+  \node[rlbox=#1, minimum width=2.4cm, minimum height=0.9cm, font=\normalsize] (ev) at (0, -1.2) {world};
+  \draw[rlarrow=#1] ([xshift=-0.6cm]ag.south) -- node[left, font=\small, text=#1] {act} ([xshift=-0.6cm]ev.north);
+  \draw[rlarrow=#1] ([xshift=0.6cm]ev.north) -- node[right, font=\small, text=#1] {outcome} ([xshift=0.6cm]ag.south);
+}
+
+% Idea 2 panel: a chain of states, each with a value
+\newcommand{\szvalue}[1]{%
+  \node[szpanel=#1] at (0, 0.45) {};
+  \node[font=\Large\bfseries, text=#1, align=center] at (0, 2.2) {2. Learn the \emph{value}\\of behaviour};
+  \foreach \x/\l/\n in {-1.7/s/a, 0/s'/b, 1.7/s''/c} {
+    \node[circle, draw=#1, fill=white, minimum size=1.1cm, inner sep=0pt, font=\normalsize] (st\n) at (\x, -0.2) {$\l$};
+    \node[font=\normalsize, text=#1] at (\x, 0.9) {$V(\l)$};
+  }
+  \draw[rlarrow=#1] (sta) -- (stb);
+  \draw[rlarrow=#1] (stb) -- (stc);
+}
+
+\begin{frame}<1>[label=keyideas]
+  \frametitle{Two Key Ideas}
+  \vfill
+  \centering
+  \begin{tikzpicture}[x=1cm, y=1cm]
+    \path[use as bounding box] (-5.4, -2.2) rectangle (5.4, 3.1);
+    \begin{scope}[shift={(-2.7, 0)}]
+      \szexperience{agentcolor}
+    \end{scope}
+    \begin{scope}[shift={(2.7, 0)}]
+      \only<1>{\colorlet{szc}{gray!55}\szvalue{szc}}%
+      \only<2>{\szvalue{valuecolor}}%
+    \end{scope}
+  \end{tikzpicture}
+  \vfill
+  % Overlay 2 (shown later via \againframe<2>{keyideas}): idea 2 revealed in full color.
+\end{frame}

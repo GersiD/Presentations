@@ -1,0 +1,72 @@
+\section*{Value}
+
+% ---- s3 helpers ------------------------------------------------------------
+\newcommand{\sthreefig}[2][0.86]{\includegraphics[width=#1\textwidth]{#2}}
+% fixed-height, centred text box: later overlay content never shifts what is already visible
+\newcommand{\sthreebox}[2]{\parbox[c][#1][c]{\textwidth}{\centering #2}}
+
+\begin{frame}
+  \frametitle{On the Tee}
+  \vfill
+  \centering
+  \sthreefig{s3-hole}
+  \vfill
+  \sthreebox{2em}{\large 300 yards to the hole. \textcolor{agentcolor}{What do you do?}}
+  \vfill
+\end{frame}
+
+\begin{frame}
+  \frametitle{So Many Choices}
+  \vfill
+  \centering
+  \sthreefig{s3-fan}
+  \vfill
+  \sthreebox{2.2cm}{%
+    \begin{tikzpicture}
+      \useasboundingbox (-4.8,-0.9) rectangle (4.8,0.9);
+      \node<2->[rlbox=agentcolor, minimum width=2.5cm, minimum height=0.7cm, font=\small] at (-3.1,0.45) {14 clubs};
+      \node<2->[font=\large] at (-1.55,0.45) {$\times$};
+      \node<2->[rlbox=agentcolor, minimum width=2.5cm, minimum height=0.7cm, font=\small] at (0,0.45) {30 angles};
+      \node<2->[font=\large] at (1.55,0.45) {$\times$};
+      \node<2->[rlbox=agentcolor, minimum width=2.5cm, minimum height=0.7cm, font=\small] at (3.1,0.45) {20 strengths};
+      \node<3->[font=\large] at (0,-0.45) {$\approx \textcolor{agentcolor}{8{,}400}$ actions per shot};
+  \end{tikzpicture}}
+  \vfill
+\end{frame}
+
+\begin{frame}
+  \frametitle{Too Many Sequences}
+  \vfill
+  \centering
+  \sthreefig[0.88]{s3-explosion}
+  \vfill
+  \sthreebox{2em}{\visible<2->{Learning the policy directly is \textcolor{rewardcolor}{intractable}}}
+  \vfill
+\end{frame}
+
+\begin{frame}
+  \frametitle{Value of a State}
+  \vfill
+  \centering
+  \sthreefig{s3-value}
+  \vfill
+  \sthreebox{3.2em}{%
+    \textcolor{valuecolor}{$V(s)$} = how good is it to be \emph{here}?\par\vspace{3pt}
+  \visible<2->{$V(s) \approx -\,$expected strokes to finish the hole from $s$}}
+  \vfill
+\end{frame}
+
+\begin{frame}
+  \frametitle{Where Does It Land?}
+  \vfill
+  \centering
+  \only<1>{\sthreefig{s3-shots-a}}%
+  \only<2>{\sthreefig{s3-shots-b}}%
+  \only<3>{\sthreefig{s3-shots-c}}
+  \vfill
+  \sthreebox{2em}{%
+    \only<1>{Each shot leads to a new state \textcolor{agentcolor}{$s'$}.}%
+    \only<2>{How good is each new state? \textcolor{valuecolor}{$V(s')$}}%
+  \only<3>{$a^\star = \arg\max_a \big[\,\textcolor{rewardcolor}{r}(s,a) + \gamma \sum_{s'} P(s' \mid s,a)\,\textcolor{valuecolor}{V(s')}\,\big]$}}
+  \vfill
+\end{frame}

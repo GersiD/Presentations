@@ -1,0 +1,94 @@
+\section*{History}
+
+% backgammon board, starting position; point numbering as in the standard diagram
+\newcommand{\szbackgammon}{%
+  \def\szw{0.44}\def\szbar{0.28}\def\szh{2.2}\def\szg{0.2}%
+  \fill[brown!12] (-0.1, -0.1) rectangle (12*\szw+\szbar+0.1, 2*\szh+\szg+0.1);
+  \draw[brown!60!black, thick] (-0.1, -0.1) rectangle (12*\szw+\szbar+0.1, 2*\szh+\szg+0.1);
+  \fill[brown!40] (6*\szw, -0.1) rectangle (6*\szw+\szbar, 2*\szh+\szg+0.1);
+  \foreach \c in {0,...,11} {
+    \pgfmathsetmacro{\px}{\c*\szw + (\c>5 ? \szbar : 0)}
+    \pgfmathtruncatemacro{\szpar}{mod(\c,2)}
+    \ifnum\szpar=0 \def\szcol{brown!70!black}\else\def\szcol{BrickRed!50}\fi
+    \fill[\szcol] (\px, 0) -- (\px+\szw, 0) -- (\px+0.5*\szw, \szh) -- cycle;
+    \fill[\szcol] (\px, 2*\szh+\szg) -- (\px+\szw, 2*\szh+\szg) -- (\px+0.5*\szw, \szh+\szg) -- cycle;
+  }
+  % columns: top row = points 13..24, bottom row = points 12..1
+  \foreach \c/\n/\top/\col in {
+      0/5/1/black!80, 4/3/1/white, 6/5/1/white, 11/2/1/black!80,
+      0/5/0/white, 4/3/0/black!80, 6/5/0/black!80, 11/2/0/white} {
+    \pgfmathsetmacro{\px}{\c*\szw + (\c>5 ? \szbar : 0) + 0.5*\szw}
+    \foreach \j in {1,...,\n} {
+      \ifnum\top=1
+        \draw[fill=\col, draw=black!70] (\px, 2*\szh+\szg-\szw*\j+0.5*\szw) circle (0.5*\szw-0.02);
+      \else
+        \draw[fill=\col, draw=black!70] (\px, \szw*\j-0.5*\szw) circle (0.5*\szw-0.02);
+      \fi
+    }
+  }
+}
+
+\newcommand{\szchessboard}{%
+  \foreach \i in {0,...,7} {
+    \foreach \j in {0,...,7} {
+      \pgfmathtruncatemacro{\szpar}{mod(\i+\j,2)}
+      \ifnum\szpar=0 \fill[brown!55] (\i*0.45, \j*0.45) rectangle ++(0.45, 0.45);
+      \else \fill[brown!10] (\i*0.45, \j*0.45) rectangle ++(0.45, 0.45);\fi
+    }
+  }
+  \draw[brown!60!black, thick] (0, 0) rectangle (3.6, 3.6);
+}
+
+\newcommand{\szgoboard}{%
+  \fill[orange!25!yellow!40] (-0.3, -0.3) rectangle (3.5, 3.5);
+  \draw[brown!60!black, thick] (-0.3, -0.3) rectangle (3.5, 3.5);
+  \foreach \i in {0,...,8} {
+    \draw[black!70, thin] (\i*0.4, 0) -- (\i*0.4, 3.2);
+    \draw[black!70, thin] (0, \i*0.4) -- (3.2, \i*0.4);
+  }
+  \foreach \i/\j in {2/2, 2/6, 6/2, 6/6, 4/4} {\fill[black!70] (\i*0.4, \j*0.4) circle (0.04);}
+  \foreach \i/\j in {2/2, 3/5, 5/3, 6/6, 4/3, 5/6, 3/1} {\draw[fill=black!85] (\i*0.4, \j*0.4) circle (0.17);}
+  \foreach \i/\j in {2/6, 4/5, 6/3, 3/3, 5/5, 4/2, 6/4} {\draw[fill=white] (\i*0.4, \j*0.4) circle (0.17);}
+}
+
+% mini board icons for the timeline, centred on the origin
+\newcommand{\szicbg}{\begin{scope}[shift={(-1.09, -0.87)}, scale=0.38]\szbackgammon\end{scope}}
+\newcommand{\szicchess}{\begin{scope}[shift={(-0.81, -0.81)}, scale=0.45]\szchessboard\end{scope}}
+\newcommand{\szicgo}{\begin{scope}[shift={(-0.75, -0.75)}, scale=0.47]\szgoboard\end{scope}}
+\newcommand{\szicaz}{\begin{scope}[shift={(-1.0, -0.4)}, scale=0.25]\szchessboard\end{scope}
+  \begin{scope}[shift={(0.1, -0.4)}, scale=0.25]\szgoboard\end{scope}}
+
+% timeline milestone: #1 = overlay, #2 = x, #3 = year, #4 = name, #5 = percent self-experience, #6 = caption, #7 = icon
+\tikzset{szstep/.style={rlbox=white, draw=searchcolor!#1!humancolor, fill=searchcolor!#1!humancolor!35!white,
+  minimum width=2.4cm, minimum height=1.0cm, font=\normalsize\bfseries}}
+\newcommand{\szmile}[7]{%
+  \only<#1->{%
+    \begin{scope}[shift={(#2, 0)}]
+      \begin{scope}[shift={(0, 3.2)}]#7\end{scope}
+      \node[szstep=#5] (m#1) at (0, 1.5) {#4};
+      \draw[gray] (0, 0.9) -- (m#1.south);
+      \fill[gray] (0, 0.9) circle (0.06);
+      \node[font=\large\bfseries, anchor=north] at (0, 0.7) {#3};
+      \node[font=\footnotesize, align=center, anchor=north] at (0, 0.2) {#6};
+    \end{scope}}%
+}
+
+\begin{frame}
+  \frametitle{A Short History}
+  \vfill
+  \centering
+  \begin{tikzpicture}[x=1cm, y=1cm]
+    \path[use as bounding box] (-1.2, -1.7) rectangle (9.0, 4.3);
+    \draw[rlarrow, thick, gray] (-1.2, 0.9) -- (9.0, 0.9);
+    \szmile{1}{0}{1992}{TD-Gammon}{85}{self-play,\\learned value}{\szicbg}
+    \szmile{1}{2.6}{1997}{Deep Blue}{20}{search +\\hand-crafted eval}{\szicchess}
+    \szmile{1}{5.2}{2016}{AlphaGo}{60}{human games\\+ self-play}{\szicgo}
+    \szmile{1}{7.8}{2017}{AlphaZero}{100}{self-play\\only}{\szicaz}
+    % legend: gradient bar
+    \shade[left color=humancolor!70, right color=searchcolor] (-1, -1.1) rectangle (8.8, -0.8);
+    \node[font=\footnotesize, anchor=north west] at (-1, -1.1) {human knowledge};
+    \node[font=\footnotesize, anchor=north east] at (8.8, -1.1) {self-experience};
+  \end{tikzpicture}
+  \vfill
+  \source{Shading is qualitative: how much each system relies on human knowledge vs.\ its own experience}
+\end{frame}

@@ -1,0 +1,88 @@
+% Shared preamble. main.tex and the per-section builds (build.sh <section>) both \input this.
+\documentclass{beamer}
+
+\usepackage{mpemath}
+\usepackage{subcaption}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{natbib}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{bbm}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,matrix,calc,fit,backgrounds,shapes.geometric,decorations.pathreplacing}
+\usepackage{listings}
+\usepackage{pifont} % \ding{51} check, \ding{55} cross
+
+% *** Styles ***
+\usetheme{Singapore}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercovered{invisible}
+\usefonttheme{professionalfonts}
+\setbeamertemplate{footline}[frame number]
+\graphicspath{{imgs/}{imgs/gen/}{imgs/rlvrbook/}}
+
+% *** Code listings ***
+\lstdefinestyle{py}{
+  language=Python,
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\color{NavyBlue}\bfseries,
+  commentstyle=\color{Gray}\itshape,
+  stringstyle=\color{BrickRed},
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{lightgray},
+  columns=fullflexible,
+  keepspaces=true,
+}
+\lstset{style=py}
+
+% *** Shared color language (keep in sync with scripts/style.py) ***
+\colorlet{agentcolor}{NavyBlue}     % agent / policy / model
+\colorlet{envcolor}{ForestGreen}    % environment / verifier
+\colorlet{rewardcolor}{BrickRed}    % reward signal
+\colorlet{valuecolor}{Plum}         % value of a state
+\colorlet{humancolor}{Gray}         % human knowledge / hand-crafted
+\colorlet{searchcolor}{NavyBlue}    % search / self-experience / compute (same as agent: learning from experience)
+
+\newcommand{\agent}{\textcolor{agentcolor}{\textbf{agent}}}
+\newcommand{\env}{\textcolor{envcolor}{\textbf{environment}}}
+\newcommand{\reward}{\textcolor{rewardcolor}{\textbf{reward}}}
+\newcommand{\val}{\textcolor{valuecolor}{\textbf{value}}}
+
+% boxed node, same look as the token boxes of the transformers talk
+\tikzset{
+  rlbox/.style={draw=#1, fill=#1!10, rounded corners=2pt, inner sep=3pt,
+    font=\footnotesize, align=center},
+  rlbox/.default=gray,
+  rlarrow/.style={-{Stealth}, thick, #1},
+  rlarrow/.default=black!75,
+}
+\newcommand{\rltok}[2][gray]{\tikz[baseline=(t.base)]\node[draw=#1,rounded corners=2pt,inner sep=2pt,fill=#1!10](t){\strut\texttt{#2}};}
+
+% one-line takeaway at the bottom of a frame
+\newcommand{\keyidea}[1]{\begin{center}\colorbox{agentcolor!8}{\parbox{0.85\textwidth}{\centering\small #1}}\end{center}}
+% citation kept in the .tex for reference only; prints nothing on the slide (no gray text on slides)
+\newcommand{\source}[1]{}
+
+\newcommand{\cc}[1]{\textcolor{red}{[CC: #1]}} % review comments
+
+\title{Reinforcement Learning from Verifiable Rewards}
+\author{Gersi Doko}
+\institute{Department of Computer Science \\ University of New Hampshire}
+\date{}
+
+\AtBeginSection[]{
+  \begin{frame}
+    \vfill
+    \centering
+    {\huge\bf \insertsection}%
+    \vfill
+  \end{frame}
+}
