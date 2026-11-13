@@ -70,3 +70,47 @@
   \only<3>{$a^\star = \arg\max_a \big[\,\textcolor{rewardcolor}{r}(s,a) + \gamma \sum_{s'} P(s' \mid s,a)\,\textcolor{valuecolor}{V(s')}\,\big]$}}
   \vfill
 \end{frame}
+
+% soft launch of the advantage: mid-round, compare what we expected at the tee with how we are doing now
+% numbers come from scripts/s3_midround.py (toy value model in scripts/s3_hole.py)
+\begin{frame}
+  \frametitle{What If I Can't Predict Where It Will Land?}
+  \vfill
+  \centering
+  \sthreefig{s3-mid-a}
+  \vfill
+\end{frame}
+
+\begin{frame}
+  \frametitle{What If I Can't Predict Where It Will Land?}
+  \vfill
+  \centering
+  \only<1>{\sthreefig{s3-mid-b}}%
+  \only<2->{\sthreefig{s3-mid-c}}
+  \vfill
+  \sthreebox{4.4em}{%
+    \renewcommand{\arraystretch}{1.3}%
+    \begin{tabular}{@{}r@{\quad}l@{}}
+      should have done: & \textcolor{valuecolor}{$V(s_0)$} $= -4.0$ \\
+      \visible<2->{actually doing:} & \visible<2->{\textcolor{rewardcolor}{$r_1 + r_2$} $+$ \textcolor{valuecolor}{$V(s_2)$} $= -2 - 1.5 = -3.5$} \\
+      \visible<3->{difference:} & \visible<3->{$-3.5 - (-4.0) = \textcolor{agentcolor}{+0.5}$, better than expected!}
+    \end{tabular}}
+  \vfill
+\end{frame}
+
+% same drive, second shot in the water: the difference goes negative
+\begin{frame}
+  \frametitle{What If I Can't Predict Where It Will Land?}
+  \vfill
+  \centering
+  \sthreefig{s3-mid-d}
+  \vfill
+  \sthreebox{4.4em}{%
+    \renewcommand{\arraystretch}{1.3}%
+    \begin{tabular}{@{}r@{\quad}l@{}}
+      should have done: & \textcolor{valuecolor}{$V(s_0)$} $= -4.0$ \\
+      actually doing: & \textcolor{rewardcolor}{$r_1 + r_2$} $+$ \textcolor{valuecolor}{$V(s_2)$} $= -2 - 4.5 = -6.5$ \\
+      difference: & $-6.5 - (-4.0) = \textcolor{rewardcolor}{-2.5}$, worse than expected!
+    \end{tabular}}
+  \vfill
+\end{frame}
